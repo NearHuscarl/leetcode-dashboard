@@ -1,4 +1,4 @@
-import { queryProblems, TLcQuestion } from "./queryProblems.ts";
+import { queryProblems, TLcQuestion } from "./queryProblems.js";
 
 export const getProblems = async () => {
   console.log("fetching LC problems...");

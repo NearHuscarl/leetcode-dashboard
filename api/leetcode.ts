@@ -1,5 +1,5 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { getProblems } from "./lib/problems.ts";
+import { getProblems } from "./lib/problems.js";
 
 export default async function handler(
   _: VercelRequest,

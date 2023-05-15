@@ -1,4 +1,4 @@
-import { queryLeetcode } from "./leetcode.ts";
+import { queryLeetcode } from "./leetcode.js";
 
 type TQueryLcProblemsProps = {
   limit: number;
