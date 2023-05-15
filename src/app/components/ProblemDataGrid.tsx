@@ -1,28 +1,39 @@
-import { useEffect, useState } from "react";
 import {
   DataGrid,
   GridColDef,
   GridRenderCellParams,
   GridValueGetterParams,
 } from "@mui/x-data-grid";
+import { transform } from "framer-motion";
 import formatDistanceToNowStrict from "date-fns/formatDistanceToNowStrict";
-import { IconButton, Chip } from "@mui/material";
+import { IconButton, Chip, LinearProgress, Link, alpha } from "@mui/material";
 import red from "@mui/material/colors/red";
 import orange from "@mui/material/colors/orange";
 import yellow from "@mui/material/colors/yellow";
 import lightGreen from "@mui/material/colors/lightGreen";
+import green from "@mui/material/colors/green";
 import lightBlue from "@mui/material/colors/lightBlue";
+import amber from "@mui/material/colors/amber";
 import grey from "@mui/material/colors/grey";
 import OndemandVideoIcon from "@mui/icons-material/OndemandVideo";
-import { TCard, getCards } from "app/api/deck";
+import GppBadIcon from "@mui/icons-material/GppBad";
+import GppMaybeIcon from "@mui/icons-material/GppMaybe";
+import GppGoodIcon from "@mui/icons-material/GppGood";
+import isNil from "lodash/isNil";
+import { TCard, useCards } from "app/api/deck";
 import { TCardReview } from "app/api/stats";
 import { getIntervalTime, getReviewResult } from "app/helpers/stats";
+import { TLeetcode, useLeetcodeProblems } from "app/api/leetcode";
 
 declare global {
   interface Array<T> {
     toReversed(): Array<T>;
   }
 }
+const getAcRateColor = transform(
+  [30, 60, 80],
+  [red[500], yellow[600], green[500]]
+);
 
 const reviewResultColors: Record<"wrong" | "hard" | "ok" | "easy", string> = {
   easy: lightGreen[500],
@@ -38,10 +49,32 @@ const cardTypeColors: Record<string, string> = {
   Relearning: red[500],
   Unknown: grey[500],
 };
+const dateNow = Date.now();
 
 const columns: GridColDef[] = [
-  { field: "cardId", headerName: "ID", width: 0 },
-  { field: "leetcodeId", headerName: "Leetcode", width: 350 },
+  {
+    field: "cardId",
+    headerName: "ID",
+    width: 0,
+  },
+  {
+    field: "leetcodeId",
+    headerName: "Leetcode",
+    width: 350,
+    renderCell: (params: GridRenderCellParams<any, string>) => {
+      if (!params.value) {
+        return null;
+      }
+      return (
+        <Link
+          href={`https://leetcode.com/problems/${params.value}`}
+          underline="none"
+        >
+          {params.row.leetcode?.title ?? params.value}
+        </Link>
+      );
+    },
+  },
   {
     field: "type",
     headerName: "Type",
@@ -118,12 +151,54 @@ const columns: GridColDef[] = [
         return null;
       }
       const value = params.formattedValue;
+      let dueStatus = "bad";
       const isLate = value === "Now" || value.endsWith("ago");
-      const backgroundColor = isLate ? red[300] : lightGreen[400];
+      const distance = params.value - dateNow;
+
+      // within 1 day
+      if (Math.abs(distance) < 1000 * 60 * 60 * 24 || value === "Now") {
+        dueStatus = "now";
+      } else if (distance >= 1000 * 60 * 60 * 24) {
+        dueStatus = "good";
+      }
+
       return (
-        <div style={{ color: backgroundColor, fontWeight: "bold" }}>
+        <div style={{ display: "flex", gap: 3, alignItems: "center" }}>
+          {dueStatus === "bad" && <GppBadIcon style={{ color: red[300] }} />}
+          {dueStatus === "now" && (
+            <GppMaybeIcon style={{ color: amber[400] }} />
+          )}
+          {dueStatus === "good" && (
+            <GppGoodIcon style={{ color: lightGreen[300] }} />
+          )}
           {value}
         </div>
+      );
+    },
+  },
+  {
+    field: "leetcode",
+    headerName: "AC Rate",
+    width: 100,
+    valueGetter: (params: GridValueGetterParams<TCard, TLeetcode>) => {
+      return params.value?.acRate;
+    },
+    renderCell: (params) => {
+      if (isNil(params.value)) return null;
+      return (
+        <LinearProgress
+          variant="determinate"
+          sx={{
+            width: "100%",
+            height: 10,
+            borderRadius: 3,
+            backgroundColor: alpha(getAcRateColor(params.value), 0.2),
+            "& > span": {
+              backgroundColor: getAcRateColor(params.value),
+            },
+          }}
+          value={params.value}
+        />
       );
     },
   },
@@ -185,16 +260,21 @@ const columns: GridColDef[] = [
 ];
 
 export const ProblemDataGrid = () => {
-  const [rows, setRows] = useState<any[]>([]);
+  const { data: leetcodes = {} } = useLeetcodeProblems();
+  const { data: cards = [] } = useCards();
 
-  useEffect(() => {
-    getCards("Leetcode").then((cards) => setRows(cards));
-  }, []);
+  const rows = cards.map((card) => {
+    return {
+      ...card,
+      leetcode: leetcodes[card.leetcodeId],
+    };
+  });
 
   return (
     <DataGrid
       rowHeight={40}
       columnHeaderHeight={40}
+      loading={rows.length === 0}
       rows={rows}
       disableVirtualization
       getRowId={(row) => row.cardId}

@@ -3,6 +3,7 @@ import { ankiConnect } from "./ankiConnect";
 import { getCardInfos } from "./card";
 import { getNoteInfos } from "./note";
 import { TCardReview, getCardReviews } from "./stats";
+import { useQuery } from "@tanstack/react-query";
 
 export const getCardIds = (deck: string): Promise<number[]> => {
   return ankiConnect("findCards", { query: `deck:${deck}` });
@@ -49,4 +50,8 @@ export const getCards = async (deck: string) => {
         ),
       } as TCard)
   );
+};
+
+export const useCards = () => {
+  return useQuery(["cards"], () => getCards("Leetcode"));
 };

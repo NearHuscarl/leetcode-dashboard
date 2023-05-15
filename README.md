@@ -1,5 +1,30 @@
 # Leetcode Dashboard
 
+## Development
+
+- Download and install Anki
+- Install [anki-connect](https://ankiweb.net/shared/info/2055492159) add-on.
+- In Anki, go to `Tools` > `Add-ons` > Select `AnkiConnect` > `Config`. Update the config to allow CORS.
+
+```json
+{
+  "webCorsOriginList": [
+    "http://localhost:5173",
+    "http://localhost:3000",
+    "https://leetcode-dashboard.vercel.app"
+  ]
+}
+```
+
+- Do not close Anki to maintain the connection with AnkiConnect.
+- Clone this repo.
+- Install depedencies and run the dev server
+
+```bash
+yarn
+yarn dev
+```
+
 <!--
 Features
 
