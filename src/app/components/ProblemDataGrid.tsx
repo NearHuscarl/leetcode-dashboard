@@ -96,7 +96,7 @@ const columns: GridColDef[] = [
   {
     field: "due",
     headerName: "Due",
-    width: 200,
+    width: 140,
     valueGetter: (params: GridValueGetterParams<TCard, number>) => {
       // there are 2 interval properties:
       // - card.interval: the next interval, if the card is overdue, then this is 0
@@ -111,13 +111,10 @@ const columns: GridColDef[] = [
     },
     valueFormatter(params) {
       if (params.value === null) return "Now";
-
-      const text = formatDistanceToNowStrict(params.value, { addSuffix: true });
-
-      return text;
+      return formatDistanceToNowStrict(params.value, { addSuffix: true });
     },
     renderCell: (params) => {
-      if (!params.value) {
+      if (!params.formattedValue) {
         return null;
       }
       const value = params.formattedValue;
@@ -125,7 +122,7 @@ const columns: GridColDef[] = [
       const backgroundColor = isLate ? red[300] : lightGreen[400];
       return (
         <div style={{ color: backgroundColor, fontWeight: "bold" }}>
-          {params.formattedValue}
+          {value}
         </div>
       );
     },

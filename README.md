@@ -37,7 +37,7 @@ LC Problem Difficulty
 - ScatterPlot
 - Dot color: LC pattern
 - X: Interval
-- Y: Acceptence rate
+- Y: Number of reviews
 
 Current pattern covered
 - Sunburst chart
