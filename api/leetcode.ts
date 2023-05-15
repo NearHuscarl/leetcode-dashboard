@@ -5,6 +5,9 @@ export default async function handler(
   request: VercelRequest,
   response: VercelResponse
 ) {
+  response.setHeader("Access-Control-Allow-Credentials", "true");
+  response.setHeader("Access-Control-Allow-Origin", "*");
+
   const limit = Number(request.query.limit) ?? 100;
   const problems = await getProblems(limit);
 
