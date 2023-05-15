@@ -1,4 +1,11 @@
-import { DataGrid, GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
+import { useEffect, useState } from "react";
+import {
+  DataGrid,
+  GridColDef,
+  GridRenderCellParams,
+  GridValueGetterParams,
+} from "@mui/x-data-grid";
+import formatDistanceToNowStrict from "date-fns/formatDistanceToNowStrict";
 import { IconButton, Chip } from "@mui/material";
 import red from "@mui/material/colors/red";
 import orange from "@mui/material/colors/orange";
@@ -7,10 +14,9 @@ import lightGreen from "@mui/material/colors/lightGreen";
 import lightBlue from "@mui/material/colors/lightBlue";
 import grey from "@mui/material/colors/grey";
 import OndemandVideoIcon from "@mui/icons-material/OndemandVideo";
-import { getCards } from "app/api/deck";
+import { TCard, getCards } from "app/api/deck";
 import { TCardReview } from "app/api/stats";
-import { getReviewResult } from "app/helpers/stats";
-import { useEffect, useState } from "react";
+import { getIntervalTime, getReviewResult } from "app/helpers/stats";
 
 declare global {
   interface Array<T> {
@@ -78,9 +84,50 @@ const columns: GridColDef[] = [
       if (!params.value) {
         return null;
       }
-      return params.value.map((tag, i) => (
-        <Chip key={i} label={tag.split("::").at(-1)} />
-      ));
+      return (
+        <div style={{ display: "flex", gap: 4 }}>
+          {params.value.map((tag, i) => (
+            <Chip key={i} label={tag.split("::").at(-1)} />
+          ))}
+        </div>
+      );
+    },
+  },
+  {
+    field: "due",
+    headerName: "Due",
+    width: 200,
+    valueGetter: (params: GridValueGetterParams<TCard, number>) => {
+      // there are 2 interval properties:
+      // - card.interval: the next interval, if the card is overdue, then this is 0
+      // - card.reviews.at(-1).ivl: the next interval
+      const lastReview = params.row.reviews.at(-1);
+      if (!lastReview) return null;
+
+      const { id: reviewDate, ivl } = lastReview;
+      const interval = getIntervalTime(ivl!);
+
+      return reviewDate + interval;
+    },
+    valueFormatter(params) {
+      if (params.value === null) return "Now";
+
+      const text = formatDistanceToNowStrict(params.value, { addSuffix: true });
+
+      return text;
+    },
+    renderCell: (params) => {
+      if (!params.value) {
+        return null;
+      }
+      const value = params.formattedValue;
+      const isLate = value === "Now" || value.endsWith("ago");
+      const backgroundColor = isLate ? red[300] : lightGreen[400];
+      return (
+        <div style={{ color: backgroundColor, fontWeight: "bold" }}>
+          {params.formattedValue}
+        </div>
+      );
     },
   },
   {
@@ -160,6 +207,14 @@ export const ProblemDataGrid = () => {
           columnVisibilityModel: {
             cardId: false,
           },
+        },
+        sorting: {
+          sortModel: [
+            {
+              field: "due",
+              sort: "asc",
+            },
+          ],
         },
         pagination: {
           paginationModel: {

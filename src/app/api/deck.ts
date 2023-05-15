@@ -2,10 +2,32 @@ import keyBy from "lodash/keyBy";
 import { ankiConnect } from "./ankiConnect";
 import { getCardInfos } from "./card";
 import { getNoteInfos } from "./note";
-import { getCardReviews } from "./stats";
+import { TCardReview, getCardReviews } from "./stats";
 
 export const getCardIds = (deck: string): Promise<number[]> => {
   return ankiConnect("findCards", { query: `deck:${deck}` });
+};
+
+export type TCard = {
+  reviews: TCardReview[];
+  tags: string[];
+
+  leetcodeId: string;
+  neetcodeLink: string;
+  deckName: string;
+  modelName: string;
+  fieldOrder: number;
+  cardId: number;
+  interval: number;
+  note: number;
+  ord: number;
+  type: number;
+  queue: number;
+  due: number;
+  reps: number;
+  lapses: number;
+  left: number;
+  mod: number;
 };
 
 export const getCards = async (deck: string) => {
@@ -17,11 +39,14 @@ export const getCards = async (deck: string) => {
   const noteInfos = await getNoteInfos(cardInfos.map((c) => c.note));
   const noteLookup = keyBy(noteInfos, (n) => n.noteId);
 
-  return cardInfos.map((cardInfo) => ({
-    ...cardInfo,
-    reviews: cardReviews[cardInfo.cardId],
-    tags: noteLookup[cardInfo.note].tags.filter(
-      (t) => !t.startsWith("leetcode::lvl")
-    ),
-  }));
+  return cardInfos.map(
+    (cardInfo) =>
+      ({
+        ...cardInfo,
+        reviews: cardReviews[cardInfo.cardId],
+        tags: noteLookup[cardInfo.note].tags.filter(
+          (t) => !t.startsWith("leetcode::lvl")
+        ),
+      } as TCard)
+  );
 };

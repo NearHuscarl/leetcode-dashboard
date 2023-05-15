@@ -49,3 +49,13 @@ export const getReviewResult = (review: TCardReview) => {
       return "easy";
   }
 };
+
+// Negative = seconds, positive = days
+// https://github.com/ankidroid/Anki-Android/wiki/Database-Structure#cards
+export const getIntervalTime = (interval: number) => {
+  if (interval < 0) {
+    return -interval * 1000;
+  } else {
+    return interval * 1000 * 60 * 60 * 24;
+  }
+};
