@@ -45,9 +45,19 @@ const reviewResultColors: Record<"wrong" | "hard" | "ok" | "easy", string> = {
 const cardTypeColors: Record<string, string> = {
   New: lightBlue[500],
   Learning: orange[500],
-  Review: lightGreen[500],
+  Young: lightGreen[500],
+  Mature: green[500],
   Relearning: red[500],
   Unknown: grey[500],
+};
+// use in sorting
+const cardTypePriority: Record<string, number> = {
+  New: 0,
+  Learning: 1,
+  Relearning: 2,
+  Young: 3,
+  Mature: 4,
+  Unknown: 5,
 };
 const dateNow = Date.now();
 
@@ -80,20 +90,27 @@ const columns: GridColDef[] = [
     headerName: "Type",
     width: 120,
     sortable: true,
-    valueGetter(params) {
+    valueGetter(params: GridValueGetterParams<TCard, TCard["type"]>) {
       switch (params.value) {
         case 0:
           return "New";
         case 1:
           return "Learning";
         case 2:
-          return "Review";
+          const interval = getIntervalTime(params.row.reviews.at(-1)?.ivl!);
+          // A mature card is one that has an interval of 21 days or greater.
+          // https://docs.ankiweb.net/getting-started.html#cards
+          if (interval / 1000 / 60 / 60 / 24 >= 21) {
+            return "Mature";
+          }
+          return "Young";
         case 3:
           return "Relearning";
         default:
           return "Unknown";
       }
     },
+    sortComparator: (v1, v2) => cardTypePriority[v1] - cardTypePriority[v2],
     renderCell: (params: GridRenderCellParams<any, string>) => {
       if (!params.value) {
         return null;
@@ -205,6 +222,7 @@ const columns: GridColDef[] = [
     field: "reviews",
     headerName: "Reviews",
     width: 70,
+    sortComparator: (v1, v2) => v1.length - v2.length,
     renderCell: (params: GridRenderCellParams<any, TCardReview[]>) => {
       if (!params.value) {
         return null;
