@@ -20,10 +20,12 @@ import GppBadIcon from "@mui/icons-material/GppBad";
 import GppMaybeIcon from "@mui/icons-material/GppMaybe";
 import GppGoodIcon from "@mui/icons-material/GppGood";
 import isNil from "lodash/isNil";
-import { TCard, useCards } from "app/api/deck";
+import { TCard } from "app/api/deck";
 import { TCardReview } from "app/api/stats";
 import { getIntervalTime, getReviewResult } from "app/helpers/stats";
-import { TLeetcode, useLeetcodeProblems } from "app/api/leetcode";
+import { TLeetcode } from "app/api/leetcode";
+import { useProblems } from "app/services/problems";
+import { getCardType } from "app/helpers/card";
 
 declare global {
   interface Array<T> {
@@ -90,25 +92,8 @@ const columns: GridColDef[] = [
     headerName: "Type",
     width: 120,
     sortable: true,
-    valueGetter(params: GridValueGetterParams<TCard, TCard["type"]>) {
-      switch (params.value) {
-        case 0:
-          return "New";
-        case 1:
-          return "Learning";
-        case 2:
-          const interval = getIntervalTime(params.row.reviews.at(-1)?.ivl!);
-          // A mature card is one that has an interval of 21 days or greater.
-          // https://docs.ankiweb.net/getting-started.html#cards
-          if (interval / 1000 / 60 / 60 / 24 >= 21) {
-            return "Mature";
-          }
-          return "Young";
-        case 3:
-          return "Relearning";
-        default:
-          return "Unknown";
-      }
+    valueGetter(params: GridValueGetterParams<TCard>) {
+      return getCardType(params.row);
     },
     sortComparator: (v1, v2) => cardTypePriority[v1] - cardTypePriority[v2],
     renderCell: (params: GridRenderCellParams<any, string>) => {
@@ -277,15 +262,7 @@ const columns: GridColDef[] = [
 ];
 
 export const ProblemDataGrid = () => {
-  const { data: leetcodes = {} } = useLeetcodeProblems();
-  const { data: cards = [] } = useCards();
-
-  const rows = cards.map((card) => {
-    return {
-      ...card,
-      leetcode: leetcodes[card.leetcodeId],
-    };
-  });
+  const rows = useProblems();
 
   return (
     <DataGrid
