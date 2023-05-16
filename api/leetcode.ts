@@ -9,7 +9,8 @@ export default async function handler(
   response.setHeader("Access-Control-Allow-Origin", "*");
 
   const limit = Number(request.query.limit) ?? 100;
-  const problems = await getProblems(limit);
+  const skip = Number(request.query.skip) ?? 0;
+  const problems = await getProblems(limit, skip);
 
   response.status(200).json({
     problems,

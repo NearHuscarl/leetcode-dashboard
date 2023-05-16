@@ -1,7 +1,8 @@
 import { queryLeetcode } from "./queryLeetcode.js";
 
-type TQueryLcProblemsProps = {
+type TQueryProblemsProps = {
   limit: number;
+  skip?: number;
 };
 
 export type TLcQuestion = {
@@ -17,7 +18,10 @@ export type TLcQuestion = {
   }[];
 };
 
-export const queryProblems = async ({ limit }: TQueryLcProblemsProps) => {
+export const queryProblems = async ({
+  limit,
+  skip = 0,
+}: TQueryProblemsProps) => {
   const result = await queryLeetcode({
     query: `
 query problemsetQuestionList($categorySlug: String, $limit: Int, $skip: Int, $filters: QuestionListFilterInput) {
@@ -45,7 +49,7 @@ query problemsetQuestionList($categorySlug: String, $limit: Int, $skip: Int, $fi
 `,
     variables: {
       categorySlug: "",
-      skip: 0,
+      skip,
       limit,
       filters: {},
     },

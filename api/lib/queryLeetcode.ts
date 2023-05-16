@@ -5,22 +5,23 @@ type TQueryLeetcodeProps = {
   variables: object;
 };
 
-export function queryLeetcode<T>(props: TQueryLeetcodeProps): Promise<T> {
-  const { query, variables = {}, ...rest } = props;
+export async function queryLeetcode<T>(props: TQueryLeetcodeProps): Promise<T> {
+  try {
+    const { query, variables = {}, ...rest } = props;
+    const r = await fetch("https://leetcode.com/graphql", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ query, variables, ...rest }),
+    });
 
-  return fetch("https://leetcode.com/graphql", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ query, variables, ...rest }),
-  })
-    .then((r) => {
-      if (r.ok) {
-        return r.json() as any;
-      } else {
-        throw new Error("Failed to query GraphQL. HTTP " + r.status);
-      }
-    })
-    .catch((e) => console.log(e));
+    if (r.ok) {
+      return r.json() as any;
+    } else {
+      throw new Error("Failed to query GraphQL. HTTP " + r.status);
+    }
+  } catch (err) {
+    console.log(err);
+  }
 }

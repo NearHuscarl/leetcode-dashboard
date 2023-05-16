@@ -1,8 +1,8 @@
 import { queryProblems, TLcQuestion } from "./queryProblems.js";
 
-export const getProblems = async (limit: number) => {
+export const getProblems = async (limit: number, skip: number) => {
   console.log("fetching LC problems...");
-  const { questions, total } = await queryProblems({ limit });
+  const { questions, total } = await queryProblems({ limit, skip });
   console.log(`LC problems: ${total}`);
 
   const problemLookup: Record<string, TLcQuestion> = {};
