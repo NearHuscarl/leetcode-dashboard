@@ -151,9 +151,8 @@ const columns: GridColDef[] = [
         return null;
       }
       const value = params.formattedValue;
-      let dueStatus = "bad";
-      const isLate = value === "Now" || value.endsWith("ago");
       const distance = params.value - dateNow;
+      let dueStatus = "bad";
 
       // within 1 day
       if (Math.abs(distance) < 1000 * 60 * 60 * 24 || value === "Now") {
