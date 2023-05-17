@@ -26,7 +26,12 @@ yarn dev
 ```
 
 <!--
-Features
+--UI
+
+https://dribbble.com/shots/20325736-Sales-Components
+
+
+--Features
 
 LC solved over time
 - Line chart

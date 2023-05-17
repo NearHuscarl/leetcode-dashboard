@@ -9,7 +9,7 @@ import { useSelector } from "app/store/setup";
 export const TotalReviewHistory = () => {
   const problems = useProblems();
   const date = useSelector((state) => state.filter.filter.date);
-  const { data } = prepareChartData(problems, date);
+  const { data, ...stats } = prepareChartData(problems, date);
 
   return (
     <>
@@ -20,7 +20,7 @@ export const TotalReviewHistory = () => {
         alignItems="center"
         gap={1}
       >
-        <TotalReviewHistoryStats />
+        <TotalReviewHistoryStats {...stats} />
         <TotalReviewHistoryFilter />
       </Stack>
       <TotalReviewHistoryChart data={data} />

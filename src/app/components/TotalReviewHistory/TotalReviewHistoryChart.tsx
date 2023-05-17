@@ -25,7 +25,7 @@ const DashedLine = ({
         stroke={color}
         strokeWidth={4}
         style={
-          (id as string).endsWith("Review") ? { strokeDasharray: "12,3" } : {}
+          (id as string).endsWith("New") ? { strokeDasharray: "12,3" } : {}
         }
       />
     );
@@ -63,7 +63,7 @@ export const TotalReviewHistoryChart = (
   return (
     <ResponsiveLine
       data={data}
-      margin={{ top: 50, right: 40, bottom: 60, left: 50 }}
+      margin={{ top: 50, right: 40, bottom: 80, left: 30 }}
       curve="basis"
       theme={chartTheme}
       xScale={{ type: "point" }}
@@ -95,7 +95,7 @@ export const TotalReviewHistoryChart = (
           }
 
           return (
-            <text x={x} y={y + 20} {...(legendTextStyle as any)}>
+            <text x={x} y={y + 25} {...(legendTextStyle as any)}>
               {formattedDate}
             </text>
           );
@@ -103,9 +103,6 @@ export const TotalReviewHistoryChart = (
       }}
       axisLeft={{
         tickSize: 0,
-        legend: "Reviews",
-        legendOffset: -35,
-        legendPosition: "middle",
         tickValues: 5,
       }}
       layers={[
@@ -122,6 +119,7 @@ export const TotalReviewHistoryChart = (
       ]}
       // enableArea
       // areaOpacity={0.8}
+      enableSlices="x"
       lineWidth={3}
       enableGridX={false}
       gridYValues={5}

@@ -34,11 +34,7 @@ function createMap(
   return map;
 }
 
-export function prepareChartData(
-  cards: any[],
-  date: TDateFilter
-): { data: Serie[] } {
-  // Find the earliest and latest review dates
+export function prepareChartData(cards: any[], date: TDateFilter) {
   let minReviewDate = new Date();
   for (const card of cards) {
     for (const review of card.reviews) {
@@ -54,7 +50,7 @@ export function prepareChartData(
   // Get all the dates between the earliest and latest review dates
   const dates = getDatesBetween(minDate, maxDate);
   const map = createMap(cards);
-  const result: any[] = [];
+  const result: Serie[] = [];
   const categories = [
     "Easy - New",
     "Easy - Review",
@@ -65,7 +61,7 @@ export function prepareChartData(
   ];
 
   for (const category of categories) {
-    const data: any[] = [];
+    const data: Serie["data"] = [];
     let total = 0;
 
     for (const date of dates) {
@@ -76,7 +72,29 @@ export function prepareChartData(
     result.push({ id: category, data });
   }
 
+  let totalProblems = 0;
+  let totalProblemsThisWeek = 0;
+  let totalReviews = 0;
+  let totalReviewsThisWeek = 0;
+  result.forEach((d) => {
+    const isReview = (d.id as string).endsWith("- Review");
+    const todayCount = (d.data.at(-1)?.y as number) ?? 0;
+    const lastSevenDaysCount = (d.data.at(-1 - 7)?.y as number) ?? 0;
+
+    if (isReview) {
+      totalReviews += todayCount;
+      totalReviewsThisWeek += todayCount - lastSevenDaysCount ?? 0;
+    } else {
+      totalProblems += todayCount;
+      totalProblemsThisWeek += todayCount - lastSevenDaysCount ?? 0;
+    }
+  });
+
   return {
+    totalProblems,
+    totalProblemsThisWeek,
+    totalReviews,
+    totalReviewsThisWeek,
     data: result,
   };
 }
