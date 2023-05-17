@@ -1,5 +1,6 @@
 import { PropsWithChildren } from "react";
-import { indigo } from "@mui/material/colors";
+import grey from "@mui/material/colors/grey";
+import indigo from "@mui/material/colors/indigo";
 import {
   ThemeProvider as ThemeProvider2,
   createTheme,
@@ -15,6 +16,24 @@ export const theme = createTheme({
     },
   },
   components: {
+    MuiCard: {
+      defaultProps: {
+        elevation: 0,
+      },
+      styleOverrides: {
+        root: {
+          borderRadius: 8,
+          boxShadow: `rgba(0, 0, 0, 0.1) 0px 10px 50px`,
+        },
+      },
+    },
+    MuiPaper: {
+      styleOverrides: {
+        root: {
+          boxShadow: `rgba(0, 0, 0, 0.1) 0px 10px 50px`,
+        },
+      },
+    },
     MuiIconButton: {
       defaultProps: {
         size: "small",
@@ -27,7 +46,21 @@ export const theme = createTheme({
     },
     MuiTextField: {
       defaultProps: {
+        variant: "outlined",
         size: "small",
+      },
+      styleOverrides: {
+        root: {
+          backgroundColor: grey[100],
+          borderRadius: 4,
+          transition: "0.2s background-color ease-in-out",
+          "&:hover": {
+            backgroundColor: grey[200],
+          },
+          "& fieldset": {
+            border: "none",
+          },
+        },
       },
     },
     MuiTab: {

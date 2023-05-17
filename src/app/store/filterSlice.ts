@@ -3,9 +3,11 @@ import type { PayloadAction } from "@reduxjs/toolkit";
 import { persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 
+export type TDateFilter = "week" | "month" | "quarter" | "year" | "all";
+
 export interface TFilterState {
   filter: {
-    date: "week" | "month" | "quarter" | "year" | "all";
+    date: TDateFilter;
   };
 }
 
@@ -19,7 +21,7 @@ export const filterSlice = createSlice({
   name: "filter",
   initialState,
   reducers: {
-    setDate: (state, action: PayloadAction<TFilterState["filter"]["date"]>) => {
+    setDate: (state, action: PayloadAction<TDateFilter>) => {
       state.filter.date = action.payload;
     },
   },
