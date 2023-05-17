@@ -30,6 +30,9 @@ Features
 
 LC solved over time
 - Line chart
+- Filter
+  - Date: week, month, quarter, year, all
+- Summary: Total solved (increase this week), Total revision (increase this week)
 - X: time
 - Y: number of LC solved
 - Lines:
@@ -63,6 +66,12 @@ LC Problem Difficulty
 - Dot color: LC pattern
 - X: Interval
 - Y: Number of reviews
+
+Current retention rate: In circle percentage
+- Easy: percentage
+- Medium: percentage
+- Hard: percentage
+- Overall: percentage
 
 Current pattern covered
 - Sunburst chart

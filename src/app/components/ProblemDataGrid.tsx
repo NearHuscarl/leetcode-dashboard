@@ -26,6 +26,7 @@ import { getIntervalTime, getReviewResult } from "app/helpers/stats";
 import { TLeetcode } from "app/api/leetcode";
 import { useProblems } from "app/services/problems";
 import { getCardType } from "app/helpers/card";
+import { useSelector } from "app/store/setup";
 
 declare global {
   interface Array<T> {
@@ -262,7 +263,12 @@ const columns: GridColDef[] = [
 ];
 
 export const ProblemDataGrid = () => {
+  const view = useSelector((state) => state.global.view);
   const rows = useProblems();
+
+  if (view === "chart") {
+    return null;
+  }
 
   return (
     <DataGrid

@@ -1,12 +1,13 @@
-import { Box } from "@mui/material";
-import { ProblemDataGrid } from "app/components/ProblemDataGrid";
-import { ProblemHistoryChart } from "app/components/ProblemHistoryChart";
 import SpeedDial from "@mui/material/SpeedDial";
 import SpeedDialIcon from "@mui/material/SpeedDialIcon";
 import SpeedDialAction from "@mui/material/SpeedDialAction";
+import Box from "@mui/material/Box";
 import FileCopyIcon from "@mui/icons-material/FileCopyOutlined";
 import SaveIcon from "@mui/icons-material/Save";
-import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { ProblemDataGrid } from "app/components/ProblemDataGrid";
+import { Charts } from "./Charts";
+import { globalActions } from "./store/globalSlice";
 
 const actions = [
   { icon: <FileCopyIcon />, name: "Copy" },
@@ -14,27 +15,17 @@ const actions = [
 ];
 
 function App() {
-  const [isChart, setIsChart] = useState(false);
+  const dispatch = useDispatch();
 
   return (
     <Box sx={{ height: "95vh" }}>
-      <div
-        style={{
-          display: isChart ? "block" : "none",
-          height: 500,
-          width: 700,
-        }}
-      >
-        <ProblemHistoryChart />
-      </div>
-      <div style={{ display: !isChart ? "inline" : "none" }}>
-        <ProblemDataGrid />
-      </div>
+      <Charts />
+      <ProblemDataGrid />
       <SpeedDial
         ariaLabel="SpeedDial basic example"
         sx={{ position: "fixed", bottom: 16, right: 16 }}
         icon={<SpeedDialIcon />}
-        onClick={() => setIsChart((c) => !c)}
+        onClick={() => dispatch(globalActions.toggleView())}
       >
         {actions.map((action) => (
           <SpeedDialAction

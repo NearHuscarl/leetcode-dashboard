@@ -1,20 +1,8 @@
 import { CustomLayerProps, ResponsiveLine } from "@nivo/line";
 import { TCardModel, useProblems } from "app/services/problems";
-import format from "date-fns/format";
-import differenceInDays from "date-fns/differenceInDays";
-import { amber, lightGreen, red } from "@mui/material/colors";
-
-// A helper function that returns an array of dates between two dates
-function getDatesBetween(start: Date, end: Date): string[] {
-  const dates: string[] = [];
-  const diff = differenceInDays(end, start);
-  for (let i = 0; i <= diff; i++) {
-    const date = new Date(start);
-    date.setDate(date.getDate() + i);
-    dates.push(format(date, "yyyy-MM-dd"));
-  }
-  return dates;
-}
+import { amber, grey, lightGreen, red } from "@mui/material/colors";
+import { formatDate, getDatesBetween } from "app/helpers/date";
+import { Theme } from "@nivo/core";
 
 type TDate = string;
 type TCategory = string;
@@ -30,7 +18,7 @@ function createMap(
 
     for (let i = 0; i < card.reviews.length; i++) {
       const review = card.reviews[i];
-      const date = format(review.id, "yyyy-MM-dd");
+      const date = formatDate(review.id);
       const submap = map[date];
       const isNewCard = i === 0;
       const category = `${difficulty} - ${isNewCard ? "New" : "Review"}`;
@@ -116,6 +104,24 @@ const DashedLine = ({
   });
 };
 
+const legendTextStyle: Partial<React.CSSProperties> = {
+  fill: grey[400],
+  fontSize: 13,
+  fontFamily: "sans-serif",
+};
+
+const chartTheme: Theme = {
+  axis: {
+    ticks: { text: legendTextStyle },
+    legend: { text: legendTextStyle },
+  },
+  tooltip: {
+    container: {
+      fontFamily: "monospace",
+    },
+  },
+};
+
 export const ProblemHistoryChart = () => {
   const problems = useProblems();
   const chartData = prepareChartData(problems);
@@ -123,9 +129,10 @@ export const ProblemHistoryChart = () => {
   return (
     <ResponsiveLine
       data={chartData}
-      margin={{ top: 50, right: 110, bottom: 50, left: 60 }}
-      xScale={{ type: "point" }}
+      margin={{ top: 50, right: 40, bottom: 50, left: 60 }}
       curve="basis"
+      theme={chartTheme}
+      xScale={{ type: "point" }}
       yScale={{
         type: "linear",
         min: "auto",
@@ -143,11 +150,21 @@ export const ProblemHistoryChart = () => {
       axisRight={null}
       axisBottom={{
         tickSize: 0,
-        ariaHidden: true,
-        format: () => "",
-        legend: "Time",
-        legendOffset: 15,
         legendPosition: "middle",
+        renderTick(props) {
+          const { x, y, value } = props;
+
+          // Only show the tick labels of the first month
+          if (value.split("-")[2] !== "01") {
+            return <></>;
+          }
+
+          return (
+            <text x={x} y={y + 20} {...(legendTextStyle as any)}>
+              {formatDate(new Date(value), "MMM")}
+            </text>
+          );
+        },
       }}
       axisLeft={{
         tickSize: 0,
@@ -175,22 +192,6 @@ export const ProblemHistoryChart = () => {
       gridYValues={5}
       enablePoints={false}
       useMesh
-      legends={[
-        {
-          anchor: "right",
-          direction: "column",
-          justify: false,
-          translateX: 100,
-          translateY: 0,
-          itemsSpacing: 0,
-          itemDirection: "left-to-right",
-          itemWidth: 95,
-          itemHeight: 16,
-          itemOpacity: 0.75,
-          symbolSize: 12,
-          symbolShape: "circle",
-        },
-      ]}
     />
   );
 };
