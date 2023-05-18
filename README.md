@@ -36,14 +36,14 @@ https://dribbble.com/shots/20325736-Sales-Components
 LC solved over time
 - Line chart
 - Filter
-  - Date: week, month, quarter, year, all
-- Summary: Total solved (increase this week), Total revision (increase this week)
-- X: time
-- Y: number of LC solved
+  + Date: week, month, quarter, year, all
++ Summary: Total solved (increase this week), Total reviews (increase this week)
++ X: time
++ Y: number of LC solved
 - Lines:
   - Difficulty (Easy, Medium, Hard)
   - Pattern (DP, BFS, DFS, etc.)
-  - Estimated deadlines https://nivo.rocks/storybook/?path=/story/line--highlighting-negative-values
+  * Estimated deadlines https://nivo.rocks/storybook/?path=/story/line--highlighting-negative-values
 
 Card type over time
 - Stream https://nivo.rocks/storybook/?path=/story/stream--basic

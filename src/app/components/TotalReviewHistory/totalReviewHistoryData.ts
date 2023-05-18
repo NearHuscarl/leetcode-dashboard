@@ -7,9 +7,7 @@ type TDate = string;
 type TCategory = string;
 
 // A helper function that preprocesses the cards array and creates a map that stores the number of problems solved for each date and category
-function createMap(
-  cards: TCardModel[]
-): Record<TDate, Record<TCategory, number>> {
+function createMap(cards: TCardModel[]) {
   const map: Record<TDate, Record<TCategory, number>> = {};
 
   for (const card of cards) {
@@ -20,8 +18,17 @@ function createMap(
       const date = formatDate(review.id);
       const submap = map[date];
       const isNewCard = i === 0;
-      const category = `${difficulty} - ${isNewCard ? "New" : "Review"}`;
 
+      if (isNewCard) {
+        const category = `${difficulty} Problems`;
+        if (submap) {
+          submap[category] = (submap[category] ?? 0) + 1;
+        } else {
+          map[date] = { [category]: 1 };
+        }
+      }
+
+      const category = `${difficulty} Reviews`;
       if (submap) {
         submap[category] = (submap[category] ?? 0) + 1;
       } else {
@@ -34,7 +41,7 @@ function createMap(
   return map;
 }
 
-export function prepareChartData(cards: any[], date: TDateFilter) {
+export function prepareChartData(cards: TCardModel[], date: TDateFilter) {
   let minReviewDate = new Date();
   for (const card of cards) {
     for (const review of card.reviews) {
@@ -52,12 +59,12 @@ export function prepareChartData(cards: any[], date: TDateFilter) {
   const map = createMap(cards);
   const result: Serie[] = [];
   const categories = [
-    "Easy - New",
-    "Easy - Review",
-    "Medium - New",
-    "Medium - Review",
-    "Hard - New",
-    "Hard - Review",
+    "Easy Problems",
+    "Easy Reviews",
+    "Medium Problems",
+    "Medium Reviews",
+    "Hard Problems",
+    "Hard Reviews",
   ];
 
   for (const category of categories) {
@@ -77,7 +84,7 @@ export function prepareChartData(cards: any[], date: TDateFilter) {
   let totalReviews = 0;
   let totalReviewsThisWeek = 0;
   result.forEach((d) => {
-    const isReview = (d.id as string).endsWith("- Review");
+    const isReview = (d.id as string).endsWith("Reviews");
     const todayCount = (d.data.at(-1)?.y as number) ?? 0;
     const lastSevenDaysCount = (d.data.at(-1 - 7)?.y as number) ?? 0;
 

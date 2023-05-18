@@ -3,7 +3,7 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Stack from "@mui/material/Stack";
 import { TotalReviewHistory } from "app/components/TotalReviewHistory";
-import { RevisionCalendar } from "./components/RevisionCalendar";
+import { ReviewCalendar } from "./components/ReviewCalendar";
 import { useSelector } from "app/store/setup";
 
 const ChartCard = ({ children }: PropsWithChildren) => {
@@ -27,7 +27,7 @@ export const Charts = () => {
         <TotalReviewHistory />
       </ChartCard>
       <ChartCard>
-        <RevisionCalendar />
+        <ReviewCalendar />
       </ChartCard>
     </Stack>
   );

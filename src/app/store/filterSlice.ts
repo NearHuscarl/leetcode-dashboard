@@ -6,14 +6,20 @@ import storage from "redux-persist/lib/storage";
 export type TDateFilter = "week" | "month" | "quarter" | "year" | "all";
 
 export interface TFilterState {
-  filter: {
+  lineChart: {
     date: TDateFilter;
+  };
+  calendar: {
+    year: number;
   };
 }
 
 const initialState: TFilterState = {
-  filter: {
+  lineChart: {
     date: "quarter",
+  },
+  calendar: {
+    year: new Date().getFullYear(),
   },
 };
 
@@ -21,8 +27,11 @@ export const filterSlice = createSlice({
   name: "filter",
   initialState,
   reducers: {
-    setDate: (state, action: PayloadAction<TDateFilter>) => {
-      state.filter.date = action.payload;
+    setLineChartDate: (state, action: PayloadAction<TDateFilter>) => {
+      state.lineChart.date = action.payload;
+    },
+    setCalendarYear: (state, action: PayloadAction<number>) => {
+      state.calendar.year = action.payload;
     },
   },
 });

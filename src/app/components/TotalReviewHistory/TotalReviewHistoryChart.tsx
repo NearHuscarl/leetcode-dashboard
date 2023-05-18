@@ -25,7 +25,7 @@ const DashedLine = ({
         stroke={color}
         strokeWidth={4}
         style={
-          (id as string).endsWith("New") ? { strokeDasharray: "12,3" } : {}
+          (id as string).endsWith("Problems") ? { strokeDasharray: "12,3" } : {}
         }
       />
     );
