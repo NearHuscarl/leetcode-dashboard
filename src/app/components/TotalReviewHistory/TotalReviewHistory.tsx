@@ -20,7 +20,7 @@ export const TotalReviewHistory = () => {
         alignItems="center"
         gap={1}
       >
-        <TotalReviewHistoryStats {...stats} />
+        <TotalReviewHistoryStats {...stats} date={date} />
         <TotalReviewHistoryFilter sx={{ alignSelf: "flex-start" }} />
       </Stack>
       <TotalReviewHistoryChart data={data} />

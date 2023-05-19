@@ -16,24 +16,16 @@ function createMap(cards: TCardModel[]) {
     for (let i = 0; i < card.reviews.length; i++) {
       const review = card.reviews[i];
       const date = formatDate(review.id);
-      const submap = map[date];
+      const submap = map[date] ?? (map[date] = {}); // Initialize the submap if it doesn't exist
       const isNewCard = i === 0;
 
       if (isNewCard) {
-        const category = `${difficulty} Problems`;
-        if (submap) {
-          submap[category] = (submap[category] ?? 0) + 1;
-        } else {
-          map[date] = { [category]: 1 };
-        }
+        const problemCategory = `${difficulty} Problems`;
+        submap[problemCategory] = (submap[problemCategory] ?? 0) + 1;
       }
 
-      const category = `${difficulty} Reviews`;
-      if (submap) {
-        submap[category] = (submap[category] ?? 0) + 1;
-      } else {
-        map[date] = { [category]: 1 };
-      }
+      const reviewCategory = `${difficulty} Reviews`;
+      submap[reviewCategory] = (submap[reviewCategory] ?? 0) + 1;
     }
   }
 
