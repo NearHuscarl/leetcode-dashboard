@@ -27,6 +27,7 @@ import { TLeetcode } from "app/api/leetcode";
 import { useProblems } from "app/services/problems";
 import { getCardType } from "app/helpers/card";
 import { useSelector } from "app/store/setup";
+import { LEETCODE_BASE_URL } from "app/settings";
 
 declare global {
   interface Array<T> {
@@ -79,10 +80,7 @@ const columns: GridColDef[] = [
         return null;
       }
       return (
-        <Link
-          href={`https://leetcode.com/problems/${params.value}`}
-          underline="none"
-        >
+        <Link href={`${LEETCODE_BASE_URL}/${params.value}`} underline="none">
           {params.row.leetcode?.title ?? params.value}
         </Link>
       );

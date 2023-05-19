@@ -1,7 +1,15 @@
 import { TCard } from "app/api/deck";
 import { getIntervalTime } from "./stats";
 
-export const getCardType = (card: TCard) => {
+export type TCardType =
+  | "New"
+  | "Learning"
+  | "Young"
+  | "Mature"
+  | "Relearning"
+  | "Unknown";
+
+export const getCardType = (card: TCard): TCardType => {
   switch (card.type) {
     case 0:
       return "New";
@@ -20,4 +28,32 @@ export const getCardType = (card: TCard) => {
     default:
       return "Unknown";
   }
+};
+
+export const getRetentionRate = (card: TCard): number => {
+  const successReviews = card.reviews.filter((r) => r.ease > 1).length;
+
+  return successReviews / card.reviews.length;
+};
+
+export const getEaseRate = (card: TCard): number => {
+  let score = 0;
+
+  for (const review of card.reviews) {
+    switch (review.ease) {
+      case 1:
+        score += 0;
+        break;
+      case 2:
+        score += 0.5;
+        break;
+      case 3:
+        score += 0.75;
+        break;
+      case 4:
+        score += 1;
+        break;
+    }
+  }
+  return score / card.reviews.length;
 };
