@@ -1,3 +1,4 @@
+import { SxProps } from "@mui/material";
 import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
 import { useSelector } from "app/store/setup";
@@ -10,14 +11,14 @@ const options = [...new Array(5).keys()].map((i) => ({
   label: thisYear - i,
 }));
 
-export const ReviewCalendarFilter = () => {
+export const ReviewCalendarFilter = ({ sx }: { sx: SxProps }) => {
   const year = useSelector((state) => state.filter.calendar.year);
   const dispatch = useDispatch();
 
   return (
     <TextField
       select
-      sx={{ width: 120 }}
+      sx={{ width: 120, ...sx }}
       value={year}
       onChange={(e) =>
         dispatch(filterActions.setCalendarYear(e.target.value as any))
