@@ -2,7 +2,7 @@ import { TCard, useCards } from "app/api/deck";
 import { TLeetcode, useLeetcodeProblems } from "app/api/leetcode";
 
 export type TCardModel = TCard & {
-  leetcode: TLeetcode;
+  leetcode?: TLeetcode;
 };
 
 export const useProblems = (): TCardModel[] => {

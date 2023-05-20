@@ -11,6 +11,8 @@ function createMap(cards: TCardModel[]) {
   const map: Record<TDate, Record<TCategory, number>> = {};
 
   for (const card of cards) {
+    if (!card.leetcode) continue;
+
     const { difficulty } = card.leetcode;
 
     for (let i = 0; i < card.reviews.length; i++) {

@@ -22,10 +22,10 @@ import GppGoodIcon from "@mui/icons-material/GppGood";
 import isNil from "lodash/isNil";
 import { TCard } from "app/api/deck";
 import { TCardReview } from "app/api/stats";
-import { getIntervalTime, getReviewResult } from "app/helpers/stats";
+import { getReviewResult } from "app/helpers/stats";
 import { TLeetcode } from "app/api/leetcode";
 import { useProblems } from "app/services/problems";
-import { getCardType } from "app/helpers/card";
+import { getCardType, getNextReviewTime } from "app/helpers/card";
 import { useSelector } from "app/store/setup";
 import { LEETCODE_BASE_URL } from "app/settings";
 
@@ -132,19 +132,10 @@ const columns: GridColDef[] = [
     headerName: "Due",
     width: 140,
     valueGetter: (params: GridValueGetterParams<TCard, number>) => {
-      // there are 2 interval properties:
-      // - card.interval: the next interval, if the card is overdue, then this is 0
-      // - card.reviews.at(-1).ivl: the next interval
-      const lastReview = params.row.reviews.at(-1);
-      if (!lastReview) return null;
-
-      const { id: reviewDate, ivl } = lastReview;
-      const interval = getIntervalTime(ivl!);
-
-      return reviewDate + interval;
+      return getNextReviewTime(params.row);
     },
     valueFormatter(params) {
-      if (params.value === null) return "Now";
+      if (params.value === 0) return "Now";
       return formatDistanceToNowStrict(params.value, { addSuffix: true });
     },
     renderCell: (params) => {

@@ -30,6 +30,19 @@ export const getCardType = (card: TCard): TCardType => {
   }
 };
 
+export const getNextReviewTime = (card: TCard): number => {
+  const lastReview = card.reviews.at(-1);
+  if (!lastReview) return 0;
+
+  // there are 2 interval properties:
+  // - card.interval: the next interval, if the card is overdue, then this is 0
+  // - card.reviews.at(-1).ivl: the next interval
+  const { id: reviewDate, ivl } = lastReview;
+  const interval = getIntervalTime(ivl!);
+
+  return reviewDate + interval;
+};
+
 export const getRetentionRate = (card: TCard): number => {
   const successReviews = card.reviews.filter((r) => r.ease > 1).length;
 
