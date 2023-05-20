@@ -8,7 +8,6 @@ import formatDistanceToNowStrict from "date-fns/formatDistanceToNowStrict";
 import { IconButton, Chip, Link } from "@mui/material";
 import red from "@mui/material/colors/red";
 import orange from "@mui/material/colors/orange";
-import yellow from "@mui/material/colors/yellow";
 import lightGreen from "@mui/material/colors/lightGreen";
 import green from "@mui/material/colors/green";
 import lightBlue from "@mui/material/colors/lightBlue";
@@ -20,26 +19,19 @@ import GppMaybeIcon from "@mui/icons-material/GppMaybe";
 import GppGoodIcon from "@mui/icons-material/GppGood";
 import { TCard } from "app/api/deck";
 import { TCardReview } from "app/api/stats";
-import { getReviewResult } from "app/helpers/stats";
 import { TLeetcode } from "app/api/leetcode";
 import { useProblems } from "app/services/problems";
 import { getCardType, getNextReviewTime } from "app/helpers/card";
 import { useSelector } from "app/store/setup";
 import { LEETCODE_BASE_URL } from "app/settings";
 import { AcRateIndicator } from "./AcRateIndicator";
+import { ReviewStatus } from "./ReviewStatus";
 
 declare global {
   interface Array<T> {
     toReversed(): Array<T>;
   }
 }
-
-const reviewResultColors: Record<"wrong" | "hard" | "ok" | "easy", string> = {
-  easy: lightGreen[500],
-  ok: yellow[500],
-  hard: orange[500],
-  wrong: red[500],
-};
 
 const cardTypeColors: Record<string, string> = {
   New: lightBlue[500],
@@ -179,34 +171,7 @@ const columns: GridColDef[] = [
     width: 70,
     sortComparator: (v1, v2) => v1.length - v2.length,
     renderCell: (params: GridRenderCellParams<any, TCardReview[]>) => {
-      if (!params.value) {
-        return null;
-      }
-      const maxReviews = 6;
-      const reviews = params.value
-        .toReversed()
-        .slice(0, maxReviews)
-        .map((r) => reviewResultColors[getReviewResult(r)]);
-
-      for (let i = reviews.length; i < maxReviews; i++) {
-        reviews.push(grey[300]);
-      }
-
-      return (
-        <div style={{ display: "flex", gap: 4 }}>
-          {reviews.map((color, i) => (
-            <div
-              key={i}
-              style={{
-                width: 8,
-                height: 8,
-                borderRadius: "50%",
-                backgroundColor: color,
-              }}
-            />
-          ))}
-        </div>
-      );
+      return <ReviewStatus reviews={params.value} />;
     },
   },
   {

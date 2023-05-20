@@ -1,8 +1,9 @@
-import { TCardType, getCardType, getEaseRate } from "app/helpers/card";
-import { TCardModel } from "app/services/problems";
-import { TSwarmPlotDateFilter } from "app/store/filterSlice";
 import subWeeks from "date-fns/subWeeks";
 import subMonths from "date-fns/subMonths";
+import { TSwarmPlotDateFilter } from "app/store/filterSlice";
+import { TCardType, getCardType, getEaseRate } from "app/helpers/card";
+import { TCardModel } from "app/services/problems";
+import { TCardReview } from "app/api/stats";
 
 export type TSwarmPlotDatum = {
   group: string;
@@ -10,6 +11,7 @@ export type TSwarmPlotDatum = {
   value: number;
   volume: number;
   acRate: number;
+  reviews: TCardReview[];
 };
 
 const typePriority = {
@@ -57,6 +59,7 @@ export function prepareChartData(
       acRate: card.leetcode?.acRate ?? 0,
       group: type,
       volume: card.reviews.length,
+      reviews: card.reviews,
     });
   }
 
