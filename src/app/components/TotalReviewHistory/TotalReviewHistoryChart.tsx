@@ -1,5 +1,12 @@
+import Card from "@mui/material/Card";
+import Stack from "@mui/material/Stack";
 import { amber, grey, lightGreen, red } from "@mui/material/colors";
-import { CustomLayerProps, ResponsiveLine, Serie } from "@nivo/line";
+import {
+  CustomLayerProps,
+  ResponsiveLine,
+  Serie,
+  SliceTooltipProps,
+} from "@nivo/line";
 import { Theme } from "@nivo/core";
 import { getTickFormattedDate } from "app/helpers/chart";
 
@@ -43,11 +50,67 @@ const chartTheme: Theme = {
     ticks: { text: legendTextStyle },
     legend: { text: legendTextStyle },
   },
-  tooltip: {
-    container: {
-      fontFamily: "monospace",
-    },
-  },
+};
+
+const createIcon = (color: string, dashed: boolean) => (
+  <div
+    style={{
+      width: 14,
+      height: 14,
+      borderRadius: "50%",
+      border: `2px solid ${color}`,
+      borderStyle: dashed ? "dotted" : "solid",
+    }}
+  />
+);
+const category2Icon = {
+  "Easy Problems": createIcon(lightGreen[500], true),
+  "Medium Problems": createIcon(amber[500], true),
+  "Hard Problems": createIcon(red[500], true),
+  "Easy Reviews": createIcon(lightGreen[500], false),
+  "Medium Reviews": createIcon(amber[500], false),
+  "Hard Reviews": createIcon(red[500], false),
+};
+
+const CustomTooltip = (props: SliceTooltipProps) => {
+  const { slice } = props;
+
+  return (
+    <Card sx={{ p: 1.5 }}>
+      <div
+        style={{
+          color: grey[500],
+          fontWeight: 500,
+          fontSize: 14,
+          marginBottom: 6,
+        }}
+      >
+        {slice.points[0].data.xFormatted}
+      </div>
+      <Stack gap={0.2}>
+        {slice.points.map(({ serieId, data, color }) => (
+          <div
+            key={serieId}
+            style={{
+              fontSize: 12,
+              display: "flex",
+              gap: 4,
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <div style={{ display: "flex", gap: 4, alignItems: "center" }}>
+              {category2Icon[serieId as keyof typeof category2Icon]}
+              <div style={{ color, width: 130 }}>{serieId}</div>
+            </div>
+            <div style={{ textAlign: "right", fontWeight: 600 }}>
+              {data.yFormatted}
+            </div>
+          </div>
+        ))}
+      </Stack>
+    </Card>
+  );
 };
 
 type TTotalReviewHistoryChartProps = {
@@ -72,14 +135,23 @@ export const TotalReviewHistoryChart = (
         min: "auto",
         max: "auto",
       }}
-      colors={[
-        lightGreen[500],
-        lightGreen[500],
-        amber[500],
-        amber[500],
-        red[500],
-        red[500],
-      ]}
+      enableSlices="x"
+      sliceTooltip={CustomTooltip}
+      colors={(data) => {
+        switch (data.id) {
+          case "Hard Reviews":
+          case "Hard Problems":
+            return red[500];
+          case "Medium Reviews":
+          case "Medium Problems":
+            return amber[500];
+          case "Easy Reviews":
+          case "Easy Problems":
+            return lightGreen[500];
+        }
+
+        return grey[500];
+      }}
       axisTop={null}
       axisRight={null}
       axisBottom={{
@@ -119,7 +191,6 @@ export const TotalReviewHistoryChart = (
       ]}
       // enableArea
       // areaOpacity={0.8}
-      enableSlices="x"
       lineWidth={3}
       enableGridX={false}
       gridYValues={5}
