@@ -4,9 +4,8 @@ import {
   GridRenderCellParams,
   GridValueGetterParams,
 } from "@mui/x-data-grid";
-import { transform } from "framer-motion";
 import formatDistanceToNowStrict from "date-fns/formatDistanceToNowStrict";
-import { IconButton, Chip, LinearProgress, Link, alpha } from "@mui/material";
+import { IconButton, Chip, Link } from "@mui/material";
 import red from "@mui/material/colors/red";
 import orange from "@mui/material/colors/orange";
 import yellow from "@mui/material/colors/yellow";
@@ -19,7 +18,6 @@ import OndemandVideoIcon from "@mui/icons-material/OndemandVideo";
 import GppBadIcon from "@mui/icons-material/GppBad";
 import GppMaybeIcon from "@mui/icons-material/GppMaybe";
 import GppGoodIcon from "@mui/icons-material/GppGood";
-import isNil from "lodash/isNil";
 import { TCard } from "app/api/deck";
 import { TCardReview } from "app/api/stats";
 import { getReviewResult } from "app/helpers/stats";
@@ -28,16 +26,13 @@ import { useProblems } from "app/services/problems";
 import { getCardType, getNextReviewTime } from "app/helpers/card";
 import { useSelector } from "app/store/setup";
 import { LEETCODE_BASE_URL } from "app/settings";
+import { AcRateIndicator } from "./AcRateIndicator";
 
 declare global {
   interface Array<T> {
     toReversed(): Array<T>;
   }
 }
-const getAcRateColor = transform(
-  [30, 60, 80],
-  [red[500], yellow[600], green[500]]
-);
 
 const reviewResultColors: Record<"wrong" | "hard" | "ok" | "easy", string> = {
   easy: lightGreen[500],
@@ -175,22 +170,7 @@ const columns: GridColDef[] = [
       return params.value?.acRate;
     },
     renderCell: (params) => {
-      if (isNil(params.value)) return null;
-      return (
-        <LinearProgress
-          variant="determinate"
-          sx={{
-            width: "100%",
-            height: 10,
-            borderRadius: 3,
-            backgroundColor: alpha(getAcRateColor(params.value), 0.2),
-            "& > span": {
-              backgroundColor: getAcRateColor(params.value),
-            },
-          }}
-          value={params.value}
-        />
-      );
+      return <AcRateIndicator value={params.value} />;
     },
   },
   {
