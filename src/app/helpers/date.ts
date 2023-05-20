@@ -6,6 +6,10 @@ export const formatDate = (date: number | Date, dateFormat = "yyyy-MM-dd") => {
   return format(date, dateFormat);
 };
 
+export const formatDisplayedDate = (date: number | Date) => {
+  return format(date, "EEEE, MMM d, yyyy");
+};
+
 // A helper function that returns an array of dates between two dates
 export function getDatesBetween(start: Date, end: Date): string[] {
   const dates: string[] = [];

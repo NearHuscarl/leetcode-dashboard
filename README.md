@@ -33,6 +33,19 @@ https://dribbble.com/shots/20325736-Sales-Components
 
 --Features
 
+Factor:
+- Number of problems
+- Number of reviews
+- Difficulty (Easy, Medium, Hard)
+- Pattern (DP, BFS, DFS, etc.)
+- Due status (due, near due, not due)
+- Card type (new, learning, review, young, mature)
+- Ease rate (total score of Again, Hard, Good, Easy)
+- Retention rate
+
+All Charts
+- Highlight nodes today, this week, this month
+
 LC solved over time
 - Line chart
 - Filter
@@ -46,25 +59,29 @@ LC solved over time
   * Estimated deadlines https://nivo.rocks/storybook/?path=/story/line--highlighting-negative-values
 
 Card type over time
-- Stream https://nivo.rocks/storybook/?path=/story/stream--basic
+- Bar
 - X: time
-- Y: Number of card type (new, learning, review)
+- Y: Number of card type in stack (new, learning, review)
 
 Card type now
 - Funnel
 - Color: Percentage of card type (new, learning, review)
 
 Revision History
-- Calendar
-- Each cell represents a day
-- Color shade: number of LC solved
-- Color: pattern
++ Calendar
++ Each cell represents a day
++ Color shade: number of LC solved
++ 2 charts: new problems and reviews
++ Streak days stats
+  - Tooltip to explain total number
+- Add due date as red square in the future
 
-New History
-- Calendar
-- Each cell represents a day
-- Color shade: number of LC solved
-- Color: pattern
+Upcoming Due Table
+- Click to see full table
+- Display upcoming leetcode problems
+
+Heatmap
+- Show correlation between number of reviews and review hours
 
 LC Problem Difficulty
 - ScatterPlot
