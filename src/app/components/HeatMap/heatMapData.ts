@@ -1,7 +1,6 @@
 import { HeatMapDatum, HeatMapSerie } from "@nivo/heatmap";
 import getHours from "date-fns/getHours";
 import { TDateFilter } from "app/store/filterSlice";
-import { TCardType } from "app/helpers/card";
 import { TCardModel } from "app/services/problems";
 import { formatDate, getDateStart } from "app/helpers/date";
 
@@ -57,7 +56,7 @@ const createSubmap = (): Record<TDay, number> =>
   }, {});
 
 // A helper function that preprocesses the cards array and creates a map that stores the number of problems solved for each date and category
-function createMap(cards: TCardModel[]) {
+function createMap(cards: TCardModel[], dateStart: Date) {
   const map: Record<THour, Record<TDay, number>> = hourKeys.reduce(
     (acc: any, hour) => {
       acc[hour] = createSubmap();
@@ -69,7 +68,10 @@ function createMap(cards: TCardModel[]) {
   for (const card of cards) {
     for (let i = 0; i < card.reviews.length; i++) {
       const review = card.reviews[i];
-      const hour = getHours(new Date(review.id));
+      const reviewDate = new Date(review.id);
+      if (reviewDate < dateStart) continue;
+
+      const hour = getHours(reviewDate);
       const hourKey = workingHour[hour];
 
       if (!hourKey) continue;
@@ -86,25 +88,27 @@ function createMap(cards: TCardModel[]) {
 
 export function prepareChartData(cards: TCardModel[], dateFilter: TDateFilter) {
   const data: HeatMapSerie<HeatMapDatum, {}>[] = [];
-  const types = new Set<TCardType>();
   const dateStart = getDateStart(dateFilter);
-  const map = createMap(cards);
+  const map = createMap(cards, dateStart ?? new Date(0));
+  let totalReviews = 0;
 
-  console.log(map);
   for (const hour of hourKeys) {
     data.push({
       id: hour,
       data: Object.keys(map[hour] ?? {})
         // @ts-ignore
         .sort((a, b) => dayPriority[a] - dayPriority[b])
-        .map((day) => ({
-          x: day,
-          y: map[hour]?.[day] ?? 0,
-        })),
+        .map((day) => {
+          const value = map[hour]?.[day] ?? 0;
+          totalReviews += value;
+
+          return { x: day, y: value };
+        }),
     });
   }
 
   return {
     data,
+    totalReviews,
   };
 }

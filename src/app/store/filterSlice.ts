@@ -21,6 +21,9 @@ export interface TFilterState {
   swarmPlot: {
     dateAgo: TSwarmPlotDateFilter;
   };
+  heatMap: {
+    date: TDateFilter;
+  };
 }
 
 const initialState: TFilterState = {
@@ -32,6 +35,9 @@ const initialState: TFilterState = {
   },
   swarmPlot: {
     dateAgo: "now",
+  },
+  heatMap: {
+    date: "all",
   },
 };
 
@@ -47,6 +53,9 @@ export const filterSlice = createSlice({
     },
     setSwarmPlotDate: (state, action: PayloadAction<TSwarmPlotDateFilter>) => {
       state.swarmPlot.dateAgo = action.payload;
+    },
+    setHeatMapDate: (state, action: PayloadAction<TDateFilter>) => {
+      state.heatMap.date = action.payload;
     },
   },
 });

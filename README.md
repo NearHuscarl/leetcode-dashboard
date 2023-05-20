@@ -83,7 +83,10 @@ Upcoming Due Table
 - Display upcoming leetcode problems
 
 Heatmap
-- Show correlation between number of reviews and review hours
++ Show correlation between number of reviews and review hours
++ Add title
++ Add date filter
+- Add tooltip
 
 LC Problem Difficulty
 - ScatterPlot
