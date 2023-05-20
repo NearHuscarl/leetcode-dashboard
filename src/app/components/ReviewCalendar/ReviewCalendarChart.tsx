@@ -4,6 +4,7 @@ import {
   DateOrString,
   ResponsiveCalendar,
 } from "@nivo/calendar";
+import useTheme from "@mui/material/styles/useTheme";
 import grey from "@mui/material/colors/grey";
 import red from "@mui/material/colors/red";
 import amber from "@mui/material/colors/amber";
@@ -117,6 +118,7 @@ type TReviewCalendarChartProps = {
 export const ReviewCalendarChart = (props: TReviewCalendarChartProps) => {
   const { data, from, to, label } = props;
   const colors = label === "New" ? newColors : reviewColors;
+  const theme = useTheme();
 
   return (
     <ResponsiveCalendar
@@ -124,7 +126,7 @@ export const ReviewCalendarChart = (props: TReviewCalendarChartProps) => {
       height={120}
       data={data}
       theme={{
-        textColor: grey[400],
+        textColor: theme.chart.legend.color,
       }}
       from={from}
       to={to}

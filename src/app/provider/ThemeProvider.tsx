@@ -6,6 +6,25 @@ import {
   createTheme,
 } from "@mui/material/styles";
 
+declare module "@mui/material/styles/createTheme" {
+  interface Theme {
+    chart: {
+      legend: {
+        color?: string;
+        fontSize?: number;
+      };
+    };
+  }
+  interface ThemeOptions {
+    chart: {
+      legend: {
+        color?: string;
+        fontSize?: number;
+      };
+    };
+  }
+}
+
 const defaultTheme = createTheme();
 const primaryColor = indigo;
 
@@ -13,6 +32,12 @@ export const theme = createTheme({
   palette: {
     primary: {
       main: primaryColor[500],
+    },
+  },
+  chart: {
+    legend: {
+      color: grey[400],
+      fontSize: 11,
     },
   },
   components: {

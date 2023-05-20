@@ -9,6 +9,7 @@ import {
 } from "@nivo/line";
 import { Theme } from "@nivo/core";
 import { getTickFormattedDate } from "app/helpers/chart";
+import { theme } from "app/provider/ThemeProvider";
 
 const DashedLine = ({
   series,
@@ -40,9 +41,8 @@ const DashedLine = ({
 };
 
 const legendTextStyle: Partial<React.CSSProperties> = {
-  fill: grey[400],
-  fontSize: 13,
-  fontFamily: "sans-serif",
+  fill: theme.chart.legend.color,
+  fontSize: theme.chart.legend.fontSize,
 };
 
 const chartTheme: Theme = {
@@ -167,7 +167,7 @@ export const TotalReviewHistoryChart = (
           }
 
           return (
-            <text x={x} y={y + 25} {...(legendTextStyle as any)}>
+            <text x={x - 10} y={y + 20} {...(legendTextStyle as any)}>
               {formattedDate}
             </text>
           );
