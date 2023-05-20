@@ -5,8 +5,8 @@ import Stack from "@mui/material/Stack";
 import { useSelector } from "app/store/setup";
 import { TotalReviewHistory } from "app/components/TotalReviewHistory";
 import { ReviewCalendar } from "./components/ReviewCalendar";
-import { CardTypeFunnel } from "./components/CardTypeFunnel";
-import { ScatterPlot } from "./components/ScatterPlot";
+// import { CardTypeFunnel } from "./components/CardTypeFunnel";
+// import { ScatterPlot } from "./components/ScatterPlot";
 import { SwarmPlot } from "./components/SwarmPlot";
 import { HeatMap } from "./components/HeatMap";
 
