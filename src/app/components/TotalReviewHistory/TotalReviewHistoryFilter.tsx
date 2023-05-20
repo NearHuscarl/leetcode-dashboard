@@ -2,10 +2,10 @@ import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
 import { useSelector } from "app/store/setup";
 import { useDispatch } from "react-redux";
-import { filterActions } from "app/store/filterSlice";
+import { TDateFilter, filterActions } from "app/store/filterSlice";
 import { SxProps } from "@mui/material";
 
-const options = [
+const options: { value: TDateFilter; label: string }[] = [
   { value: "week", label: "Week" },
   { value: "month", label: "Month" },
   { value: "quarter", label: "Quarter" },

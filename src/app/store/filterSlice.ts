@@ -4,6 +4,12 @@ import { persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 
 export type TDateFilter = "week" | "month" | "quarter" | "year" | "all";
+export type TSwarmPlotDateFilter =
+  | "now"
+  | "week"
+  | "2week"
+  | "month"
+  | "3month";
 
 export interface TFilterState {
   lineChart: {
@@ -11,6 +17,9 @@ export interface TFilterState {
   };
   calendar: {
     year: number;
+  };
+  swarmPlot: {
+    dateAgo: TSwarmPlotDateFilter;
   };
 }
 
@@ -20,6 +29,9 @@ const initialState: TFilterState = {
   },
   calendar: {
     year: new Date().getFullYear(),
+  },
+  swarmPlot: {
+    dateAgo: "now",
   },
 };
 
@@ -32,6 +44,9 @@ export const filterSlice = createSlice({
     },
     setCalendarYear: (state, action: PayloadAction<number>) => {
       state.calendar.year = action.payload;
+    },
+    setSwarmPlotDate: (state, action: PayloadAction<TSwarmPlotDateFilter>) => {
+      state.swarmPlot.dateAgo = action.payload;
     },
   },
 });

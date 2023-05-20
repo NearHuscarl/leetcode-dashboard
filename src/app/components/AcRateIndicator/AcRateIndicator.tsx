@@ -1,15 +1,7 @@
 import LinearProgress from "@mui/material/LinearProgress";
 import { alpha } from "@mui/system/colorManipulator";
 import isNil from "lodash/isNil";
-import red from "@mui/material/colors/red";
-import yellow from "@mui/material/colors/yellow";
-import green from "@mui/material/colors/green";
-import { transform } from "framer-motion";
-
-const getAcRateColor = transform(
-  [30, 60, 80],
-  [red[500], yellow[600], green[500]]
-);
+import { getAcRateColor } from "./getAcRateColor";
 
 type TAcRateIndicatorProps = {
   value?: number;

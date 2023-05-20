@@ -1,0 +1,1 @@
+export { SwarmPlot } from "./SwarmPlot";

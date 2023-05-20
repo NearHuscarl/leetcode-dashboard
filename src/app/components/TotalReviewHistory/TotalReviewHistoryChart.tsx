@@ -103,7 +103,13 @@ const CustomTooltip = (props: SliceTooltipProps) => {
               {category2Icon[serieId as keyof typeof category2Icon]}
               <div style={{ color, width: 130 }}>{serieId}</div>
             </div>
-            <div style={{ textAlign: "right", fontWeight: 600 }}>
+            <div
+              style={{
+                textAlign: "right",
+                fontWeight: 600,
+                color: data.yFormatted === "0" ? grey[400] : "inherit",
+              }}
+            >
               {data.yFormatted}
             </div>
           </div>

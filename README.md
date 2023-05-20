@@ -47,14 +47,15 @@ All Charts
 - Highlight nodes today, this week, this month
 
 LC solved over time
-- Line chart
-- Filter
++ Line chart
++ Filter
   + Date: week, month, quarter, year, all
 + Summary: Total solved (increase this week), Total reviews (increase this week)
 + X: time
 + Y: number of LC solved
++ Tooltip
 - Lines:
-  - Difficulty (Easy, Medium, Hard)
+  + Difficulty (Easy, Medium, Hard)
   - Pattern (DP, BFS, DFS, etc.)
   * Estimated deadlines https://nivo.rocks/storybook/?path=/story/line--highlighting-negative-values
 
@@ -72,6 +73,7 @@ Revision History
 + Each cell represents a day
 + Color shade: number of LC solved
 + 2 charts: new problems and reviews
++ Tooltip: number of LC solved
 + Streak days stats
   - Tooltip to explain total number
 - Add due date as red square in the future
