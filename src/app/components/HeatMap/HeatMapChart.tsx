@@ -4,10 +4,7 @@ import cyan from "@mui/material/colors/cyan";
 import { useTheme } from "@mui/material";
 import { formatDate } from "app/helpers/date";
 
-export const getCellColor = transform(
-  [0, 5, 10],
-  [cyan[50], cyan[500], cyan[900]]
-);
+const interpolator = transform([0, 0.5, 1], [cyan[50], cyan[500], cyan[900]]);
 
 type THeatMapProps = {
   data: HeatMapSerie<HeatMapDatum, {}>[];
@@ -20,7 +17,7 @@ export const HeatMapChart = (props: THeatMapProps) => {
   return (
     <ResponsiveHeatMap
       data={data}
-      margin={{ top: 40, right: 90, bottom: 60, left: 90 }}
+      margin={{ top: 40, right: 90, bottom: 60, left: 70 }}
       theme={{
         textColor: theme.chart.legend.color,
       }}
@@ -41,13 +38,27 @@ export const HeatMapChart = (props: THeatMapProps) => {
           return formatDate(date, "h aa");
         },
       }}
-      colors={(cell) => {
-        return getCellColor(cell.value ?? 0);
+      colors={{
+        type: "sequential",
+        interpolator,
       }}
-      emptyColor="#555555"
       borderWidth={3}
       borderColor="#ffffff"
       enableLabels={false}
+      legends={[
+        {
+          anchor: "top-right",
+          translateX: 40,
+          translateY: 4,
+          length: 120,
+          thickness: 10,
+          direction: "column",
+          tickPosition: "after",
+          ticks: 4,
+          tickSize: 0,
+          tickSpacing: 5,
+        },
+      ]}
     />
   );
 };
