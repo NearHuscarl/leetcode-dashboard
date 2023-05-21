@@ -9,7 +9,7 @@ import grey from "@mui/material/colors/grey";
 import red from "@mui/material/colors/red";
 import amber from "@mui/material/colors/amber";
 import cyan from "@mui/material/colors/cyan";
-import Card from "@mui/material/Card";
+import Stack from "@mui/material/Stack";
 import {
   EMPTY_CURRENT,
   EMPTY_IN_FUTURE,
@@ -18,6 +18,7 @@ import {
 import { formatDisplayedDate } from "app/helpers/date";
 import { useLeetcodeProblems } from "app/api/leetcode";
 import { AcRateIndicator } from "../AcRateIndicator";
+import { ChartTooltip } from "../ChartTooltip";
 
 const newColors = [
   amber[50],
@@ -84,28 +85,22 @@ const CustomTooltipComponent = (props: CalendarTooltipProps) => {
   const color = cat2Color[category];
 
   return (
-    <Card sx={{ p: 1.5 }}>
-      <div style={{ color: grey[500], fontWeight: 500, fontSize: 14 }}>
+    <ChartTooltip>
+      <ChartTooltip.Date>
         {formatDisplayedDate(new Date(day))}
-      </div>
-      <div style={{ marginBottom: 4, color, fontSize: 12 }}>
+      </ChartTooltip.Date>
+      <ChartTooltip.Caption style={{ marginBottom: 4, color }}>
         {value} {cat2TootlipTitle[category]}
-      </div>
+      </ChartTooltip.Caption>
       {data.problems.map((p) => (
-        <div
-          key={p}
-          style={{
-            fontSize: 13,
-            display: "flex",
-            gap: 8,
-            alignItems: "baseline",
-          }}
-        >
+        <Stack key={p} gap={1.2} direction="row" alignItems="baseline">
           <AcRateIndicator value={leetcodes[p]?.acRate} width={40} height={7} />
-          <div style={{ flex: 1 }}>{leetcodes[p]?.title}</div>
-        </div>
+          <ChartTooltip.Text style={{ flex: 1 }}>
+            {leetcodes[p]?.title}
+          </ChartTooltip.Text>
+        </Stack>
       ))}
-    </Card>
+    </ChartTooltip>
   );
 };
 

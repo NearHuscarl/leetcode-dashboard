@@ -1,4 +1,3 @@
-import Card from "@mui/material/Card";
 import Stack from "@mui/material/Stack";
 import { amber, grey, lightGreen, red } from "@mui/material/colors";
 import {
@@ -10,6 +9,7 @@ import {
 import { Theme } from "@nivo/core";
 import { getTickFormattedDate } from "app/helpers/chart";
 import { theme } from "app/provider/ThemeProvider";
+import { ChartTooltip } from "../ChartTooltip";
 
 const DashedLine = ({
   series,
@@ -76,23 +76,15 @@ const CustomTooltip = (props: SliceTooltipProps) => {
   const { slice } = props;
 
   return (
-    <Card sx={{ p: 1.5 }}>
-      <div
-        style={{
-          color: grey[500],
-          fontWeight: 500,
-          fontSize: 14,
-          marginBottom: 6,
-        }}
-      >
+    <ChartTooltip>
+      <ChartTooltip.Date style={{ marginBottom: 6 }}>
         {slice.points[0].data.xFormatted}
-      </div>
+      </ChartTooltip.Date>
       <Stack gap={0.2}>
         {slice.points.map(({ serieId, data, color }) => (
           <div
             key={serieId}
             style={{
-              fontSize: 12,
               display: "flex",
               gap: 4,
               justifyContent: "space-between",
@@ -101,9 +93,11 @@ const CustomTooltip = (props: SliceTooltipProps) => {
           >
             <div style={{ display: "flex", gap: 4, alignItems: "center" }}>
               {category2Icon[serieId as keyof typeof category2Icon]}
-              <div style={{ color, width: 130 }}>{serieId}</div>
+              <ChartTooltip.Text style={{ color, width: 130 }}>
+                {serieId}
+              </ChartTooltip.Text>
             </div>
-            <div
+            <ChartTooltip.Text
               style={{
                 textAlign: "right",
                 fontWeight: 600,
@@ -111,11 +105,11 @@ const CustomTooltip = (props: SliceTooltipProps) => {
               }}
             >
               {data.yFormatted}
-            </div>
+            </ChartTooltip.Text>
           </div>
         ))}
       </Stack>
-    </Card>
+    </ChartTooltip>
   );
 };
 

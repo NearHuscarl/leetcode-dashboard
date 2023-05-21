@@ -3,41 +3,43 @@ import {
   ComputedDatum,
   ResponsiveSwarmPlot,
 } from "@nivo/swarmplot";
+import { styled, useTheme } from "@mui/material";
+import { animated } from "@react-spring/web";
 import { TSwarmPlotDatum } from "./swarmPlotData";
 import { getAcRateColor } from "../AcRateIndicator";
-import { styled, useTheme } from "@mui/material";
-import Card from "@mui/material/Card";
 import { TCardType } from "app/helpers/card";
 import { useLeetcodeProblems } from "app/api/leetcode";
 import { LEETCODE_BASE_URL } from "app/settings";
 import { ReviewStatus } from "../ReviewStatus";
+import { ChartTooltip } from "../ChartTooltip";
 
-const Circle = styled("circle")();
+const Circle = styled(animated.circle)();
 
 const CustomCircle = (props: CircleProps<TSwarmPlotDatum>) => {
-  const { node, onMouseEnter, onMouseMove, onMouseLeave, onClick } = props;
+  const { node, onMouseEnter, onMouseMove, onMouseLeave, onClick, style } =
+    props;
 
   return (
-    <g transform={`translate(${node.x},${node.y})`}>
-      <circle fill={node.color} r={node.size / 2} />
-      <Circle
-        sx={{
-          cursor: "pointer",
-          opacity: 0,
-          "&:hover": {
-            opacity: 1,
-          },
-        }}
-        stroke={node.color}
-        strokeWidth={2}
-        fill="transparent"
-        r={node.size / 2 + 3}
-        onMouseEnter={(event) => onMouseEnter?.(node, event)}
-        onMouseMove={(event) => onMouseMove?.(node, event)}
-        onMouseLeave={(event) => onMouseLeave?.(node, event)}
-        onClick={(event) => onClick?.(node, event)}
-      />
-    </g>
+    <Circle
+      sx={{
+        cursor: "pointer",
+        stroke: "transparent",
+        "&:hover": {
+          stroke: node.color,
+        },
+      }}
+      key={node.id}
+      cx={style.x}
+      cy={style.y}
+      r={style.radius}
+      fill={style.color}
+      strokeWidth={3}
+      opacity={style.opacity}
+      onMouseEnter={(event) => onMouseEnter?.(node, event)}
+      onMouseMove={(event) => onMouseMove?.(node, event)}
+      onMouseLeave={(event) => onMouseLeave?.(node, event)}
+      onClick={(event) => onClick?.(node, event)}
+    />
   );
 };
 
@@ -46,12 +48,12 @@ const CustomTooltip = (props: ComputedDatum<TSwarmPlotDatum>) => {
   const { data: leetcodes = {} } = useLeetcodeProblems();
 
   return (
-    <Card sx={{ p: 1.5 }}>
+    <ChartTooltip>
       <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-        <div style={{ flex: 1, fontSize: 13 }}>{leetcodes[id]?.title}</div>
+        <ChartTooltip.Text>{leetcodes[id]?.title}</ChartTooltip.Text>
         <ReviewStatus reviews={data.reviews} />
       </div>
-    </Card>
+    </ChartTooltip>
   );
 };
 
