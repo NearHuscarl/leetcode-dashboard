@@ -73,7 +73,7 @@ const cat2TootlipTitle = {
   Due: "Deadlines",
 };
 
-const CustomTooltipComponent = (props: CalendarTooltipProps) => {
+const CustomTooltip = (props: CalendarTooltipProps) => {
   const data = (props as any).data as TCalendarData;
   let { value, day, category } = data;
   const { data: leetcodes = {} } = useLeetcodeProblems();
@@ -131,7 +131,7 @@ export const ReviewCalendarChart = (props: TReviewCalendarChartProps) => {
       colors={redColors.concat(colors)}
       yearLegend={() => label}
       margin={{ top: 30, right: 30, bottom: 0, left: 30 }}
-      tooltip={CustomTooltipComponent}
+      tooltip={CustomTooltip}
       monthBorderColor="#ffffff"
       dayBorderWidth={2}
       dayBorderColor="#ffffff"
