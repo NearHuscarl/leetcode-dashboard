@@ -47,7 +47,10 @@ export function prepareChartData(
 
   return {
     data: points,
-    // @ts-ignore
-    types: [...types].sort((a, b) => typePriority[a] - typePriority[b]),
+    types:
+      types.size > 0
+        ? // @ts-ignore
+          [...types].sort((a, b) => typePriority[a] - typePriority[b])
+        : ["Learning", "Young", "Mature"],
   };
 }

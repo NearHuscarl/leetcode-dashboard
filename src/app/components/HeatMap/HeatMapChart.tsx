@@ -6,13 +6,16 @@ import {
 } from "@nivo/heatmap";
 import { transform } from "framer-motion";
 import Stack from "@mui/material/Stack";
-import cyan from "@mui/material/colors/cyan";
 import grey from "@mui/material/colors/grey";
 import useTheme from "@mui/material/styles/useTheme";
 import { formatDate } from "app/helpers/date";
 import { ChartTooltip } from "../ChartTooltip";
+import { primaryColor } from "app/provider/ThemeProvider";
 
-const interpolator = transform([0, 0.5, 1], [cyan[50], cyan[500], cyan[900]]);
+const interpolator = transform(
+  [0, 0.5, 1],
+  [primaryColor[50], primaryColor[500], primaryColor[900]]
+);
 
 const CustomTooltip = (props: TooltipProps<HeatMapDatum>) => {
   const { serieId, data, color } = props.cell;

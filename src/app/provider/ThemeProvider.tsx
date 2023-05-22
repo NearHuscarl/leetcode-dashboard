@@ -1,6 +1,6 @@
 import { PropsWithChildren } from "react";
 import grey from "@mui/material/colors/grey";
-import indigo from "@mui/material/colors/indigo";
+import cyan from "@mui/material/colors/cyan";
 import {
   ThemeProvider as ThemeProvider2,
   createTheme,
@@ -26,7 +26,7 @@ declare module "@mui/material/styles/createTheme" {
 }
 
 const defaultTheme = createTheme();
-const primaryColor = indigo;
+export const primaryColor = cyan;
 
 export const theme = createTheme({
   palette: {
