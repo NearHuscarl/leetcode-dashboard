@@ -25,7 +25,7 @@ export function prepareChartData(
   dateAgo: TSwarmPlotDateFilter
 ) {
   const points: TSwarmPlotDatum[] = [];
-  const types = new Set<TCardType>();
+  const typeSet = new Set<TCardType>();
   const dateEnd = getDateAgo(dateAgo);
 
   for (const card of cards) {
@@ -34,7 +34,7 @@ export function prepareChartData(
 
     if (type === "New") continue; // Skip new cards (they don't have ease rate)
 
-    types.add(type);
+    typeSet.add(type);
     points.push({
       id: card.leetcodeId,
       value: easeRate,
@@ -45,12 +45,14 @@ export function prepareChartData(
     });
   }
 
+  const types: TCardType[] =
+    typeSet.size > 0
+      ? // @ts-ignore
+        [...typeSet].sort((a, b) => typePriority[a] - typePriority[b])
+      : ["Learning", "Young", "Mature"];
+
   return {
     data: points,
-    types:
-      types.size > 0
-        ? // @ts-ignore
-          [...types].sort((a, b) => typePriority[a] - typePriority[b])
-        : ["Learning", "Young", "Mature"],
+    types,
   };
 }
