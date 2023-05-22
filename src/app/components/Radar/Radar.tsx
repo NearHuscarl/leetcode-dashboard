@@ -4,11 +4,14 @@ import { useProblems } from "app/services/problems";
 import { useLeetcodeProblems } from "app/api/leetcode";
 import { ChartTitle } from "../ChartTitle";
 import { RadarChart } from "./RadarChart";
+import { RadarFilter } from "./RadarFilter";
+import { useSelector } from "app/store/setup";
 
 export const Radar = () => {
   const cards = useProblems();
   const { data: leetcodes = {} } = useLeetcodeProblems();
-  const { data } = prepareChartData(cards, leetcodes);
+  const dateAgo = useSelector((state) => state.filter.radar.dateAgo);
+  const { data } = prepareChartData(cards, leetcodes, dateAgo);
 
   return (
     <Stack justifyContent="space-between" height="100%">
@@ -20,6 +23,7 @@ export const Radar = () => {
         gap={1}
       >
         <ChartTitle>Data Structures</ChartTitle>
+        <RadarFilter sx={{ alignSelf: "flex-start" }} />
       </Stack>
       <RadarChart data={data} />
     </Stack>

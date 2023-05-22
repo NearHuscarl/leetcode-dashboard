@@ -1,9 +1,8 @@
-import subWeeks from "date-fns/subWeeks";
-import subMonths from "date-fns/subMonths";
 import { TSwarmPlotDateFilter } from "app/store/filterSlice";
 import { TCardType, getCardType, getEaseRate } from "app/helpers/card";
 import { TCardModel } from "app/services/problems";
 import { TCardReview } from "app/api/stats";
+import { getDateAgo } from "app/helpers/date";
 
 export type TSwarmPlotDatum = {
   group: string;
@@ -21,30 +20,13 @@ const typePriority = {
   Mature: 2,
 } as const;
 
-export function getDateEnd(filter: TSwarmPlotDateFilter): number {
-  const dateNow = new Date();
-
-  switch (filter) {
-    case "week":
-      return subWeeks(dateNow, 1).valueOf();
-    case "2week":
-      return subWeeks(dateNow, 2).valueOf();
-    case "month":
-      return subMonths(dateNow, 1).valueOf();
-    case "3month":
-      return subMonths(dateNow, 3).valueOf();
-    default:
-      return dateNow.valueOf();
-  }
-}
-
 export function prepareChartData(
   cards: TCardModel[],
   dateAgo: TSwarmPlotDateFilter
 ) {
   const points: TSwarmPlotDatum[] = [];
   const types = new Set<TCardType>();
-  const dateEnd = getDateEnd(dateAgo);
+  const dateEnd = getDateAgo(dateAgo);
 
   for (const card of cards) {
     const type = getCardType(card);

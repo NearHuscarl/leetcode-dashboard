@@ -5,7 +5,7 @@ import storage from "redux-persist/lib/storage";
 
 export type TDateFilter = "week" | "month" | "quarter" | "year" | "all";
 export type TSwarmPlotDateFilter =
-  | "now"
+  | "today"
   | "week"
   | "2week"
   | "month"
@@ -24,6 +24,9 @@ export interface TFilterState {
   heatMap: {
     date: TDateFilter;
   };
+  radar: {
+    dateAgo: TSwarmPlotDateFilter;
+  };
 }
 
 const initialState: TFilterState = {
@@ -34,10 +37,13 @@ const initialState: TFilterState = {
     year: new Date().getFullYear(),
   },
   swarmPlot: {
-    dateAgo: "now",
+    dateAgo: "today",
   },
   heatMap: {
     date: "all",
+  },
+  radar: {
+    dateAgo: "today",
   },
 };
 
@@ -56,6 +62,9 @@ export const filterSlice = createSlice({
     },
     setHeatMapDate: (state, action: PayloadAction<TDateFilter>) => {
       state.heatMap.date = action.payload;
+    },
+    setRadarDate: (state, action: PayloadAction<TSwarmPlotDateFilter>) => {
+      state.radar.dateAgo = action.payload;
     },
   },
 });
