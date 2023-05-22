@@ -84,6 +84,31 @@ export const getNextReviewTime = (card: TCard): number => {
   return reviewDate + interval;
 };
 
+export type TDueStatus = "stale" | "bad" | "now" | "good";
+
+export const getDueStatus = (card: TCard): TDueStatus => {
+  const nextInterviewTime = getNextReviewTime(card);
+
+  if (nextInterviewTime == 0) {
+    return "now";
+  }
+
+  const dateNow = Date.now();
+  const distance = nextInterviewTime - dateNow;
+
+  // within 1 day
+  if (Math.abs(distance) < 1000 * 60 * 60 * 24) {
+    return "now";
+  } else if (distance >= 1000 * 60 * 60 * 24) {
+    return "good";
+    // due over 30 days
+  } else if (distance < -1000 * 60 * 60 * 24 * 30) {
+    return "stale";
+  }
+
+  return "bad";
+};
+
 export const getRetentionRate = (card: TCard): number => {
   const successReviews = card.reviews.filter((r) => r.ease > 1).length;
 

@@ -106,7 +106,7 @@ Revision History
 + Tooltip: number of LC solved
 + Streak days stats
   - Tooltip to explain total number
-- Add due date as red square in the future
++ Add due date as red square in the future
 
 Upcoming Due Table
 - Click to see full table
@@ -117,6 +117,11 @@ Heatmap
 + Add title
 + Add date filter
 - Add tooltip
+
+HalfPie
+- Due status
+- Filter
+- Tooltip
 
 LC Problem Difficulty
 - ScatterPlot

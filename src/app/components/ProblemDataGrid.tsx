@@ -21,7 +21,7 @@ import { TCard } from "app/api/deck";
 import { TCardReview } from "app/api/stats";
 import { TLeetcode } from "app/api/leetcode";
 import { useProblems } from "app/services/problems";
-import { getCardType, getNextReviewTime } from "app/helpers/card";
+import { getCardType, getDueStatus, getNextReviewTime } from "app/helpers/card";
 import { useSelector } from "app/store/setup";
 import { LEETCODE_BASE_URL } from "app/settings";
 import { AcRateIndicator } from "./AcRateIndicator";
@@ -50,7 +50,6 @@ const cardTypePriority: Record<string, number> = {
   Mature: 4,
   Unknown: 5,
 };
-const dateNow = Date.now();
 
 const columns: GridColDef[] = [
   {
@@ -119,37 +118,32 @@ const columns: GridColDef[] = [
     headerName: "Due",
     width: 140,
     valueGetter: (params: GridValueGetterParams<TCard, number>) => {
-      return getNextReviewTime(params.row);
-    },
-    valueFormatter(params) {
-      if (params.value === 0) return "Now";
-      return formatDistanceToNowStrict(params.value, { addSuffix: true });
+      return getNextReviewTime(params.row); // return this instead of due status to make sorting predictable
     },
     renderCell: (params) => {
-      if (!params.formattedValue) {
-        return null;
-      }
-      const value = params.formattedValue;
-      const distance = params.value - dateNow;
-      let dueStatus = "bad";
+      const dueStatus = getDueStatus(params.row);
+      const nextReviewTime = params.value;
+      const displayedDate = formatDistanceToNowStrict(nextReviewTime, {
+        addSuffix: true,
+      });
 
-      // within 1 day
-      if (Math.abs(distance) < 1000 * 60 * 60 * 24 || value === "Now") {
-        dueStatus = "now";
-      } else if (distance >= 1000 * 60 * 60 * 24) {
-        dueStatus = "good";
+      if (!displayedDate) {
+        return null;
       }
 
       return (
         <div style={{ display: "flex", gap: 3, alignItems: "center" }}>
-          {dueStatus === "bad" && <GppBadIcon style={{ color: red[300] }} />}
+          {dueStatus === "bad" ||
+            (dueStatus === "stale" && (
+              <GppBadIcon style={{ color: red[300] }} />
+            ))}
           {dueStatus === "now" && (
             <GppMaybeIcon style={{ color: amber[400] }} />
           )}
           {dueStatus === "good" && (
             <GppGoodIcon style={{ color: lightGreen[300] }} />
           )}
-          {value}
+          {displayedDate}
         </div>
       );
     },
