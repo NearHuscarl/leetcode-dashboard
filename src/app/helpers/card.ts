@@ -1,6 +1,12 @@
+import blue from "@mui/material/colors/blue";
+import orange from "@mui/material/colors/orange";
+import lightGreen from "@mui/material/colors/lightGreen";
+import green from "@mui/material/colors/green";
+import red from "@mui/material/colors/red";
+import grey from "@mui/material/colors/grey";
 import { TCard } from "app/api/deck";
-import { getIntervalTime } from "./stats";
 import { TCardReview } from "app/api/stats";
+import { getIntervalTime } from "./stats";
 
 export type TCardType =
   | "New"
@@ -29,6 +35,22 @@ export const getCardType = (card: TCard): TCardType => {
     default:
       return "Unknown";
   }
+};
+
+export const getCardTypeColor = (type: TCardType): string => {
+  switch (type) {
+    case "New":
+      return blue[500];
+    case "Learning":
+      return orange[500];
+    case "Young":
+      return lightGreen[500];
+    case "Mature":
+      return green[500];
+    case "Relearning":
+      return red[500];
+  }
+  return grey[500];
 };
 
 export const getNextReviewTime = (card: TCard): number => {

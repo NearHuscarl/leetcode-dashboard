@@ -6,7 +6,7 @@ import { useDispatch } from "react-redux";
 import { TSwarmPlotDateFilter, filterActions } from "app/store/filterSlice";
 
 const options: { value: TSwarmPlotDateFilter; label: string }[] = [
-  { value: "now", label: "Now" },
+  { value: "now", label: "Today" },
   { value: "week", label: "1 week ago" },
   { value: "2week", label: "2 weeks ago" },
   { value: "month", label: "1 month ago" },

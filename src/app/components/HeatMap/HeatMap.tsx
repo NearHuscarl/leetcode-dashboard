@@ -4,6 +4,7 @@ import { prepareChartData } from "./heatMapData";
 import { HeatMapChart } from "./HeatMapChart";
 import { HeatMapFilter } from "./HeatMapFilter";
 import { useSelector } from "app/store/setup";
+import { ChartTitle } from "../ChartTitle";
 
 export const HeatMap = () => {
   const cards = useProblems();
@@ -19,9 +20,7 @@ export const HeatMap = () => {
         alignItems="center"
         gap={1}
       >
-        <div style={{ fontWeight: 500, fontSize: 19 }}>
-          Reviews by time ({totalReviews})
-        </div>
+        <ChartTitle>Reviews by time ({totalReviews})</ChartTitle>
         <HeatMapFilter sx={{ alignSelf: "flex-start" }} />
       </Stack>
       <HeatMapChart data={data} />

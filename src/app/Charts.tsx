@@ -9,6 +9,7 @@ import { ReviewCalendar } from "./components/ReviewCalendar";
 // import { ScatterPlot } from "./components/ScatterPlot";
 import { SwarmPlot } from "./components/SwarmPlot";
 import { HeatMap } from "./components/HeatMap";
+import { Radar } from "./components/Radar";
 
 type TChartCardProps = PropsWithChildren & {
   flex?: number | string;
@@ -43,13 +44,13 @@ export const Charts = () => {
         </ChartCard> */}
       </Stack>
       <Stack direction="row" gap={2} p={2}>
-        <ChartCard flex="30%">
+        <ChartCard flex="20%">
           <HeatMap />
         </ChartCard>
-        {/* <ChartCard flex="30%">
-          <ScatterPlot />
-        </ChartCard> */}
-        <ChartCard flex="30%">
+        <ChartCard flex="20%">
+          <Radar />
+        </ChartCard>
+        <ChartCard flex="50%">
           <SwarmPlot />
         </ChartCard>
       </Stack>
