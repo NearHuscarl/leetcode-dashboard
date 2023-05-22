@@ -1,10 +1,18 @@
-import { GridLabelProps, ResponsiveRadar } from "@nivo/radar";
+import {
+  GridLabelProps,
+  RadarSliceTooltipProps,
+  ResponsiveRadar,
+} from "@nivo/radar";
 import { useTheme as useNivoTheme } from "@nivo/core";
 import { animated } from "@react-spring/web";
 import useTheme from "@mui/material/styles/useTheme";
 import grey from "@mui/material/colors/grey";
+import Stack from "@mui/material/Stack";
 import { TRadarDatum } from "./radarData";
 import { TCardType, getCardTypeColor } from "app/helpers/card";
+import { ChartTooltip } from "../ChartTooltip";
+
+const getDisplayedLabel = (id: string) => (id.startsWith("Heap") ? "Heap" : id);
 
 const RadarGridLabel = ({
   id,
@@ -20,13 +28,45 @@ const RadarGridLabel = ({
         dominantBaseline="central"
         textAnchor={anchor}
       >
-        {id.startsWith("Heap") ? "Heap" : id}
+        {getDisplayedLabel(id)}
       </text>
     </animated.g>
   );
 };
 
 const cardTypes: TCardType[] = ["Learning", "Young", "Mature"];
+
+const CustomTooltip = (props: RadarSliceTooltipProps) => {
+  const { data, index } = props;
+
+  return (
+    <ChartTooltip>
+      <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+        <div style={{ fontWeight: "bold" }}>
+          {getDisplayedLabel(index as string)}
+        </div>
+        <Stack>
+          {data.map(({ id, value }) => (
+            <Stack key={id} direction="row" justifyContent="space-between">
+              <ChartTooltip.Caption
+                style={{
+                  width: 80,
+                  color: getCardTypeColor(id as any),
+                  fontWeight: "bold",
+                }}
+              >
+                {id}
+              </ChartTooltip.Caption>
+              <ChartTooltip.Text>
+                {Math.round(value * 10) / 10}%
+              </ChartTooltip.Text>
+            </Stack>
+          ))}
+        </Stack>
+      </div>
+    </ChartTooltip>
+  );
+};
 
 type TRadarChartProps = {
   data: TRadarDatum[];
@@ -46,7 +86,11 @@ export const RadarChart = (props: TRadarChartProps) => {
         grid: {
           line: { stroke: grey[300] },
         },
+        crosshair: {
+          line: { stroke: theme.palette.primary.main },
+        },
       }}
+      sliceTooltip={CustomTooltip}
       maxValue={100}
       margin={{ top: 70, right: 80, bottom: 40, left: 80 }}
       gridShape="linear"
