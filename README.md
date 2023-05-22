@@ -43,6 +43,36 @@ Factor:
 - Ease rate (total score of Again, Hard, Good, Easy)
 - Retention rate
 
+Data Structures (Sorted by most common in interviews)
+- Array
+- String
+- Hash Table
+- Linked List
+- Stack
+- Matrix
+- Tree
+  - Binary Tree
+  - Trie
+- Heap
+- Graph
+  - Advanced Graph
+
+Algorithm (Sorted by most common in interviews)
+- DFS
+- BFS
+- Binary Search
+- Two pointers
+- Sliding window
+- Prefix Sum
+- Backtracking
+- DP
+ - DP 2D
+- Greedy
+- Intervals
+- Math & Geometry
+- Bit Manipulation
+- Sorting
+
 All Charts
 - Highlight nodes today, this week, this month
 
@@ -65,7 +95,7 @@ Card type over time
 - Y: Number of card type in stack (new, learning, review)
 
 Card type now
-- Funnel
+- Sankey
 - Color: Percentage of card type (new, learning, review)
 
 Revision History
@@ -102,6 +132,7 @@ Current retention rate: In circle percentage
 
 Current pattern covered
 - Sunburst chart
+- Hierarchy: Difficulty > Tags > LC problem
 - Each angle represents a pattern
 - Each ring represents a difficulty
 - Each block represents a LC problem
