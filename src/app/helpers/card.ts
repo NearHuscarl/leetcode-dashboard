@@ -101,7 +101,9 @@ export const getNextReviewTime = (
 
 export type TDueStatus = "stale" | "bad" | "now" | "good" | "none";
 
-export const getDueStatus = (card: TCard, dateEnd: number): TDueStatus => {
+export const getDueStatus = (card: TCard, dateEnd?: number): TDueStatus => {
+  dateEnd = dateEnd ?? Date.now();
+
   // card does not exist at this point
   if (dateEnd < card.cardId) {
     return "none";

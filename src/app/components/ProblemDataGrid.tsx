@@ -133,10 +133,9 @@ const columns: GridColDef[] = [
 
       return (
         <div style={{ display: "flex", gap: 3, alignItems: "center" }}>
-          {dueStatus === "bad" ||
-            (dueStatus === "stale" && (
-              <GppBadIcon style={{ color: red[300] }} />
-            ))}
+          {(dueStatus === "bad" || dueStatus === "stale") && (
+            <GppBadIcon style={{ color: red[300] }} />
+          )}
           {dueStatus === "now" && (
             <GppMaybeIcon style={{ color: amber[400] }} />
           )}
