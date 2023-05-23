@@ -71,30 +71,49 @@ export const getCardTypeColor = (type: TCardType): string => {
   return grey[500];
 };
 
-export const getNextReviewTime = (card: TCard): number => {
-  const lastReview = card.reviews.at(-1);
-  if (!lastReview) return 0;
+export const getNextReviewTime = (
+  card: TCard,
+  dateEndProps?: number
+): number => {
+  let review = card.reviews.at(-1);
+
+  if (dateEndProps !== undefined) {
+    const dateEnd = dateEndProps ?? Date.now();
+
+    for (let i = 0; i < card.reviews.length; i++) {
+      if (dateEnd < card.reviews[i].id) {
+        review = card.reviews[i - 1];
+        break;
+      }
+    }
+  }
+
+  if (!review) return 0;
 
   // there are 2 interval properties:
   // - card.interval: the next interval, if the card is overdue, then this is 0
   // - card.reviews.at(-1).ivl: the next interval
-  const { id: reviewDate, ivl } = lastReview;
+  const { id: reviewDate, ivl } = review;
   const interval = getIntervalTime(ivl!);
 
   return reviewDate + interval;
 };
 
-export type TDueStatus = "stale" | "bad" | "now" | "good";
+export type TDueStatus = "stale" | "bad" | "now" | "good" | "none";
 
-export const getDueStatus = (card: TCard): TDueStatus => {
-  const nextInterviewTime = getNextReviewTime(card);
+export const getDueStatus = (card: TCard, dateEnd: number): TDueStatus => {
+  // card does not exist at this point
+  if (dateEnd < card.cardId) {
+    return "none";
+  }
+
+  const nextInterviewTime = getNextReviewTime(card, dateEnd);
 
   if (nextInterviewTime == 0) {
     return "now";
   }
 
-  const dateNow = Date.now();
-  const distance = nextInterviewTime - dateNow;
+  const distance = nextInterviewTime - dateEnd;
 
   // within 1 day
   if (Math.abs(distance) < 1000 * 60 * 60 * 24) {

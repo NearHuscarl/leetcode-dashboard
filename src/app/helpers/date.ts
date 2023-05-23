@@ -1,5 +1,6 @@
 import format from "date-fns/format";
 import differenceInDays from "date-fns/differenceInDays";
+import subDays from "date-fns/subDays";
 import subWeeks from "date-fns/subWeeks";
 import subMonths from "date-fns/subMonths";
 import { TDateFilter, TSwarmPlotDateFilter } from "app/store/filterSlice";
@@ -43,6 +44,8 @@ export function getDateAgo(filter: TSwarmPlotDateFilter): number {
   const dateNow = new Date();
 
   switch (filter) {
+    case "yesterday":
+      return subDays(dateNow, 1).valueOf();
     case "week":
       return subWeeks(dateNow, 1).valueOf();
     case "2week":

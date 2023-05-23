@@ -34,13 +34,13 @@ export const Charts = () => {
   return (
     <Stack>
       <Stack direction="row" gap={2} p={2} pb={0}>
-        <ChartCard flex="35%">
+        <ChartCard flex="1.5">
           <TotalReviewHistory />
         </ChartCard>
-        <ChartCard flex="40%">
+        <ChartCard flex="1">
           <ReviewCalendar />
         </ChartCard>
-        <ChartCard flex="10%">
+        <ChartCard flex="0 0 315px">
           <HalfPie />
         </ChartCard>
       </Stack>

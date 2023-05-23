@@ -14,8 +14,8 @@ const options: { value: TSwarmPlotDateFilter; label: string }[] = [
   { value: "3month", label: "3 months ago" },
 ];
 
-export const RadarFilter = ({ sx }: { sx: SxProps }) => {
-  const dateAgo = useSelector((state) => state.filter.radar.dateAgo);
+export const HalfPieFilter = ({ sx }: { sx: SxProps }) => {
+  const dateAgo = useSelector((state) => state.filter.halfPie.dateAgo);
   const dispatch = useDispatch();
 
   return (
@@ -24,7 +24,7 @@ export const RadarFilter = ({ sx }: { sx: SxProps }) => {
       sx={{ width: 150, ...sx }}
       value={dateAgo}
       onChange={(e) =>
-        dispatch(filterActions.setRadarDate(e.target.value as any))
+        dispatch(filterActions.setHalfPieDate(e.target.value as any))
       }
     >
       {options.map((option) => (

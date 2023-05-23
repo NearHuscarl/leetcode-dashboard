@@ -11,8 +11,8 @@ export const HalfPieChart = (props: THalfPieProps) => {
   return (
     <ResponsivePie<TPieDatum>
       data={data}
-      margin={{ top: 50, right: 0, bottom: 50, left: -50 }}
-      innerRadius={0.5}
+      margin={{ top: 30, right: 0, bottom: 50, left: -50 }}
+      innerRadius={0.7}
       startAngle={0}
       endAngle={180}
       padAngle={0.7}
@@ -27,6 +27,7 @@ export const HalfPieChart = (props: THalfPieProps) => {
       arcLinkLabelsTextOffset={9}
       arcLinkLabelsTextColor="#333333"
       arcLinkLabelsOffset={0}
+      arcLinkLabelsSkipAngle={1}
       arcLinkLabelsDiagonalLength={18}
       arcLinkLabelsStraightLength={15}
       arcLinkLabelsColor={{ from: "color" }}
