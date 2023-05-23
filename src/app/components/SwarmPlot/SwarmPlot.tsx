@@ -4,6 +4,7 @@ import { useSelector } from "app/store/setup";
 import { SwarmPlotChart } from "./SwarmPlotChart";
 import { prepareChartData } from "./swarmPlotData";
 import { SwarmPlotFilter } from "./SwarmPlotFilter";
+import { ChartTitle } from "../ChartTitle";
 
 export const SwarmPlot = () => {
   const dateAgo = useSelector((state) => state.filter.swarmPlot.dateAgo);
@@ -19,6 +20,7 @@ export const SwarmPlot = () => {
         alignItems="center"
         gap={1}
       >
+        <ChartTitle>Card Types</ChartTitle>
         <SwarmPlotFilter sx={{ alignSelf: "flex-start" }} />
       </Stack>
       <SwarmPlotChart data={data} groups={types} />
