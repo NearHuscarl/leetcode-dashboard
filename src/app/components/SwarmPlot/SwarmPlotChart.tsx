@@ -5,13 +5,19 @@ import {
 } from "@nivo/swarmplot";
 import { styled, useTheme } from "@mui/material";
 import { animated } from "@react-spring/web";
+import { transform } from "framer-motion";
 import { TSwarmPlotDatum } from "./swarmPlotData";
-import { getAcRateColor } from "../AcRateIndicator";
 import { TCardType } from "app/helpers/card";
 import { useLeetcodeProblems } from "app/api/leetcode";
 import { LEETCODE_BASE_URL } from "app/settings";
 import { ReviewStatus } from "../ReviewStatus";
 import { ChartTooltip } from "../ChartTooltip";
+import { primaryColor } from "app/provider/ThemeProvider";
+
+export const getAcRateColor = transform(
+  [30, 60, 80],
+  [primaryColor[900], primaryColor[500], primaryColor[100]]
+);
 
 const Circle = styled(animated.circle)();
 
@@ -86,7 +92,8 @@ export const SwarmPlotChart = (props: TSwarmPlotChartProps) => {
       }}
       forceStrength={4}
       simulationIterations={100}
-      margin={{ top: 60, right: 60, bottom: 60, left: 60 }}
+      margin={{ top: 30, right: 60, bottom: 50, left: 60 }}
+      gridYValues={4}
       axisTop={{
         tickSize: 0,
         tickPadding: 10,
@@ -97,6 +104,7 @@ export const SwarmPlotChart = (props: TSwarmPlotChartProps) => {
       }}
       axisRight={{
         tickSize: 0,
+        tickValues: 4,
         format: ".1f",
         legend: "Ease Rate",
         legendPosition: "middle",
@@ -104,6 +112,7 @@ export const SwarmPlotChart = (props: TSwarmPlotChartProps) => {
       }}
       axisLeft={{
         tickSize: 0,
+        tickValues: 4,
         format: ".1f",
         legend: "Ease Rate",
         legendPosition: "middle",
