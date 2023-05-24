@@ -94,9 +94,11 @@ Card type over time
 - X: time
 - Y: Number of card type in stack (new, learning, review)
 
-Card type now
-- Sankey
-- Color: Percentage of card type (new, learning, review)
+Review Result (Ease rate)
++ SwarmPlot
++ X: card types
++ Y: ease rate
+- Hover on each dot to highlight preview reviews, future deadlines on calendar chart
 
 Revision History
 + Calendar
@@ -119,8 +121,8 @@ Heatmap
 - Add tooltip
 
 HalfPie
-- Due status
-- Filter
++ Due status
++ Filter
 - Tooltip
 
 LC Problem Difficulty

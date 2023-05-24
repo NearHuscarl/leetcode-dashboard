@@ -25,7 +25,7 @@ export const HeatMapFilter = (props: THeatMapFilterProps) => {
   return (
     <TextField
       select
-      sx={{ width: 120, ...sx }}
+      sx={{ width: 110, ...sx }}
       value={date}
       onChange={(e) =>
         dispatch(filterActions.setHeatMapDate(e.target.value as any))

@@ -11,14 +11,24 @@ import { SwarmPlot } from "./components/SwarmPlot";
 import { HeatMap } from "./components/HeatMap";
 import { Radar } from "./components/Radar";
 import { HalfPie } from "./components/HalfPie";
+import { CardTypeBar } from "./components/CardTypeBar";
+import { useTheme } from "@mui/material";
 
 type TChartCardProps = PropsWithChildren & {
   flex?: number | string;
 };
 
 const ChartCard = ({ children, flex }: TChartCardProps) => {
+  const theme = useTheme();
+
   return (
-    <Card sx={{ height: 400, flex, overflow: "visible" }}>
+    <Card
+      sx={{
+        height: `calc(98vh / 3 - ${theme.spacing(2)})`,
+        flex,
+        overflow: "visible",
+      }}
+    >
       <CardContent sx={{ height: "100%" }}>{children}</CardContent>
     </Card>
   );
@@ -32,19 +42,19 @@ export const Charts = () => {
   }
 
   return (
-    <Stack>
-      <Stack direction="row" gap={2} p={2} pb={0}>
+    <Stack height="95vh" justifyContent="stretch">
+      <Stack flex={1} direction="row" gap={2} p={2} pb={0}>
         <ChartCard flex="1.5">
           <TotalReviewHistory />
         </ChartCard>
         <ChartCard flex="1">
           <ReviewCalendar />
         </ChartCard>
-        <ChartCard flex="0 0 315px">
+        <ChartCard flex="0 0 275px">
           <HalfPie />
         </ChartCard>
       </Stack>
-      <Stack direction="row" gap={2} p={2}>
+      <Stack flex={1} direction="row" gap={2} p={2} pb={0}>
         <ChartCard flex="20%">
           <HeatMap />
         </ChartCard>
@@ -53,6 +63,11 @@ export const Charts = () => {
         </ChartCard>
         <ChartCard flex="50%">
           <SwarmPlot />
+        </ChartCard>
+      </Stack>
+      <Stack flex={1} direction="row" gap={2} p={2}>
+        <ChartCard flex="20%">
+          <CardTypeBar />
         </ChartCard>
       </Stack>
     </Stack>

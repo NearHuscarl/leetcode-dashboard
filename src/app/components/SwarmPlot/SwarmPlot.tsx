@@ -20,7 +20,7 @@ export const SwarmPlot = () => {
         alignItems="center"
         gap={1}
       >
-        <ChartTitle>Card Types</ChartTitle>
+        <ChartTitle>Ease Rate</ChartTitle>
         <SwarmPlotFilter sx={{ alignSelf: "flex-start" }} />
       </Stack>
       <SwarmPlotChart data={data} groups={types} />

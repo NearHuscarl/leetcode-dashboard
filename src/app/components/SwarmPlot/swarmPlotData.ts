@@ -1,5 +1,5 @@
 import { TSwarmPlotDateFilter } from "app/store/filterSlice";
-import { TCardType, getCardType, getEaseRate } from "app/helpers/card";
+import { TCardType, getCardTypeAt, getEaseRate } from "app/helpers/card";
 import { TCardModel } from "app/services/problems";
 import { TCardReview } from "app/api/stats";
 import { getDateAgo } from "app/helpers/date";
@@ -29,8 +29,12 @@ export function prepareChartData(
   const dateEnd = getDateAgo(dateAgo);
 
   for (const card of cards) {
-    const type = getCardType(card);
-    const easeRate = getEaseRate(card.reviews.filter((r) => r.id <= dateEnd));
+    const type = getCardTypeAt(card, dateEnd);
+    const reviews = card.reviews.filter((r) => r.id <= dateEnd);
+
+    if (reviews.length === 0) continue;
+
+    const easeRate = getEaseRate(reviews);
 
     if (type === "New") continue; // Skip new cards (they don't have ease rate)
 

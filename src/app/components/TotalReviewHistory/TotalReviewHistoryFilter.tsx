@@ -27,7 +27,7 @@ export const TotalReviewHistoryFilter = (
   return (
     <TextField
       select
-      sx={{ width: 120, ...sx }}
+      sx={{ width: 110, ...sx }}
       value={date}
       onChange={(e) =>
         dispatch(filterActions.setLineChartDate(e.target.value as any))

@@ -93,7 +93,7 @@ export const RadarChart = (props: TRadarChartProps) => {
       sliceTooltip={CustomTooltip}
       maxValue={100}
       gridLevels={4}
-      margin={{ top: 70, right: 80, bottom: 40, left: 80 }}
+      margin={{ top: 20, right: 80, bottom: 40, left: 70 }}
       gridShape="linear"
       gridLabelOffset={10}
       gridLabel={RadarGridLabel}
@@ -107,7 +107,7 @@ export const RadarChart = (props: TRadarChartProps) => {
           anchor: "top-left",
           direction: "column",
           translateX: -70,
-          translateY: -40,
+          translateY: -10,
           itemWidth: 80,
           itemHeight: 20,
           symbolSize: 12,

@@ -126,7 +126,7 @@ export const TotalReviewHistoryChart = (
   return (
     <ResponsiveLine
       data={data}
-      margin={{ top: 50, right: 40, bottom: 80, left: 30 }}
+      margin={{ top: 20, right: 40, bottom: 70, left: 30 }}
       curve="basis"
       theme={chartTheme}
       xScale={{ type: "point" }}

@@ -88,7 +88,7 @@ export const SwarmPlotChart = (props: TSwarmPlotChartProps) => {
       size={{
         key: "volume",
         values: [1, 6],
-        sizes: [6, 20],
+        sizes: [6, 15],
       }}
       forceStrength={4}
       simulationIterations={100}

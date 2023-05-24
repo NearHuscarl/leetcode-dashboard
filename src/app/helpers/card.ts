@@ -16,6 +16,32 @@ export type TCardType =
   | "Relearning"
   | "Unknown";
 
+export const getCardTypeAt = (card: TCard, date: number) => {
+  if (card.reviews.length === 0) {
+    return "New" as const;
+  }
+
+  // card.type: the latest type as of now AFTER the last review
+  // card.reviews[i].type: the type BEFORE this review
+  for (let i = 0; i < card.reviews.length; i++) {
+    const review = card.reviews[i];
+
+    if (date < review.id) {
+      if (i === 0) {
+        return "New" as const;
+      }
+      return getCardTypeFromReview(review);
+    }
+  }
+
+  return getCardType(card);
+};
+
+// A mature card is one that has an interval of 21 days or greater.
+// https://docs.ankiweb.net/getting-started.html#cards
+const isMatureInterval = (interval: number) =>
+  interval / 1000 / 60 / 60 / 24 >= 21;
+
 export const getCardType = (card: TCard): TCardType => {
   switch (card.type) {
     case 0:
@@ -24,9 +50,7 @@ export const getCardType = (card: TCard): TCardType => {
       return "Learning";
     case 2:
       const interval = getIntervalTime(card.reviews.at(-1)?.ivl!);
-      // A mature card is one that has an interval of 21 days or greater.
-      // https://docs.ankiweb.net/getting-started.html#cards
-      if (interval / 1000 / 60 / 60 / 24 >= 21) {
+      if (isMatureInterval(interval)) {
         return "Mature";
       }
       return "Young";
@@ -41,10 +65,8 @@ export const getCardTypeFromReview = (review: TCardReview): TCardType => {
     case 0:
       return "Learning";
     case 1:
-      const interval = getIntervalTime(review.ivl);
-      // A mature card is one that has an interval of 21 days or greater.
-      // https://docs.ankiweb.net/getting-started.html#cards
-      if (interval / 1000 / 60 / 60 / 24 >= 21) {
+      const interval = getIntervalTime(review.lastIvl);
+      if (isMatureInterval(interval)) {
         return "Mature";
       }
       return "Young";

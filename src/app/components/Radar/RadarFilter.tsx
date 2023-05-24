@@ -21,7 +21,7 @@ export const RadarFilter = ({ sx }: { sx: SxProps }) => {
   return (
     <TextField
       select
-      sx={{ width: 150, ...sx }}
+      sx={{ width: 140, ...sx }}
       value={dateAgo}
       onChange={(e) =>
         dispatch(filterActions.setRadarDate(e.target.value as any))

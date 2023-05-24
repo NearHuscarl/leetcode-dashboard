@@ -88,6 +88,14 @@ export const theme = createTheme({
         },
       },
     },
+    MuiInputBase: {
+      styleOverrides: {
+        root: {
+          height: 35,
+          fontSize: 15,
+        },
+      },
+    },
     MuiTab: {
       styleOverrides: {
         root: {

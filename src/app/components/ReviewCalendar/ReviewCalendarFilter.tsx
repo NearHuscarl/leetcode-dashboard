@@ -18,7 +18,7 @@ export const ReviewCalendarFilter = ({ sx }: { sx: SxProps }) => {
   return (
     <TextField
       select
-      sx={{ width: 120, ...sx }}
+      sx={{ width: 100, ...sx }}
       value={year}
       onChange={(e) =>
         dispatch(filterActions.setCalendarYear(e.target.value as any))

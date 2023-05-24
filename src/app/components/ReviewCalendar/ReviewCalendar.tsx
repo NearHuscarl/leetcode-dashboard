@@ -30,7 +30,7 @@ export const ReviewCalendar = () => {
       </Stack>
       <Box
         sx={{
-          "& > div": { height: "140px !important" },
+          "& > div": { height: "100px !important" },
         }}
       >
         <ReviewCalendarChart from={from} to={to} data={data.New} label="New" />

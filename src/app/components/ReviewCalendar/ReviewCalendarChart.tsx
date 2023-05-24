@@ -130,7 +130,7 @@ export const ReviewCalendarChart = (props: TReviewCalendarChartProps) => {
       maxValue={9}
       colors={redColors.concat(colors)}
       yearLegend={() => label}
-      margin={{ top: 30, right: 30, bottom: 0, left: 30 }}
+      margin={{ top: 20, right: 0, bottom: 30, left: 10 }}
       tooltip={CustomTooltip}
       monthBorderColor="#ffffff"
       dayBorderWidth={2}

@@ -2,20 +2,12 @@ import memoize from "lodash/memoize";
 import { TCardModel } from "app/services/problems";
 import { TLeetcode } from "app/api/leetcode";
 import { neetcodeProblems } from "app/neetcode.g";
-import {
-  TCardType,
-  getCardType,
-  getCardTypeFromReview,
-} from "app/helpers/card";
+import { TCardType, getCardTypeAt } from "app/helpers/card";
 import { TSwarmPlotDateFilter } from "app/store/filterSlice";
 import { getDateAgo } from "app/helpers/date";
 
 function createMap(cards: TCardModel[], dateAgo: TSwarmPlotDateFilter) {
   const dateEnd = getDateAgo(dateAgo);
-
-  // card.type: the latest type as of now after the last review
-  // card.reviews[i].type: the type before this review
-
   const map: Record<TDsa, Record<TCardType, number>> = dataStructures.reduce(
     (acc: any, dsa) => {
       acc[dsa] = {};
@@ -29,21 +21,8 @@ function createMap(cards: TCardModel[], dateAgo: TSwarmPlotDateFilter) {
       continue;
     }
 
-    let cardType: TCardType = "New";
-
-    let i = 0;
-    for (; i < card.reviews.length; i++) {
-      const review = card.reviews[i];
-
-      if (dateEnd < review.id) {
-        cardType = getCardTypeFromReview(review);
-        break;
-      }
-    }
-    if (i === 0) continue;
-    if (i === card.reviews.length) {
-      cardType = getCardType(card);
-    }
+    const cardType = getCardTypeAt(card, dateEnd);
+    if (cardType === "New") continue;
 
     for (const tag of card.leetcode.topicTags) {
       const tagName = tag.name as TDsa;

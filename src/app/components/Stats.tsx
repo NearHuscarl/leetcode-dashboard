@@ -21,17 +21,23 @@ export const Stats = (props: TStatsProps) => {
         fontWeight: "bold",
       }}
     >
-      <div style={{ color: theme.palette.grey[500], fontWeight: 500 }}>
+      <div
+        style={{
+          color: theme.palette.grey[500],
+          fontWeight: 500,
+          fontSize: 15,
+        }}
+      >
         {label}
       </div>
       <Stack direction="row" gap={1} alignItems="center">
-        <div style={{ fontSize: 22 }}>
+        <div style={{ fontSize: 20 }}>
           {value}
-          <span style={{ fontSize: 15, color: theme.palette.grey[500] }}>
+          <span style={{ fontSize: 13, color: theme.palette.grey[500] }}>
             /{total}
           </span>
         </div>
-        {change && (
+        {change ? (
           <Tooltip title={changeTooltip}>
             <div
               style={{
@@ -39,7 +45,7 @@ export const Stats = (props: TStatsProps) => {
                 padding: "2px 4px",
                 fontWeight: 400,
                 borderRadius: 4,
-                fontSize: 14,
+                fontSize: 12,
                 color: green[600],
                 marginTop: 2,
               }}
@@ -47,7 +53,7 @@ export const Stats = (props: TStatsProps) => {
               +{change}
             </div>
           </Tooltip>
-        )}
+        ) : null}
       </Stack>
     </div>
   );
