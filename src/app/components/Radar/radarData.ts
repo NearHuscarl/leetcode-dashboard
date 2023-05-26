@@ -3,10 +3,10 @@ import { TCardModel } from "app/services/problems";
 import { TLeetcode } from "app/api/leetcode";
 import { neetcodeProblems } from "app/neetcode.g";
 import { TCardType, getCardTypeAt } from "app/helpers/card";
-import { TSwarmPlotDateFilter } from "app/store/filterSlice";
+import { TDateAgoFilter } from "app/store/filterSlice";
 import { getDateAgo } from "app/helpers/date";
 
-function createMap(cards: TCardModel[], dateAgo: TSwarmPlotDateFilter) {
+function createMap(cards: TCardModel[], dateAgo: TDateAgoFilter) {
   const dateEnd = getDateAgo(dateAgo);
   const map: Record<TDsa, Record<TCardType, number>> = dataStructures.reduce(
     (acc: any, dsa) => {
@@ -105,7 +105,7 @@ export type TRadarDatum = {
 export function prepareChartData(
   cards: TCardModel[],
   leetcodes: Record<string, TLeetcode>,
-  dateAgo: TSwarmPlotDateFilter
+  dateAgo: TDateAgoFilter
 ) {
   const data: TRadarDatum[] = [];
   const map = createMap(cards, dateAgo);

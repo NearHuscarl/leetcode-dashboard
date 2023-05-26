@@ -14,8 +14,8 @@ const options: { value: TDateAgoFilter; label: string }[] = [
   { value: "3month", label: "3 months ago" },
 ];
 
-export const SwarmPlotFilter = ({ sx }: { sx: SxProps }) => {
-  const dateAgo = useSelector((state) => state.filter.swarmPlot.dateAgo);
+export const RetentionRateFilter = ({ sx }: { sx: SxProps }) => {
+  const dateAgo = useSelector((state) => state.filter.retentionRate.dateAgo);
   const dispatch = useDispatch();
 
   return (
@@ -24,7 +24,7 @@ export const SwarmPlotFilter = ({ sx }: { sx: SxProps }) => {
       sx={{ width: 140, ...sx }}
       value={dateAgo}
       onChange={(e) =>
-        dispatch(filterActions.setSwarmPlotDate(e.target.value as any))
+        dispatch(filterActions.setRetentionRateDate(e.target.value as any))
       }
     >
       {options.map((option) => (

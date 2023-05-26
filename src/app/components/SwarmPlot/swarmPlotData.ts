@@ -1,4 +1,4 @@
-import { TSwarmPlotDateFilter } from "app/store/filterSlice";
+import { TDateAgoFilter } from "app/store/filterSlice";
 import { TCardType, getCardTypeAt, getEaseRate } from "app/helpers/card";
 import { TCardModel } from "app/services/problems";
 import { TCardReview } from "app/api/stats";
@@ -20,10 +20,7 @@ const typePriority = {
   Mature: 2,
 } as const;
 
-export function prepareChartData(
-  cards: TCardModel[],
-  dateAgo: TSwarmPlotDateFilter
-) {
+export function prepareChartData(cards: TCardModel[], dateAgo: TDateAgoFilter) {
   const points: TSwarmPlotDatum[] = [];
   const typeSet = new Set<TCardType>();
   const dateEnd = getDateAgo(dateAgo);

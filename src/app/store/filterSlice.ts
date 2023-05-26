@@ -4,7 +4,7 @@ import { persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 
 export type TDateFilter = "week" | "month" | "quarter" | "year" | "all";
-export type TSwarmPlotDateFilter =
+export type TDateAgoFilter =
   | "today"
   | "yesterday"
   | "week"
@@ -20,16 +20,19 @@ export interface TFilterState {
     year: number;
   };
   swarmPlot: {
-    dateAgo: TSwarmPlotDateFilter;
+    dateAgo: TDateAgoFilter;
   };
   heatMap: {
     date: TDateFilter;
   };
   radar: {
-    dateAgo: TSwarmPlotDateFilter;
+    dateAgo: TDateAgoFilter;
   };
   halfPie: {
-    dateAgo: TSwarmPlotDateFilter;
+    dateAgo: TDateAgoFilter;
+  };
+  retentionRate: {
+    dateAgo: TDateAgoFilter;
   };
 }
 
@@ -52,6 +55,9 @@ const initialState: TFilterState = {
   halfPie: {
     dateAgo: "today",
   },
+  retentionRate: {
+    dateAgo: "today",
+  },
 };
 
 export const filterSlice = createSlice({
@@ -64,17 +70,20 @@ export const filterSlice = createSlice({
     setCalendarYear: (state, action: PayloadAction<number>) => {
       state.calendar.year = action.payload;
     },
-    setSwarmPlotDate: (state, action: PayloadAction<TSwarmPlotDateFilter>) => {
+    setSwarmPlotDate: (state, action: PayloadAction<TDateAgoFilter>) => {
       state.swarmPlot.dateAgo = action.payload;
     },
     setHeatMapDate: (state, action: PayloadAction<TDateFilter>) => {
       state.heatMap.date = action.payload;
     },
-    setRadarDate: (state, action: PayloadAction<TSwarmPlotDateFilter>) => {
+    setRadarDate: (state, action: PayloadAction<TDateAgoFilter>) => {
       state.radar.dateAgo = action.payload;
     },
-    setHalfPieDate: (state, action: PayloadAction<TSwarmPlotDateFilter>) => {
+    setHalfPieDate: (state, action: PayloadAction<TDateAgoFilter>) => {
       state.halfPie.dateAgo = action.payload;
+    },
+    setRetentionRateDate: (state, action: PayloadAction<TDateAgoFilter>) => {
+      state.retentionRate.dateAgo = action.payload;
     },
   },
 });

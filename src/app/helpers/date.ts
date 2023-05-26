@@ -3,7 +3,7 @@ import differenceInDays from "date-fns/differenceInDays";
 import subDays from "date-fns/subDays";
 import subWeeks from "date-fns/subWeeks";
 import subMonths from "date-fns/subMonths";
-import { TDateFilter, TSwarmPlotDateFilter } from "app/store/filterSlice";
+import { TDateFilter, TDateAgoFilter } from "app/store/filterSlice";
 
 export const formatDate = (date: number | Date, dateFormat = "yyyy-MM-dd") => {
   return format(date, dateFormat);
@@ -40,7 +40,7 @@ export function getDateStart(filter: TDateFilter): Date | undefined {
   }
 }
 
-export function getDateAgo(filter: TSwarmPlotDateFilter): number {
+export function getDateAgo(filter: TDateAgoFilter): number {
   const dateNow = new Date();
 
   switch (filter) {

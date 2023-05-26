@@ -31,7 +31,7 @@ const DashedLine = ({
         d={d}
         fill="none"
         stroke={color}
-        strokeWidth={4}
+        strokeWidth={3}
         style={
           (id as string).endsWith("Problems") ? { strokeDasharray: "12,3" } : {}
         }
@@ -191,7 +191,6 @@ export const TotalReviewHistoryChart = (
       ]}
       // enableArea
       // areaOpacity={0.8}
-      lineWidth={3}
       enableGridX={false}
       gridYValues={5}
       enablePoints={false}

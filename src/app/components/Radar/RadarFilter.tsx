@@ -3,9 +3,9 @@ import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
 import { useDispatch } from "react-redux";
 import { useSelector } from "app/store/setup";
-import { TSwarmPlotDateFilter, filterActions } from "app/store/filterSlice";
+import { TDateAgoFilter, filterActions } from "app/store/filterSlice";
 
-const options: { value: TSwarmPlotDateFilter; label: string }[] = [
+const options: { value: TDateAgoFilter; label: string }[] = [
   { value: "today", label: "Today" },
   { value: "yesterday", label: "Yesterday" },
   { value: "week", label: "1 week ago" },

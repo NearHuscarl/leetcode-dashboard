@@ -90,9 +90,9 @@ LC solved over time
   * Estimated deadlines https://nivo.rocks/storybook/?path=/story/line--highlighting-negative-values
 
 Card type over time
-- Bar
-- X: time
-- Y: Number of card type in stack (new, learning, review)
++ Bar
++ X: time
++ Y: Number of card type in stack (new, learning, review)
 
 Review Result (Ease rate)
 + SwarmPlot
@@ -118,7 +118,7 @@ Heatmap
 + Show correlation between number of reviews and review hours
 + Add title
 + Add date filter
-- Add tooltip
++ Add tooltip
 
 HalfPie
 + Due status

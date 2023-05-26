@@ -5,10 +5,10 @@ import orange from "@mui/material/colors/orange";
 import amber from "@mui/material/colors/amber";
 import lightGreen from "@mui/material/colors/lightGreen";
 import { MayHaveLabel } from "@nivo/pie";
-import { TSwarmPlotDateFilter } from "app/store/filterSlice";
+import { TDateAgoFilter } from "app/store/filterSlice";
 import { getDateAgo } from "app/helpers/date";
 
-function createMap(cards: TCardModel[], dateAgo: TSwarmPlotDateFilter) {
+function createMap(cards: TCardModel[], dateAgo: TDateAgoFilter) {
   const map: Record<TDueStatus, number> = {
     stale: 0,
     bad: 0,
@@ -40,10 +40,7 @@ const colorLookup: Record<TDueStatus, string> = {
   none: "",
 };
 
-export function prepareChartData(
-  cards: TCardModel[],
-  dateAgo: TSwarmPlotDateFilter
-) {
+export function prepareChartData(cards: TCardModel[], dateAgo: TDateAgoFilter) {
   const data: TPieDatum[] = [];
   const map = createMap(cards, dateAgo);
   const dueStatuses: TDueStatus[] = ["good", "now", "bad", "stale"];

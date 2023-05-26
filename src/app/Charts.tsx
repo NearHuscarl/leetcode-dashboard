@@ -13,6 +13,7 @@ import { Radar } from "./components/Radar";
 import { HalfPie } from "./components/HalfPie";
 import { CardTypeBar } from "./components/CardTypeBar";
 import { useTheme } from "@mui/material";
+import { RetentionRate } from "./components/RetentionRate";
 
 type TChartCardProps = PropsWithChildren & {
   flex?: number | string;
@@ -62,12 +63,15 @@ export const Charts = () => {
           <Radar />
         </ChartCard>
         <ChartCard flex="50%">
-          <SwarmPlot />
+          <RetentionRate />
         </ChartCard>
       </Stack>
       <Stack flex={1} direction="row" gap={2} p={2}>
-        <ChartCard flex="20%">
+        <ChartCard flex="40%">
           <CardTypeBar />
+        </ChartCard>
+        <ChartCard flex="50%">
+          <SwarmPlot />
         </ChartCard>
       </Stack>
     </Stack>
