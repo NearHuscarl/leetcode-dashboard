@@ -9,7 +9,7 @@ export const CardTypeBar = () => {
   const { data } = prepareChartData(cards);
 
   return (
-    <Stack justifyContent="space-between" height="100%">
+    <>
       <Stack
         width="100%"
         direction="row"
@@ -20,6 +20,6 @@ export const CardTypeBar = () => {
         <ChartTitle>Card Types</ChartTitle>
       </Stack>
       <CardTypeBarChart data={data} />
-    </Stack>
+    </>
   );
 };

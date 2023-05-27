@@ -11,7 +11,7 @@ export const HalfPieChart = (props: THalfPieProps) => {
   return (
     <ResponsivePie<TPieDatum>
       data={data}
-      margin={{ top: 30, right: 0, bottom: 40, left: -50 }}
+      margin={{ top: 30, right: 0, bottom: 50, left: -50 }}
       innerRadius={0.7}
       startAngle={0}
       endAngle={180}

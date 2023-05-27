@@ -5,6 +5,7 @@ import { SwarmPlotChart } from "./SwarmPlotChart";
 import { prepareChartData } from "./swarmPlotData";
 import { SwarmPlotFilter } from "./SwarmPlotFilter";
 import { ChartTitle } from "../ChartTitle";
+import { INPUT_HEIGHT } from "app/provider/ThemeProvider";
 
 export const SwarmPlot = () => {
   const dateAgo = useSelector((state) => state.filter.swarmPlot.dateAgo);
@@ -12,7 +13,7 @@ export const SwarmPlot = () => {
   const { data, types } = prepareChartData(cards, dateAgo);
 
   return (
-    <Stack height="100%" justifyContent="space-between">
+    <>
       <Stack
         width="100%"
         direction="row"
@@ -23,7 +24,9 @@ export const SwarmPlot = () => {
         <ChartTitle>Ease Rate</ChartTitle>
         <SwarmPlotFilter sx={{ alignSelf: "flex-start" }} />
       </Stack>
-      <SwarmPlotChart data={data} groups={types} />
-    </Stack>
+      <div style={{ height: `calc(100% - ${INPUT_HEIGHT}px)` }}>
+        <SwarmPlotChart data={data} groups={types} />
+      </div>
+    </>
   );
 };

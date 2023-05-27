@@ -28,6 +28,9 @@ const ChartCard = ({ children, flex }: TChartCardProps) => {
         height: `calc(98vh / 3 - ${theme.spacing(2)})`,
         flex,
         overflow: "visible",
+        "& .MuiCardContent-root": {
+          pb: theme.spacing(2) + " !important",
+        },
       }}
     >
       <CardContent sx={{ height: "100%" }}>{children}</CardContent>

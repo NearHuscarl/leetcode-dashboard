@@ -64,7 +64,7 @@ export const HeatMapChart = (props: THeatMapProps) => {
   return (
     <ResponsiveHeatMap
       data={data}
-      margin={{ top: 20, right: 70, bottom: 50, left: 60 }}
+      margin={{ top: 20, right: 70, bottom: 55, left: 60 }}
       theme={{
         textColor: theme.chart.legend.color,
       }}

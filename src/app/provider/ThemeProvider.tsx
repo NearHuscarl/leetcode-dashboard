@@ -9,6 +9,8 @@ import {
   createTheme,
 } from "@mui/material/styles";
 
+export const INPUT_HEIGHT = 35;
+
 declare module "@mui/material/styles/createTheme" {
   interface Theme {
     chart: {
@@ -121,7 +123,7 @@ export const theme = createTheme({
     MuiInputBase: {
       styleOverrides: {
         root: {
-          height: 35,
+          height: INPUT_HEIGHT,
           fontSize: 15,
         },
       },

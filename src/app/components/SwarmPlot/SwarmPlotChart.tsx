@@ -92,7 +92,7 @@ export const SwarmPlotChart = (props: TSwarmPlotChartProps) => {
       }}
       forceStrength={4}
       simulationIterations={100}
-      margin={{ top: 30, right: 60, bottom: 50, left: 60 }}
+      margin={{ top: 30, right: 60, bottom: 25, left: 60 }}
       gridYValues={4}
       axisTop={{
         tickSize: 0,

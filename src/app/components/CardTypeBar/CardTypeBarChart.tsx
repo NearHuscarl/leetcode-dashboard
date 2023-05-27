@@ -20,7 +20,7 @@ export const CardTypeBarChart = (props: TCardTypeBarChartProps) => {
         textColor: theme.chart.legend.color,
       }}
       colors={({ id }) => getCardTypeColor(id as any)}
-      margin={{ top: 50, right: 130, bottom: 40, left: 60 }}
+      margin={{ top: 50, right: 130, bottom: 50, left: 60 }}
       groupMode="grouped"
       valueScale={{ type: "linear" }}
       indexScale={{ type: "band", round: true }}
