@@ -1,8 +1,7 @@
 import Stack from "@mui/material/Stack";
-import { amber, grey, cyan, lightGreen, red } from "@mui/material/colors";
+import { amber, grey, lightGreen, red } from "@mui/material/colors";
 import { ResponsiveLine, Serie, SliceTooltipProps } from "@nivo/line";
 import { Theme } from "@nivo/core";
-import { getTickFormattedDate } from "app/helpers/chart";
 import { theme } from "app/provider/ThemeProvider";
 import { ChartTooltip } from "../ChartTooltip";
 
@@ -83,16 +82,15 @@ type TTotalReviewHistoryChartProps = {
   data: Serie[];
 };
 
-export const TotalReviewHistoryChart = (
+export const TotalReviewHistoryByDifficultyChart = (
   props: TTotalReviewHistoryChartProps
 ) => {
   const { data } = props;
-  const daysRecord = data[0]?.data.length;
 
   return (
     <ResponsiveLine
       data={data}
-      margin={{ top: 20, right: 20, bottom: 25, left: 30 }}
+      margin={{ top: 10, right: 10, bottom: 5, left: 10 }}
       curve="basis"
       theme={chartTheme}
       xScale={{ type: "point" }}
@@ -105,43 +103,24 @@ export const TotalReviewHistoryChart = (
       sliceTooltip={CustomTooltip}
       colors={(data) => {
         switch (data.id) {
-          case "Reviews":
-            return cyan[500];
-          case "Problems":
+          case "Hard":
+            return red[500];
+          case "Medium":
             return amber[500];
+          case "Easy":
+            return lightGreen[500];
         }
 
         return grey[500];
       }}
       axisTop={null}
       axisRight={null}
-      axisBottom={{
-        tickSize: 0,
-        legendPosition: "middle",
-        renderTick(props) {
-          const { x, y, value } = props;
-
-          const formattedDate = getTickFormattedDate(value, daysRecord);
-
-          if (!formattedDate) {
-            return <></>;
-          }
-
-          return (
-            <text x={x - 10} y={y + 20} {...(legendTextStyle as any)}>
-              {formattedDate}
-            </text>
-          );
-        },
-      }}
-      axisLeft={{
-        tickSize: 0,
-        tickValues: 4,
-      }}
+      axisLeft={null}
+      axisBottom={null}
       // enableArea
-      // areaOpacity={0.9}
-      lineWidth={3}
+      // areaOpacity={0.8}
       enableGridX={false}
+      enableGridY={false}
       gridYValues={5}
       enablePoints={false}
       useMesh

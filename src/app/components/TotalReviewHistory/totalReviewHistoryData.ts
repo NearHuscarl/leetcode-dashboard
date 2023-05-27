@@ -4,11 +4,13 @@ import { TCardModel } from "app/services/problems";
 import { TDateFilter } from "app/store/filterSlice";
 
 type TDate = string;
-type TCategory = string;
+type TDifficulty = "Easy" | "Medium" | "Hard";
 
-// A helper function that preprocesses the cards array and creates a map that stores the number of problems solved for each date and category
 function createMap(cards: TCardModel[]) {
-  const map: Record<TDate, Record<TCategory, number>> = {};
+  const totalMap: Record<TDate, { reviews: number; news: number }> = {};
+  const newMap: Record<TDate, Record<TDifficulty, number>> = {};
+  const reviewMap: Record<TDate, Record<TDifficulty, number>> = {};
+  const createSubmap = () => ({ Easy: 0, Medium: 0, Hard: 0 });
 
   for (const card of cards) {
     if (!card.leetcode) continue;
@@ -18,21 +20,23 @@ function createMap(cards: TCardModel[]) {
     for (let i = 0; i < card.reviews.length; i++) {
       const review = card.reviews[i];
       const date = formatDate(review.id);
-      const submap = map[date] ?? (map[date] = {}); // Initialize the submap if it doesn't exist
       const isNewCard = i === 0;
 
       if (isNewCard) {
-        const problemCategory = `${difficulty} Problems`;
-        submap[problemCategory] = (submap[problemCategory] ?? 0) + 1;
+        const submap = newMap[date] ?? (newMap[date] = createSubmap()); // Initialize the submap if it doesn't exist
+        submap[difficulty] = (submap[difficulty] ?? 0) + 1;
       }
 
-      const reviewCategory = `${difficulty} Reviews`;
-      submap[reviewCategory] = (submap[reviewCategory] ?? 0) + 1;
+      const submap = reviewMap[date] ?? (reviewMap[date] = createSubmap()); // Initialize the submap if it doesn't exist
+      submap[difficulty] = (submap[difficulty] ?? 0) + 1;
+
+      totalMap[date] ??= { reviews: 0, news: 0 };
+      totalMap[date].reviews += 1;
+      if (isNewCard) totalMap[date].news += 1;
     }
   }
 
-  // Return the map
-  return map;
+  return { reviewMap, newMap, totalMap };
 }
 
 export function prepareChartData(cards: TCardModel[], date: TDateFilter) {
@@ -50,45 +54,84 @@ export function prepareChartData(cards: TCardModel[], date: TDateFilter) {
 
   // Get all the dates between the earliest and latest review dates
   const dates = getDatesBetween(minDate, maxDate);
-  const map = createMap(cards);
-  const result: Serie[] = [];
-  const categories = [
-    "Easy Problems",
-    "Easy Reviews",
-    "Medium Problems",
-    "Medium Reviews",
-    "Hard Problems",
-    "Hard Reviews",
-  ];
+  const { reviewMap, newMap, totalMap } = createMap(cards);
+  const difficulties = ["Easy", "Medium", "Hard"] as const;
 
-  for (const category of categories) {
-    const data: Serie["data"] = [];
-    let total = 0;
+  const createTotalLookup = () => ({
+    reviews: 0,
+    news: 0,
+    reviewPoints: [] as Serie["data"],
+    newPoints: [] as Serie["data"],
+  });
+  const totalLookup = {
+    Easy: createTotalLookup(),
+    Medium: createTotalLookup(),
+    Hard: createTotalLookup(),
+    Total: createTotalLookup(),
+  };
 
-    for (const date of dates) {
-      total += map[date]?.[category] ?? 0;
-      data.push({ x: date, y: total });
+  for (const date of dates) {
+    for (const difficulty of difficulties) {
+      const r = reviewMap[date]?.[difficulty] ?? 0;
+      const n = newMap[date]?.[difficulty] ?? 0;
+
+      totalLookup[difficulty].reviews += r;
+      totalLookup[difficulty].reviewPoints.push({
+        x: date,
+        y: totalLookup[difficulty].reviews,
+      });
+
+      totalLookup[difficulty].news += n;
+      totalLookup[difficulty].newPoints.push({
+        x: date,
+        y: totalLookup[difficulty].news,
+      });
     }
 
-    result.push({ id: category, data });
+    totalLookup["Total"].news += totalMap[date]?.news ?? 0;
+    totalLookup["Total"].newPoints.push({
+      x: date,
+      y: totalLookup["Total"].news,
+    });
+
+    totalLookup["Total"].reviews += totalMap[date]?.reviews ?? 0;
+    totalLookup["Total"].reviewPoints.push({
+      x: date,
+      y: totalLookup["Total"].reviews,
+    });
   }
 
-  let totalProblems = 0;
-  let totalProblemsThisWeek = 0;
+  const reviewData = difficulties.map((difficulty) => ({
+    id: difficulty,
+    data: totalLookup[difficulty].reviewPoints,
+  }));
+  const newData = difficulties.map((difficulty) => ({
+    id: difficulty,
+    data: totalLookup[difficulty].newPoints,
+  }));
+  const totalData = [
+    { id: "Problems", data: totalLookup["Total"].newPoints },
+    { id: "Reviews", data: totalLookup["Total"].reviewPoints },
+  ];
+
   let totalReviews = 0;
   let totalReviewsThisWeek = 0;
-  result.forEach((d) => {
-    const isReview = (d.id as string).endsWith("Reviews");
+  reviewData.forEach((d) => {
     const todayCount = (d.data.at(-1)?.y as number) ?? 0;
     const lastSevenDaysCount = (d.data.at(-1 - 7)?.y as number) ?? 0;
 
-    if (isReview) {
-      totalReviews += todayCount;
-      totalReviewsThisWeek += todayCount - lastSevenDaysCount ?? 0;
-    } else {
-      totalProblems += todayCount;
-      totalProblemsThisWeek += todayCount - lastSevenDaysCount ?? 0;
-    }
+    totalReviews += todayCount;
+    totalReviewsThisWeek += todayCount - lastSevenDaysCount ?? 0;
+  });
+
+  let totalProblems = 0;
+  let totalProblemsThisWeek = 0;
+  newData.forEach((d) => {
+    const todayCount = (d.data.at(-1)?.y as number) ?? 0;
+    const lastSevenDaysCount = (d.data.at(-1 - 7)?.y as number) ?? 0;
+
+    totalProblems += todayCount;
+    totalProblemsThisWeek += todayCount - lastSevenDaysCount ?? 0;
   });
 
   return {
@@ -96,6 +139,8 @@ export function prepareChartData(cards: TCardModel[], date: TDateFilter) {
     totalProblemsThisWeek,
     totalReviews,
     totalReviewsThisWeek,
-    data: result,
+    totalData,
+    reviewData,
+    newData,
   };
 }
