@@ -1,36 +1,63 @@
-import { amber, lightGreen, orange } from "@mui/material/colors";
-import grey from "@mui/material/colors/grey";
 import { TDateAgoFilter } from "app/store/filterSlice";
 import { TCardModel } from "app/services/problems";
 import { getDateAgo } from "app/helpers/date";
-import { getCardTypeFromReview } from "app/helpers/card";
+import {
+  TCardType,
+  TEaseLabel,
+  getCardTypeFromReview,
+  getEaseLabel,
+} from "app/helpers/card";
+import { MayHaveLabel } from "@nivo/pie";
 
-type TRetentionArray = [
-  good: { value: number; color: string },
-  easy: { value: number; color: string },
-  hard: { value: number; color: string },
-  again: { value: number; color: string }
-];
+export interface TRetentionDatum extends MayHaveLabel {
+  id: TEaseLabel;
+  value: number;
+  cardType: TCardType;
+}
+
 type TRetentionRateData = {
-  Learning: TRetentionArray;
-  Young: TRetentionArray;
-  Mature: TRetentionArray;
+  Learning: TRetentionDatum[];
+  Young: TRetentionDatum[];
+  Mature: TRetentionDatum[];
 };
 
-const createRetentionArray = (): TRetentionArray => [
-  { value: 0, color: orange[500] },
-  { value: 0, color: amber[500] },
-  { value: 0, color: lightGreen[500] },
-  { value: 0, color: grey[300] },
+const getEaseIndex = (ease: number) => {
+  switch (ease) {
+    case 1:
+      return 3;
+    case 2:
+      return 0;
+    case 3:
+      return 1;
+    case 4:
+      return 2;
+    default:
+      return -1;
+  }
+};
+
+const createDatums = (cardType: TCardType) => [
+  { id: getEaseLabel(2), value: 0, cardType },
+  { id: getEaseLabel(3), value: 0, cardType },
+  { id: getEaseLabel(4), value: 0, cardType },
+  { id: getEaseLabel(1), value: 0, cardType },
 ];
 
 export function prepareChartData(cards: TCardModel[], dateAgo: TDateAgoFilter) {
   const dateEnd = getDateAgo(dateAgo);
-  const data: Record<string, TRetentionArray> = {
-    Learning: createRetentionArray(),
-    Young: createRetentionArray(),
-    Mature: createRetentionArray(),
+  const data: Record<string, TRetentionDatum[]> = {
+    Learning: createDatums("Learning"),
+    Young: createDatums("Young"),
+    Mature: createDatums("Mature"),
   } as TRetentionRateData;
+  const ease = {
+    again: 0,
+    hard: 0,
+    good: 0,
+    easy: 0,
+    unknown: 0,
+  };
+  let total = 0;
 
   for (const card of cards) {
     for (const review of card.reviews) {
@@ -40,15 +67,23 @@ export function prepareChartData(cards: TCardModel[], dateAgo: TDateAgoFilter) {
 
       if (data[cardType] === undefined) continue;
 
-      if (review.ease === 1) {
-        data[cardType][3].value++;
-      } else {
-        data[cardType][review.ease - 2].value++;
-      }
+      const easeLabel = getEaseLabel(review.ease);
+      const i = getEaseIndex(review.ease);
+
+      ease[easeLabel] += 1;
+      total += 1;
+
+      data[cardType][i] = data[cardType][i] ?? {
+        id: easeLabel,
+        value: 0,
+      };
+      data[cardType][i].value += 1;
     }
   }
 
   return {
     data,
+    ease,
+    total,
   };
 }

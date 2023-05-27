@@ -1,15 +1,20 @@
 import Stack from "@mui/material/Stack";
-import { CircularProgress } from "../CircularProgress";
+import { useTheme } from "@mui/material";
 import { ChartTitle } from "../ChartTitle";
 import { RetentionRateFilter } from "./RetentionRateFilter";
 import { useProblems } from "app/services/problems";
 import { prepareChartData } from "./retentionRateData";
 import { useSelector } from "app/store/setup";
+import { RetentionRateCircle } from "./RetentionRateCircle";
+import { TEaseLabel } from "app/helpers/card";
 
 export const RetentionRate = () => {
   const cards = useProblems();
   const dateAgo = useSelector((state) => state.filter.retentionRate.dateAgo);
-  const { data } = prepareChartData(cards, dateAgo);
+  const { data, ease, total } = prepareChartData(cards, dateAgo);
+  const theme = useTheme();
+  const totalPassed = ease.good + ease.easy + ease.hard;
+  const totalFailed = ease.again;
 
   return (
     <Stack justifyContent="space-between" height="100%">
@@ -25,22 +30,47 @@ export const RetentionRate = () => {
       </Stack>
       <Stack
         width="100%"
+        height="calc(100% - 100px)"
         direction="row"
         justifyContent="space-around"
         alignItems="center"
-        gap={1}
       >
-        {Object.keys(data).map((label) => {
-          const total = data[label].reduce((a, b) => a + b.value, 0);
-          return (
-            <CircularProgress
-              key={label}
-              values={data[label]}
-              value={(total - data[label][3].value) / (total || 1)}
-              text={label}
+        {Object.keys(data).map((cardType) => (
+          <RetentionRateCircle data={data[cardType]} />
+        ))}
+      </Stack>
+      <Stack>
+        <Stack px={2.5} direction="row" justifyContent="space-between">
+          <div>
+            <div style={{ color: theme.chart.legend.color, fontSize: 12 }}>
+              Passed
+            </div>
+            <div style={{ fontWeight: 600 }}>
+              {Math.round((totalPassed / total) * 100)}%
+            </div>
+          </div>
+          <div style={{ textAlign: "right" }}>
+            <div style={{ color: theme.chart.legend.color, fontSize: 12 }}>
+              Failed
+            </div>
+            <div style={{ fontWeight: 600 }}>
+              {Math.round((totalFailed / total) * 100)}%
+            </div>
+          </div>
+        </Stack>
+        <Stack direction="row" px={2} gap={0.5}>
+          {(Object.keys(ease) as TEaseLabel[]).reverse().map((e) => (
+            <div
+              style={{
+                width: `${(ease[e] / total) * 100}%`,
+                height: 11,
+                transition: "width 0.3s",
+                backgroundColor: theme.anki.ease[e],
+                borderRadius: 10,
+              }}
             />
-          );
-        })}
+          ))}
+        </Stack>
       </Stack>
     </Stack>
   );

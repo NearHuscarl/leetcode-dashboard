@@ -179,3 +179,19 @@ export const getEaseRate = (reviews: TCardReview[]): number => {
   }
   return score / reviews.length;
 };
+
+export type TEaseLabel = "again" | "hard" | "good" | "easy" | "unknown";
+
+export const getEaseLabel = (ease: number) => {
+  switch (ease) {
+    case 1:
+      return "again";
+    case 2:
+      return "hard";
+    case 3:
+      return "good";
+    case 4:
+      return "easy";
+  }
+  return "unknown";
+};
