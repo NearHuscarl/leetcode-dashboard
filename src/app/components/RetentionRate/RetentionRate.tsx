@@ -36,7 +36,7 @@ export const RetentionRate = () => {
         alignItems="center"
       >
         {Object.keys(data).map((cardType) => (
-          <RetentionRateCircle data={data[cardType]} />
+          <RetentionRateCircle key={cardType} data={data[cardType]} />
         ))}
       </Stack>
       <Stack>
@@ -61,6 +61,7 @@ export const RetentionRate = () => {
         <Stack direction="row" px={2} gap={0.5}>
           {(Object.keys(ease) as TEaseLabel[]).reverse().map((e) => (
             <div
+              key={e}
               style={{
                 width: `${(ease[e] / total) * 100}%`,
                 height: 11,

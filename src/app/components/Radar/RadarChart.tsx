@@ -35,6 +35,11 @@ const RadarGridLabel = ({
 };
 
 const cardTypes: TCardType[] = ["Learning", "Young", "Mature"];
+const cardTypePriorities = {
+  Learning: 0,
+  Young: 1,
+  Mature: 2,
+};
 
 const CustomTooltip = (props: RadarSliceTooltipProps) => {
   const { data, index } = props;
@@ -46,22 +51,25 @@ const CustomTooltip = (props: RadarSliceTooltipProps) => {
           {getDisplayedLabel(index as string)}
         </div>
         <Stack>
-          {data.map(({ id, value }) => (
-            <Stack key={id} direction="row" justifyContent="space-between">
-              <ChartTooltip.Caption
-                style={{
-                  width: 80,
-                  color: getCardTypeColor(id as any),
-                  fontWeight: "bold",
-                }}
-              >
-                {id}
-              </ChartTooltip.Caption>
-              <ChartTooltip.Text>
-                {Math.round(value * 10) / 10}%
-              </ChartTooltip.Text>
-            </Stack>
-          ))}
+          {data
+            // @ts-ignore
+            .sort((a, b) => cardTypePriorities[a.id] - cardTypePriorities[b.id])
+            .map(({ id, value }) => (
+              <Stack key={id} direction="row" justifyContent="space-between">
+                <ChartTooltip.Text
+                  style={{
+                    width: 80,
+                    color: getCardTypeColor(id as any),
+                  }}
+                >
+                  {id}
+                </ChartTooltip.Text>
+                <ChartTooltip.Text>
+                  {Math.round(value * 10) / 10}
+                  <span style={{ color: grey[400] }}>%</span>
+                </ChartTooltip.Text>
+              </Stack>
+            ))}
         </Stack>
       </div>
     </ChartTooltip>
