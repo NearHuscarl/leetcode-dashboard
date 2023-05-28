@@ -1,78 +1,72 @@
 import Stack from "@mui/material/Stack";
-import { amber, grey, lightGreen, red } from "@mui/material/colors";
+import { amber, lightGreen, red, green, grey } from "@mui/material/colors";
 import { ResponsiveLine, Serie, SliceTooltipProps } from "@nivo/line";
-import { Theme } from "@nivo/core";
 import { theme } from "app/provider/ThemeProvider";
 import { ChartTooltip } from "../ChartTooltip";
+import { TLineDatum } from "./totalReviewHistoryData";
+import { useMemo } from "react";
 
 const legendTextStyle: Partial<React.CSSProperties> = {
   fill: theme.chart.legend.color,
   fontSize: theme.chart.legend.fontSize,
 };
 
-const chartTheme: Theme = {
-  axis: {
-    ticks: { text: legendTextStyle },
-    legend: { text: legendTextStyle },
-  },
-};
-
-const createIcon = (color: string, dashed: boolean) => (
-  <div
-    style={{
-      width: 14,
-      height: 14,
-      borderRadius: "50%",
-      border: `2px solid ${color}`,
-      borderStyle: dashed ? "dotted" : "solid",
-    }}
-  />
-);
-const category2Icon = {
-  "Easy Problems": createIcon(lightGreen[500], true),
-  "Medium Problems": createIcon(amber[500], true),
-  "Hard Problems": createIcon(red[500], true),
-  "Easy Reviews": createIcon(lightGreen[500], false),
-  "Medium Reviews": createIcon(amber[500], false),
-  "Hard Reviews": createIcon(red[500], false),
-};
-
-const CustomTooltip = (props: SliceTooltipProps) => {
+const createCustomTooltip = (tooltip: string) => (props: SliceTooltipProps) => {
   const { slice } = props;
+  const total = slice.points.reduce((acc, { data }) => {
+    return acc + (data.y as number);
+  }, 0);
 
   return (
     <ChartTooltip>
-      <ChartTooltip.Date style={{ marginBottom: 6 }}>
+      <ChartTooltip.Date style={{ marginBottom: 2 }}>
         {slice.points[0].data.xFormatted}
       </ChartTooltip.Date>
+      <ChartTooltip.Caption style={{ marginBottom: 6, color: grey[500] }}>
+        <span style={{ color: "black" }}>{total}</span> {tooltip}
+      </ChartTooltip.Caption>
       <Stack gap={0.2}>
-        {slice.points.map(({ serieId, data, color }) => (
-          <div
-            key={serieId}
-            style={{
-              display: "flex",
-              gap: 4,
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
-            <div style={{ display: "flex", gap: 4, alignItems: "center" }}>
-              {category2Icon[serieId as keyof typeof category2Icon]}
-              <ChartTooltip.Text style={{ color, width: 130 }}>
-                {serieId}
-              </ChartTooltip.Text>
-            </div>
-            <ChartTooltip.Text
+        {slice.points.map(({ serieId, data, color }) => {
+          const datum = data as TLineDatum;
+
+          return (
+            <div
+              key={serieId}
               style={{
-                textAlign: "right",
-                fontWeight: 600,
-                color: data.yFormatted === "0" ? grey[400] : "inherit",
+                display: "flex",
+                gap: 4,
+                justifyContent: "space-between",
+                alignItems: "center",
               }}
             >
-              {data.yFormatted}
-            </ChartTooltip.Text>
-          </div>
-        ))}
+              <div style={{ display: "flex", gap: 4, alignItems: "center" }}>
+                <ChartTooltip.Text style={{ color, width: 100 }}>
+                  {serieId}
+                </ChartTooltip.Text>
+              </div>
+              <ChartTooltip.Text
+                style={{
+                  textAlign: "right",
+                  fontWeight: 600,
+                  color: data.yFormatted === "0" ? grey[400] : "inherit",
+                }}
+              >
+                {data.yFormatted}
+              </ChartTooltip.Text>
+              <ChartTooltip.Text
+                style={{
+                  padding: "0.5px 4px",
+                  fontWeight: 400,
+                  borderRadius: 4,
+                  backgroundColor: datum.diff === 0 ? grey[100] : green[50],
+                  color: datum.diff === 0 ? grey[400] : green[600],
+                }}
+              >
+                +{datum.diff}
+              </ChartTooltip.Text>
+            </div>
+          );
+        })}
       </Stack>
     </ChartTooltip>
   );
@@ -80,19 +74,26 @@ const CustomTooltip = (props: SliceTooltipProps) => {
 
 type TTotalReviewHistoryChartProps = {
   data: Serie[];
+  tooltip: string;
 };
 
 export const TotalReviewHistoryByDifficultyChart = (
   props: TTotalReviewHistoryChartProps
 ) => {
-  const { data } = props;
+  const { data, tooltip } = props;
+  const CustomTooltip = useMemo(() => createCustomTooltip(tooltip), [tooltip]);
 
   return (
     <ResponsiveLine
       data={data}
-      margin={{ top: 10, right: 10, bottom: 5, left: 10 }}
+      margin={{ top: 10, right: 10, bottom: 10, left: 10 }}
       curve="basis"
-      theme={chartTheme}
+      theme={{
+        axis: {
+          ticks: { text: legendTextStyle },
+          legend: { text: legendTextStyle },
+        },
+      }}
       xScale={{ type: "point" }}
       yScale={{
         type: "linear",

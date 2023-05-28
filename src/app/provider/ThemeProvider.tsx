@@ -50,11 +50,15 @@ declare module "@mui/material/styles/createTheme" {
 
 const defaultTheme = createTheme();
 export const primaryColor = cyan;
+export const secondaryColor = amber;
 
 export const theme = createTheme({
   palette: {
     primary: {
       main: primaryColor[500],
+    },
+    secondary: {
+      main: secondaryColor[500],
     },
   },
   chart: {

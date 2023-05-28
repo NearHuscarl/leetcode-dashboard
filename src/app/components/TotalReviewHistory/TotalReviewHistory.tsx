@@ -40,19 +40,25 @@ export const TotalReviewHistory = () => {
         <Stack
           width="100%"
           height="100%"
-          gap={1}
+          gap={2}
           justifyContent="space-between"
         >
           <Stack height="50%">
             <ChartTitle>Problems</ChartTitle>
             <ResponsiveContainer>
-              <TotalReviewHistoryByDifficultyChart data={newData} />
+              <TotalReviewHistoryByDifficultyChart
+                data={newData}
+                tooltip="New Problems Solved"
+              />
             </ResponsiveContainer>
           </Stack>
           <Stack height="50%">
             <ChartTitle>Reviews</ChartTitle>
             <ResponsiveContainer>
-              <TotalReviewHistoryByDifficultyChart data={reviewData} />
+              <TotalReviewHistoryByDifficultyChart
+                data={reviewData}
+                tooltip="New Reviews"
+              />
             </ResponsiveContainer>
           </Stack>
         </Stack>

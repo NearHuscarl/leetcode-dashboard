@@ -1,10 +1,14 @@
-import { Serie } from "@nivo/line";
+import { Datum, Serie } from "@nivo/line";
 import { formatDate, getDateStart, getDatesBetween } from "app/helpers/date";
 import { TCardModel } from "app/services/problems";
 import { TDateFilter } from "app/store/filterSlice";
 
 type TDate = string;
 type TDifficulty = "Easy" | "Medium" | "Hard";
+
+export interface TLineDatum extends Datum {
+  diff?: number;
+}
 
 function createMap(cards: TCardModel[]) {
   const totalMap: Record<TDate, { reviews: number; news: number }> = {};
@@ -60,8 +64,8 @@ export function prepareChartData(cards: TCardModel[], date: TDateFilter) {
   const createTotalLookup = () => ({
     reviews: 0,
     news: 0,
-    reviewPoints: [] as Serie["data"],
-    newPoints: [] as Serie["data"],
+    reviewPoints: [] as TLineDatum[],
+    newPoints: [] as TLineDatum[],
   });
   const totalLookup = {
     Easy: createTotalLookup(),
@@ -79,37 +83,43 @@ export function prepareChartData(cards: TCardModel[], date: TDateFilter) {
       totalLookup[difficulty].reviewPoints.push({
         x: date,
         y: totalLookup[difficulty].reviews,
+        diff: r,
       });
 
       totalLookup[difficulty].news += n;
       totalLookup[difficulty].newPoints.push({
         x: date,
         y: totalLookup[difficulty].news,
+        diff: n,
       });
     }
 
-    totalLookup["Total"].news += totalMap[date]?.news ?? 0;
+    const n = totalMap[date]?.news ?? 0;
+    totalLookup["Total"].news += n;
     totalLookup["Total"].newPoints.push({
       x: date,
       y: totalLookup["Total"].news,
+      diff: n,
     });
 
-    totalLookup["Total"].reviews += totalMap[date]?.reviews ?? 0;
+    const r = totalMap[date]?.reviews ?? 0;
+    totalLookup["Total"].reviews += r;
     totalLookup["Total"].reviewPoints.push({
       x: date,
       y: totalLookup["Total"].reviews,
+      diff: r,
     });
   }
 
-  const reviewData = difficulties.map((difficulty) => ({
+  const reviewData: Serie[] = difficulties.map((difficulty) => ({
     id: difficulty,
     data: totalLookup[difficulty].reviewPoints,
   }));
-  const newData = difficulties.map((difficulty) => ({
+  const newData: Serie[] = difficulties.map((difficulty) => ({
     id: difficulty,
     data: totalLookup[difficulty].newPoints,
   }));
-  const totalData = [
+  const totalData: Serie[] = [
     { id: "Problems", data: totalLookup["Total"].newPoints },
     { id: "Reviews", data: totalLookup["Total"].reviewPoints },
   ];
