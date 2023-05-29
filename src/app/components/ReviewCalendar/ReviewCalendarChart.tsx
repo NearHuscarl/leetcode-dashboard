@@ -117,8 +117,6 @@ export const ReviewCalendarChart = (props: TReviewCalendarChartProps) => {
 
   return (
     <ResponsiveCalendar
-      // @ts-ignore
-      height={120}
       data={data}
       theme={{
         textColor: theme.chart.legend.color,
@@ -130,7 +128,7 @@ export const ReviewCalendarChart = (props: TReviewCalendarChartProps) => {
       maxValue={9}
       colors={redColors.concat(colors)}
       yearLegend={() => label}
-      margin={{ top: 20, right: 0, bottom: 30, left: 10 }}
+      margin={{ top: 20, right: 0, bottom: 7, left: 10 }}
       tooltip={CustomTooltip}
       monthBorderColor="#ffffff"
       dayBorderWidth={2}

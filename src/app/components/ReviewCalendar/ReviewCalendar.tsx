@@ -1,11 +1,11 @@
 import Stack from "@mui/material/Stack";
-import Box from "@mui/material/Box";
 import { prepareChartData } from "./reviewCalendarData";
 import { useProblems } from "app/services/problems";
 import { ReviewCalendarChart } from "./ReviewCalendarChart";
 import { ReviewCalendarFilter } from "./ReviewCalendarFilter";
 import { useSelector } from "app/store/setup";
 import { ReviewCalendarStats } from "./ReviewCalendarStats";
+import { ResponsiveContainer } from "../ResponsiveContainer";
 
 export const ReviewCalendar = () => {
   const cards = useProblems();
@@ -28,19 +28,26 @@ export const ReviewCalendar = () => {
         />
         <ReviewCalendarFilter sx={{ alignSelf: "flex-start" }} />
       </Stack>
-      <Box
-        sx={{
-          "& > div": { height: "100px !important" },
-        }}
-      >
-        <ReviewCalendarChart from={from} to={to} data={data.New} label="New" />
-        <ReviewCalendarChart
-          from={from}
-          to={to}
-          data={data.Review}
-          label="Review"
-        />
-      </Box>
+      <div style={{ flex: 1 }}>
+        <ResponsiveContainer>
+          <ReviewCalendarChart
+            from={from}
+            to={to}
+            data={data.New}
+            label="New"
+          />
+        </ResponsiveContainer>
+      </div>
+      <div style={{ flex: 1 }}>
+        <ResponsiveContainer>
+          <ReviewCalendarChart
+            from={from}
+            to={to}
+            data={data.Review}
+            label="Review"
+          />
+        </ResponsiveContainer>
+      </div>
     </Stack>
   );
 };

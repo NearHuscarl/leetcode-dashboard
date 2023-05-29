@@ -140,12 +140,12 @@ Current retention rate: In circle percentage
 - Hard: percentage
 - Overall: percentage
 
-Current pattern covered
-- Sunburst chart
-- Hierarchy: Difficulty > Tags > LC problem
-- Each angle represents a pattern
-- Each ring represents a difficulty
-- Each block represents a LC problem
-- Color: card type (new, learning, review)
+Patterns covered
++ Stacked bar chart
++ X: pattern
++ Stack item: Card type
++ Y: Number of reviews
++ Color: card type (new, learning, review)
+- Tooltip
 
  -->
