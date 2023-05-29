@@ -1,5 +1,11 @@
-import { PropsWithChildren } from "react";
+import { PropsWithChildren, forwardRef } from "react";
 
-export const ChartTitle = ({ children }: PropsWithChildren) => {
-  return <div style={{ fontWeight: 500, fontSize: 16 }}>{children}</div>;
-};
+export const ChartTitle = forwardRef<HTMLDivElement, PropsWithChildren>(
+  ({ children, ...rest }, ref) => {
+    return (
+      <div ref={ref} style={{ fontWeight: 500, fontSize: 16 }} {...rest}>
+        {children}
+      </div>
+    );
+  }
+);
