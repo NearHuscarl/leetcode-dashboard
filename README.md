@@ -75,6 +75,9 @@ Algorithm (Sorted by most common in interviews)
 
 All Charts
 - Highlight nodes today, this week, this month
+- Click on data point
+  - Show list of problems | Show single problem
+    - See problem detail
 
 LC solved over time
 + Line chart
@@ -84,9 +87,9 @@ LC solved over time
 + X: time
 + Y: number of LC solved
 + Tooltip
+  - Synchronized tooltip on 2 smaller charts
 - Lines:
   + Difficulty (Easy, Medium, Hard)
-  - Pattern (DP, BFS, DFS, etc.)
   * Estimated deadlines https://nivo.rocks/storybook/?path=/story/line--highlighting-negative-values
 
 Card type over time

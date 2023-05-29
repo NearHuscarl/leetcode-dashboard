@@ -5,6 +5,7 @@ import { HeatMapChart } from "./HeatMapChart";
 import { HeatMapFilter } from "./HeatMapFilter";
 import { useSelector } from "app/store/setup";
 import { ChartTitle } from "../ChartTitle";
+import { ResponsiveContainer } from "../ResponsiveContainer";
 
 export const HeatMap = () => {
   const cards = useProblems();
@@ -23,7 +24,9 @@ export const HeatMap = () => {
         <ChartTitle>Reviews by time ({totalReviews})</ChartTitle>
         <HeatMapFilter sx={{ alignSelf: "flex-start" }} />
       </Stack>
-      <HeatMapChart data={data} />
+      <ResponsiveContainer>
+        <HeatMapChart data={data} />
+      </ResponsiveContainer>
     </Stack>
   );
 };

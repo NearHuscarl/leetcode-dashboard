@@ -42,11 +42,11 @@ export const Stats = (props: TStatsProps) => {
             <div
               style={{
                 backgroundColor: green[50],
+                color: green[600],
                 padding: "2px 4px",
                 fontWeight: 400,
                 borderRadius: 4,
                 fontSize: 12,
-                color: green[600],
                 marginTop: 2,
               }}
             >

@@ -6,6 +6,7 @@ import { ChartTitle } from "../ChartTitle";
 import { RadarChart } from "./RadarChart";
 import { RadarFilter } from "./RadarFilter";
 import { useSelector } from "app/store/setup";
+import { ResponsiveContainer } from "../ResponsiveContainer";
 
 export const Radar = () => {
   const cards = useProblems();
@@ -25,7 +26,9 @@ export const Radar = () => {
         <ChartTitle>Data Structures</ChartTitle>
         <RadarFilter sx={{ alignSelf: "flex-start" }} />
       </Stack>
-      <RadarChart data={data} />
+      <ResponsiveContainer>
+        <RadarChart data={data} />
+      </ResponsiveContainer>
     </Stack>
   );
 };

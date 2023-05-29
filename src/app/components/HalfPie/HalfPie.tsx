@@ -5,6 +5,7 @@ import { ChartTitle } from "../ChartTitle";
 import { HalfPieChart } from "./HalfPieChart";
 import { HalfPieFilter } from "./HalfPieFilter";
 import { useSelector } from "app/store/setup";
+import { ResponsiveContainer } from "../ResponsiveContainer";
 
 export const HalfPie = () => {
   const cards = useProblems();
@@ -23,7 +24,9 @@ export const HalfPie = () => {
         <ChartTitle>Due Status</ChartTitle>
         <HalfPieFilter sx={{ alignSelf: "flex-start" }} />
       </Stack>
-      <HalfPieChart data={data} />
+      <ResponsiveContainer>
+        <HalfPieChart data={data} />
+      </ResponsiveContainer>
     </Stack>
   );
 };
