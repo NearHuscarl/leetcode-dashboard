@@ -1,4 +1,5 @@
 import { PropsWithChildren } from "react";
+import red from "@mui/material/colors/red";
 import grey from "@mui/material/colors/grey";
 import cyan from "@mui/material/colors/cyan";
 import orange from "@mui/material/colors/orange";
@@ -10,6 +11,8 @@ import {
 } from "@mui/material/styles";
 
 export const INPUT_HEIGHT = 35;
+
+type TMuiColor = Record<keyof typeof grey, string>;
 
 declare module "@mui/material/styles/createTheme" {
   interface Theme {
@@ -26,6 +29,14 @@ declare module "@mui/material/styles/createTheme" {
         good: string;
         easy: string;
         unknown: string;
+      };
+      cardType: {
+        New: string;
+        Learning: string;
+        Young: string;
+        Mature: string;
+        Relearning: string;
+        Unknown: string;
       };
     };
   }
@@ -44,7 +55,20 @@ declare module "@mui/material/styles/createTheme" {
         easy: string;
         unknown: string;
       };
+      cardType: {
+        New: string;
+        Learning: string;
+        Young: string;
+        Mature: string;
+        Relearning: string;
+        Unknown: string;
+      };
     };
+  }
+}
+declare module "@mui/material/styles/createPalette" {
+  interface SimplePaletteColorOptions {
+    color?: TMuiColor;
   }
 }
 
@@ -56,9 +80,11 @@ export const theme = createTheme({
   palette: {
     primary: {
       main: primaryColor[500],
+      color: primaryColor,
     },
     secondary: {
       main: secondaryColor[500],
+      color: secondaryColor,
     },
   },
   chart: {
@@ -74,6 +100,14 @@ export const theme = createTheme({
       good: amber[500],
       easy: lightGreen[500],
       unknown: grey[900],
+    },
+    cardType: {
+      New: secondaryColor[500],
+      Learning: primaryColor[300],
+      Young: primaryColor[600],
+      Mature: primaryColor[900],
+      Relearning: red[500],
+      Unknown: grey[500],
     },
   },
   components: {

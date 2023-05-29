@@ -1,7 +1,7 @@
 import { ResponsiveBar } from "@nivo/bar";
 import { useTheme } from "@mui/material";
 import { TBarDatum, cardTypes } from "./cardTypeBarData";
-import { getCardTypeColor } from "app/helpers/card";
+import { TCardType } from "app/helpers/card";
 
 type TCardTypeBarChartProps = {
   data: TBarDatum[];
@@ -19,7 +19,7 @@ export const CardTypeBarChart = (props: TCardTypeBarChartProps) => {
       theme={{
         textColor: theme.chart.legend.color,
       }}
-      colors={({ id }) => getCardTypeColor(id as any)}
+      colors={({ id }) => theme.anki.cardType[id as TCardType]}
       margin={{ top: 50, right: 130, bottom: 50, left: 60 }}
       groupMode="grouped"
       valueScale={{ type: "linear" }}

@@ -1,5 +1,7 @@
 import Stack from "@mui/material/Stack";
-import { amber, grey, cyan, green } from "@mui/material/colors";
+import grey from "@mui/material/colors/grey";
+import green from "@mui/material/colors/green";
+import { useTheme } from "@mui/material";
 import { ResponsiveLine, Serie, SliceTooltipProps } from "@nivo/line";
 import { Theme } from "@nivo/core";
 import { getTickFormattedDate } from "app/helpers/chart";
@@ -84,6 +86,7 @@ export const TotalReviewHistoryChart = (
 ) => {
   const { data } = props;
   const daysRecord = data[0]?.data.length;
+  const theme = useTheme();
 
   return (
     <ResponsiveLine
@@ -102,9 +105,9 @@ export const TotalReviewHistoryChart = (
       colors={(data) => {
         switch (data.id) {
           case "Reviews":
-            return cyan[500];
+            return theme.palette.primary.main;
           case "Problems":
-            return amber[500];
+            return theme.palette.secondary.main;
         }
 
         return grey[500];

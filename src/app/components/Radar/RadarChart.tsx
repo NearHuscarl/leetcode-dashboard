@@ -9,7 +9,7 @@ import useTheme from "@mui/material/styles/useTheme";
 import grey from "@mui/material/colors/grey";
 import Stack from "@mui/material/Stack";
 import { TRadarDatum } from "./radarData";
-import { TCardType, getCardTypeColor } from "app/helpers/card";
+import { TCardType } from "app/helpers/card";
 import { ChartTooltip } from "../ChartTooltip";
 
 const getDisplayedLabel = (id: string) => (id.startsWith("Heap") ? "Heap" : id);
@@ -43,6 +43,7 @@ const cardTypePriorities = {
 
 const CustomTooltip = (props: RadarSliceTooltipProps) => {
   const { data, index } = props;
+  const theme = useTheme();
 
   return (
     <ChartTooltip>
@@ -59,7 +60,7 @@ const CustomTooltip = (props: RadarSliceTooltipProps) => {
                 <ChartTooltip.Text
                   style={{
                     width: 80,
-                    color: getCardTypeColor(id as any),
+                    color: theme.anki.cardType[id as TCardType],
                   }}
                 >
                   {id}
@@ -108,7 +109,7 @@ export const RadarChart = (props: TRadarChartProps) => {
       gridLabelOffset={10}
       gridLabel={RadarGridLabel}
       enableDots={false}
-      colors={({ key }) => getCardTypeColor(key as any)}
+      colors={({ key }) => theme.anki.cardType[key as TCardType]}
       fillOpacity={0.8}
       blendMode="normal"
       motionConfig="wobbly"
