@@ -14,6 +14,7 @@ import { HalfPie } from "./components/HalfPie";
 import { CardTypeBar } from "./components/CardTypeBar";
 import { useTheme } from "@mui/material";
 import { RetentionRate } from "./components/RetentionRate";
+import { HardProblem } from "./components/HardProblems";
 
 type TChartCardProps = PropsWithChildren & {
   flex?: number | string;
@@ -38,7 +39,7 @@ const ChartCard = ({ children, flex }: TChartCardProps) => {
   );
 };
 
-export const Charts = () => {
+export const ChartView = () => {
   const view = useSelector((state) => state.global.view);
 
   if (view !== "chart") {
@@ -65,8 +66,11 @@ export const Charts = () => {
         <ChartCard flex="20%">
           <Radar />
         </ChartCard>
-        <ChartCard flex="50%">
+        <ChartCard flex="30%">
           <RetentionRate />
+        </ChartCard>
+        <ChartCard flex="20%">
+          <HardProblem />
         </ChartCard>
       </Stack>
       <Stack flex={1} direction="row" gap={2} p={2}>

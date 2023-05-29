@@ -30,7 +30,7 @@ const CustomTooltip = (props: PieCustomLayerProps<TRetentionDatum>) => {
         // @ts-ignore
         .sort((a, b) => easePriorities[a.id] - easePriorities[b.id])
         .map(({ value, color, id }) => (
-          <Stack direction="row" alignItems="center" gap={1}>
+          <Stack key={id} direction="row" alignItems="center" gap={1}>
             <ChartTooltip.Text
               style={{ color: id === "again" ? grey[400] : color, width: 60 }}
             >

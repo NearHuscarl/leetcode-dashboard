@@ -14,8 +14,11 @@ export const globalSlice = createSlice({
   name: "global",
   initialState,
   reducers: {
-    toggleView: (state) => {
-      state.view = state.view === "chart" ? "table" : "chart";
+    setChartView: (state) => {
+      state.view = "chart";
+    },
+    setTableView: (state) => {
+      state.view = "table";
     },
   },
 });

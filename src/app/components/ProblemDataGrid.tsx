@@ -22,7 +22,6 @@ import { TCardReview } from "app/api/stats";
 import { TLeetcode } from "app/api/leetcode";
 import { useProblems } from "app/services/problems";
 import { getCardType, getDueStatus, getNextReviewTime } from "app/helpers/card";
-import { useSelector } from "app/store/setup";
 import { LEETCODE_BASE_URL } from "app/settings";
 import { AcRateIndicator } from "./AcRateIndicator";
 import { ReviewStatus } from "./ReviewStatus";
@@ -66,7 +65,11 @@ const columns: GridColDef[] = [
         return null;
       }
       return (
-        <Link href={`${LEETCODE_BASE_URL}/${params.value}`} underline="none">
+        <Link
+          href={`${LEETCODE_BASE_URL}/${params.value}`}
+          color="Highlight"
+          underline="none"
+        >
           {params.row.leetcode?.title ?? params.value}
         </Link>
       );
@@ -190,12 +193,7 @@ const columns: GridColDef[] = [
 ];
 
 export const ProblemDataGrid = () => {
-  const view = useSelector((state) => state.global.view);
   const rows = useProblems();
-
-  if (view === "chart") {
-    return null;
-  }
 
   return (
     <DataGrid

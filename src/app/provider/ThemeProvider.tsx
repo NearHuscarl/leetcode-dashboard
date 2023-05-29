@@ -1,4 +1,4 @@
-import { PropsWithChildren } from "react";
+import { CSSProperties, PropsWithChildren } from "react";
 import red from "@mui/material/colors/red";
 import grey from "@mui/material/colors/grey";
 import cyan from "@mui/material/colors/cyan";
@@ -42,10 +42,7 @@ declare module "@mui/material/styles/createTheme" {
   }
   interface ThemeOptions {
     chart: {
-      legend: {
-        color?: string;
-        fontSize?: number;
-      };
+      legend: CSSProperties;
     };
     anki: {
       ease: {
@@ -91,6 +88,7 @@ export const theme = createTheme({
     legend: {
       color: grey[400],
       fontSize: 11,
+      fill: "currentColor",
     },
   },
   anki: {
