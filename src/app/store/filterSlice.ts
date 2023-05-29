@@ -34,6 +34,9 @@ export interface TFilterState {
   retentionRate: {
     dateAgo: TDateAgoFilter;
   };
+  patternBar: {
+    dateAgo: TDateAgoFilter;
+  };
 }
 
 const initialState: TFilterState = {
@@ -56,6 +59,9 @@ const initialState: TFilterState = {
     dateAgo: "today",
   },
   retentionRate: {
+    dateAgo: "today",
+  },
+  patternBar: {
     dateAgo: "today",
   },
 };
@@ -84,6 +90,9 @@ export const filterSlice = createSlice({
     },
     setRetentionRateDate: (state, action: PayloadAction<TDateAgoFilter>) => {
       state.retentionRate.dateAgo = action.payload;
+    },
+    setPatternBar: (state, action: PayloadAction<TDateAgoFilter>) => {
+      state.patternBar.dateAgo = action.payload;
     },
   },
 });

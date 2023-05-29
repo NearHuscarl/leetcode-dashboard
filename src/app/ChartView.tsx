@@ -15,6 +15,7 @@ import { CardTypeBar } from "./components/CardTypeBar";
 import { useTheme } from "@mui/material";
 import { RetentionRate } from "./components/RetentionRate";
 import { HardProblem } from "./components/HardProblems";
+import { PatternBar } from "./components/PatternBar";
 
 type TChartCardProps = PropsWithChildren & {
   flex?: number | string;
@@ -49,14 +50,14 @@ export const ChartView = () => {
   return (
     <Stack height="95vh" justifyContent="stretch">
       <Stack flex={1} direction="row" gap={2} p={2} pb={0}>
-        <ChartCard flex="1.5">
+        <ChartCard flex="1.25">
           <TotalReviewHistory />
         </ChartCard>
         <ChartCard flex="1">
           <ReviewCalendar />
         </ChartCard>
-        <ChartCard flex="0 0 275px">
-          <HalfPie />
+        <ChartCard flex=".75">
+          <CardTypeBar />
         </ChartCard>
       </Stack>
       <Stack flex={1} direction="row" gap={2} p={2} pb={0}>
@@ -74,10 +75,13 @@ export const ChartView = () => {
         </ChartCard>
       </Stack>
       <Stack flex={1} direction="row" gap={2} p={2}>
-        <ChartCard flex="40%">
-          <CardTypeBar />
+        <ChartCard flex="0 0 275px">
+          <HalfPie />
         </ChartCard>
-        <ChartCard flex="50%">
+        <ChartCard flex="40%">
+          <PatternBar />
+        </ChartCard>
+        <ChartCard flex="30%">
           <SwarmPlot />
         </ChartCard>
       </Stack>

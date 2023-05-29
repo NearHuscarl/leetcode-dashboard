@@ -67,6 +67,9 @@ declare module "@mui/material/styles/createPalette" {
   interface SimplePaletteColorOptions {
     color?: TMuiColor;
   }
+  interface PaletteColor {
+    color: TMuiColor;
+  }
 }
 
 const defaultTheme = createTheme();

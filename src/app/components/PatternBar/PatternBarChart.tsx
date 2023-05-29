@@ -1,31 +1,37 @@
 import { ResponsiveBar } from "@nivo/bar";
 import { useTheme } from "@mui/material";
-import { TBarDatum, cardTypes } from "./cardTypeBarData";
+import { TBarDatum, TPattern, patternShortNames } from "./patternBarData";
 import { TCardType } from "app/helpers/card";
-import { getTickFormattedDate } from "app/helpers/chart";
 
-type TCardTypeBarChartProps = {
+type TPatternBarChartProps = {
   data: TBarDatum[];
 };
 
-export const CardTypeBarChart = (props: TCardTypeBarChartProps) => {
+const keys = ["Mature", "Young", "Learning", "Unsolved"];
+
+export const PatternBarChart = (props: TPatternBarChartProps) => {
   const { data } = props;
   const theme = useTheme();
 
   return (
     <ResponsiveBar
       data={data}
-      keys={cardTypes}
-      indexBy="date"
+      keys={keys}
+      indexBy="pattern"
       theme={{
         textColor: theme.chart.legend.color,
       }}
-      colors={({ id }) => theme.anki.cardType[id as TCardType]}
-      margin={{ top: 50, right: 90, bottom: 50, left: 25 }}
-      groupMode="grouped"
-      valueScale={{ type: "linear" }}
+      colors={({ id }) => {
+        if (id === "Unsolved") {
+          return theme.palette.primary.color[50];
+        }
+        return theme.anki.cardType[id as TCardType];
+      }}
+      margin={{ top: 10, right: 90, bottom: 25, left: 25 }}
+      groupMode="stacked"
+      valueScale={{ type: "linear", min: 0 }}
       indexScale={{ type: "band", round: true }}
-      padding={0.4}
+      padding={0.6}
       gridYValues={4}
       axisLeft={{
         tickSize: 0,
@@ -35,20 +41,7 @@ export const CardTypeBarChart = (props: TCardTypeBarChartProps) => {
       axisBottom={{
         tickSize: 0,
         tickPadding: 10,
-        renderTick(props) {
-          const { x, y, value } = props;
-          const formattedDate = getTickFormattedDate(value + "-01", 30 * 6);
-
-          if (!formattedDate) {
-            return <></>;
-          }
-
-          return (
-            <text x={x - 10} y={y + 20} {...theme.chart.legend}>
-              {formattedDate}
-            </text>
-          );
-        },
+        format: (value) => patternShortNames[value as TPattern],
       }}
       labelSkipWidth={1000}
       legends={[
