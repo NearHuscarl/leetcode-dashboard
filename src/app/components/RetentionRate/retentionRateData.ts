@@ -12,7 +12,6 @@ import { MayHaveLabel } from "@nivo/pie";
 export interface TRetentionDatum extends MayHaveLabel {
   id: TEaseLabel;
   value: number;
-  cardType: TCardType;
 }
 
 type TRetentionRateData = {

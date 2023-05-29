@@ -36,7 +36,11 @@ export const RetentionRate = () => {
         alignItems="center"
       >
         {Object.keys(data).map((cardType) => (
-          <RetentionRateCircle key={cardType} data={data[cardType]} />
+          <RetentionRateCircle
+            key={cardType}
+            data={data[cardType]}
+            cardType={cardType}
+          />
         ))}
       </Stack>
       <Stack>
@@ -46,7 +50,7 @@ export const RetentionRate = () => {
               Passed
             </div>
             <div style={{ fontWeight: 600 }}>
-              {Math.round((totalPassed / total) * 100)}%
+              {Math.round((totalPassed / (total || 1)) * 100)}%
             </div>
           </div>
           <div style={{ textAlign: "right" }}>
@@ -54,7 +58,7 @@ export const RetentionRate = () => {
               Failed
             </div>
             <div style={{ fontWeight: 600 }}>
-              {Math.round((totalFailed / total) * 100)}%
+              {Math.round((totalFailed / (total || 1)) * 100)}%
             </div>
           </div>
         </Stack>
@@ -63,7 +67,7 @@ export const RetentionRate = () => {
             <div
               key={e}
               style={{
-                width: `${(ease[e] / total) * 100}%`,
+                width: `${(ease[e] / (total || 1)) * 100}%`,
                 height: 11,
                 transition: "width 0.3s",
                 backgroundColor: theme.anki.ease[e],

@@ -65,7 +65,9 @@ const CustomTooltip = (props: RadarSliceTooltipProps) => {
                   {id}
                 </ChartTooltip.Text>
                 <ChartTooltip.Text>
-                  {Math.round(value * 10) / 10}
+                  <span style={{ fontWeight: 600 }}>
+                    {Math.round(value * 10) / 10}
+                  </span>
                   <span style={{ color: grey[400] }}>%</span>
                 </ChartTooltip.Text>
               </Stack>
