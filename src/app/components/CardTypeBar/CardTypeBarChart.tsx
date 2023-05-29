@@ -2,6 +2,7 @@ import { ResponsiveBar } from "@nivo/bar";
 import { useTheme } from "@mui/material";
 import { TBarDatum, cardTypes } from "./cardTypeBarData";
 import { TCardType } from "app/helpers/card";
+import { getTickFormattedDate } from "app/helpers/chart";
 
 type TCardTypeBarChartProps = {
   data: TBarDatum[];
@@ -30,6 +31,24 @@ export const CardTypeBarChart = (props: TCardTypeBarChartProps) => {
         tickSize: 0,
         tickPadding: 5,
         tickValues: 4,
+      }}
+      axisBottom={{
+        tickSize: 0,
+        tickPadding: 10,
+        renderTick(props) {
+          const { x, y, value } = props;
+          const formattedDate = getTickFormattedDate(value + "-01", 30 * 6);
+
+          if (!formattedDate) {
+            return <></>;
+          }
+
+          return (
+            <text x={x - 10} y={y + 20} {...theme.chart.legend}>
+              {formattedDate}
+            </text>
+          );
+        },
       }}
       labelSkipWidth={1000}
       legends={[
