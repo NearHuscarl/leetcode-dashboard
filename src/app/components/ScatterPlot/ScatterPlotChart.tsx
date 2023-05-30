@@ -18,7 +18,7 @@ export const ScatterPlotChart = (props: TScatterPlotProps) => {
       theme={{
         textColor: theme.chart.legend.color,
       }}
-      margin={{ top: 20, right: 30, bottom: 25, left: 40 }}
+      margin={{ top: 20, right: 10, bottom: 25, left: 40 }}
       xScale={{
         type: "symlog",
         min: -MSS.threeMonths,
@@ -31,6 +31,7 @@ export const ScatterPlotChart = (props: TScatterPlotProps) => {
       nodeComponent={ScatterPlotNode}
       axisTop={null}
       axisRight={null}
+      useMesh={false}
       axisBottom={{
         tickSize: 0,
         tickPadding: 10,

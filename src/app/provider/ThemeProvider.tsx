@@ -12,7 +12,7 @@ import {
 
 export const INPUT_HEIGHT = 35;
 
-type TMuiColor = Record<keyof typeof grey, string>;
+export type TMuiColor = Record<keyof typeof grey, string>;
 
 declare module "@mui/material/styles/createTheme" {
   interface Theme {

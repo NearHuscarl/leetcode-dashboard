@@ -6,11 +6,12 @@ import { ScatterPlotChart } from "./ScatterPlotChart";
 import { ScatterPlotFilter } from "./ScatterPlotFilter";
 import { useSelector } from "app/store/setup";
 import { ResponsiveContainer } from "../ResponsiveContainer";
+import { DueStatusWaffle } from "./DueStatusWaffle";
 
 export const ScatterPlot = () => {
   const cards = useProblems();
   const dateAgo = useSelector((state) => state.filter.scatterPlot.dateAgo);
-  const { data } = prepareChartData(cards, dateAgo);
+  const { data, total } = prepareChartData(cards, dateAgo);
 
   return (
     <Stack justifyContent="space-between" height="100%">
@@ -24,9 +25,25 @@ export const ScatterPlot = () => {
         <ChartTitle>Due Status</ChartTitle>
         <ScatterPlotFilter sx={{ alignSelf: "flex-start" }} />
       </Stack>
-      <ResponsiveContainer>
-        <ScatterPlotChart data={data} />
-      </ResponsiveContainer>
+      <Stack direction="row" justifyContent="space-between" height="100%">
+        <div style={{ flex: 1 }}>
+          <ResponsiveContainer>
+            <ScatterPlotChart data={data} />
+          </ResponsiveContainer>
+        </div>
+        <div
+          style={{
+            flex: "0 0 50px",
+            padding: 16,
+            paddingBottom: 23,
+            paddingRight: 0,
+          }}
+        >
+          <ResponsiveContainer>
+            <DueStatusWaffle data={total} />
+          </ResponsiveContainer>
+        </div>
+      </Stack>
     </Stack>
   );
 };

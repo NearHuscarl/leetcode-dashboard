@@ -64,11 +64,11 @@ export const ChartView = () => {
         <ChartCard flex="0 0 450px">
           <RetentionRate />
         </ChartCard>
-        <ChartCard flex="20%">
-          <Radar />
-        </ChartCard>
         <ChartCard flex="40%">
           <ScatterPlot />
+        </ChartCard>
+        <ChartCard flex="0 0 300px">
+          <Radar />
         </ChartCard>
         <ChartCard flex="0 0 350px">
           <HardProblem />
@@ -78,11 +78,11 @@ export const ChartView = () => {
         <ChartCard flex="0 0 350px">
           <HeatMap />
         </ChartCard>
-        <ChartCard flex="1">
-          <SwarmPlot />
-        </ChartCard>
         <ChartCard flex="1.5">
           <PatternBar />
+        </ChartCard>
+        <ChartCard flex="1">
+          <SwarmPlot />
         </ChartCard>
       </Stack>
     </Stack>
