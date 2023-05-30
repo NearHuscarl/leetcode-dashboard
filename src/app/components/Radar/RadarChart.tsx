@@ -12,7 +12,12 @@ import { TRadarDatum } from "./radarData";
 import { TCardType } from "app/helpers/card";
 import { ChartTooltip } from "../ChartTooltip";
 
-const getDisplayedLabel = (id: string) => (id.startsWith("Heap") ? "Heap" : id);
+const getDisplayedLabel = (id: string) => {
+  if (id.startsWith("Heap")) {
+    return "Heap";
+  }
+  return id;
+};
 
 const RadarGridLabel = ({
   id,
@@ -28,7 +33,13 @@ const RadarGridLabel = ({
         dominantBaseline="central"
         textAnchor={anchor}
       >
-        {getDisplayedLabel(id)}
+        {getDisplayedLabel(id)
+          .split(" ")
+          .map((w, i) => (
+            <tspan x="0" dy={`${i}em`}>
+              {w}
+            </tspan>
+          ))}
       </text>
     </animated.g>
   );
@@ -104,7 +115,7 @@ export const RadarChart = (props: TRadarChartProps) => {
       sliceTooltip={CustomTooltip}
       maxValue={100}
       gridLevels={4}
-      margin={{ top: 15, right: 70, bottom: 10, left: 40 }}
+      margin={{ top: 20, right: 45, bottom: 10, left: 35 }}
       gridShape="linear"
       gridLabelOffset={10}
       gridLabel={RadarGridLabel}
