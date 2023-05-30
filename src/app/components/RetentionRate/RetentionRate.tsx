@@ -44,7 +44,7 @@ export const RetentionRate = () => {
         ))}
       </Stack>
       <Stack>
-        <Stack px={2.5} direction="row" justifyContent="space-between">
+        <Stack px={1} direction="row" justifyContent="space-between">
           <div>
             <div style={{ color: theme.chart.legend.color, fontSize: 12 }}>
               Passed
@@ -62,7 +62,7 @@ export const RetentionRate = () => {
             </div>
           </div>
         </Stack>
-        <Stack direction="row" px={2} gap={0.5}>
+        <Stack direction="row" px={0.6} gap={0.5}>
           {(Object.keys(ease) as TEaseLabel[]).reverse().map((e) => (
             <div
               key={e}

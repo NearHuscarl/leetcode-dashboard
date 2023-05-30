@@ -10,7 +10,7 @@ import { ReviewCalendar } from "./components/ReviewCalendar";
 import { SwarmPlot } from "./components/SwarmPlot";
 import { HeatMap } from "./components/HeatMap";
 import { Radar } from "./components/Radar";
-import { HalfPie } from "./components/HalfPie";
+import { ScatterPlot } from "./components/ScatterPlot";
 import { CardTypeBar } from "./components/CardTypeBar";
 import { useTheme } from "@mui/material";
 import { RetentionRate } from "./components/RetentionRate";
@@ -61,28 +61,28 @@ export const ChartView = () => {
         </ChartCard>
       </Stack>
       <Stack flex={1} direction="row" gap={2} p={2} pb={0}>
-        <ChartCard flex="20%">
-          <HeatMap />
+        <ChartCard flex="0 0 450px">
+          <RetentionRate />
         </ChartCard>
         <ChartCard flex="20%">
           <Radar />
         </ChartCard>
-        <ChartCard flex="30%">
-          <RetentionRate />
+        <ChartCard flex="40%">
+          <ScatterPlot />
         </ChartCard>
-        <ChartCard flex="20%">
+        <ChartCard flex="0 0 350px">
           <HardProblem />
         </ChartCard>
       </Stack>
       <Stack flex={1} direction="row" gap={2} p={2}>
-        <ChartCard flex="0 0 275px">
-          <HalfPie />
+        <ChartCard flex="0 0 350px">
+          <HeatMap />
         </ChartCard>
-        <ChartCard flex="40%">
-          <PatternBar />
-        </ChartCard>
-        <ChartCard flex="30%">
+        <ChartCard flex="1">
           <SwarmPlot />
+        </ChartCard>
+        <ChartCard flex="1.5">
+          <PatternBar />
         </ChartCard>
       </Stack>
     </Stack>

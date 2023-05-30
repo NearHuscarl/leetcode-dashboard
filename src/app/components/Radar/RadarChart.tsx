@@ -104,7 +104,7 @@ export const RadarChart = (props: TRadarChartProps) => {
       sliceTooltip={CustomTooltip}
       maxValue={100}
       gridLevels={4}
-      margin={{ top: 20, right: 80, bottom: 10, left: 70 }}
+      margin={{ top: 15, right: 70, bottom: 10, left: 40 }}
       gridShape="linear"
       gridLabelOffset={10}
       gridLabel={RadarGridLabel}
@@ -113,18 +113,6 @@ export const RadarChart = (props: TRadarChartProps) => {
       fillOpacity={0.8}
       blendMode="normal"
       motionConfig="wobbly"
-      legends={[
-        {
-          anchor: "top-left",
-          direction: "column",
-          translateX: -70,
-          translateY: -10,
-          itemWidth: 80,
-          itemHeight: 20,
-          symbolSize: 12,
-          symbolShape: "circle",
-        },
-      ]}
     />
   );
 };

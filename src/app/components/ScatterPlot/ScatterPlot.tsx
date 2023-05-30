@@ -1,15 +1,15 @@
 import Stack from "@mui/material/Stack";
-import { prepareChartData } from "./halfPieData";
+import { prepareChartData } from "./scatterPlotData";
 import { useProblems } from "app/services/problems";
 import { ChartTitle } from "../ChartTitle";
-import { HalfPieChart } from "./HalfPieChart";
-import { HalfPieFilter } from "./HalfPieFilter";
+import { ScatterPlotChart } from "./ScatterPlotChart";
+import { ScatterPlotFilter } from "./ScatterPlotFilter";
 import { useSelector } from "app/store/setup";
 import { ResponsiveContainer } from "../ResponsiveContainer";
 
-export const HalfPie = () => {
+export const ScatterPlot = () => {
   const cards = useProblems();
-  const dateAgo = useSelector((state) => state.filter.halfPie.dateAgo);
+  const dateAgo = useSelector((state) => state.filter.scatterPlot.dateAgo);
   const { data } = prepareChartData(cards, dateAgo);
 
   return (
@@ -22,10 +22,10 @@ export const HalfPie = () => {
         gap={1}
       >
         <ChartTitle>Due Status</ChartTitle>
-        <HalfPieFilter sx={{ alignSelf: "flex-start" }} />
+        <ScatterPlotFilter sx={{ alignSelf: "flex-start" }} />
       </Stack>
       <ResponsiveContainer>
-        <HalfPieChart data={data} />
+        <ScatterPlotChart data={data} />
       </ResponsiveContainer>
     </Stack>
   );

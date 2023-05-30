@@ -64,7 +64,7 @@ export const HeatMapChart = (props: THeatMapProps) => {
   return (
     <ResponsiveHeatMap
       data={data}
-      margin={{ top: 20, right: 70, bottom: 20, left: 60 }}
+      margin={{ top: 20, right: 50, bottom: 20, left: 40 }}
       theme={{
         textColor: theme.chart.legend.color,
       }}
@@ -96,7 +96,7 @@ export const HeatMapChart = (props: THeatMapProps) => {
       legends={[
         {
           anchor: "top-right",
-          translateX: 40,
+          translateX: 30,
           translateY: 4,
           length: 120,
           thickness: 10,

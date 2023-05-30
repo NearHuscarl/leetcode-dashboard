@@ -28,7 +28,7 @@ export interface TFilterState {
   radar: {
     dateAgo: TDateAgoFilter;
   };
-  halfPie: {
+  scatterPlot: {
     dateAgo: TDateAgoFilter;
   };
   retentionRate: {
@@ -55,7 +55,7 @@ const initialState: TFilterState = {
   radar: {
     dateAgo: "today",
   },
-  halfPie: {
+  scatterPlot: {
     dateAgo: "today",
   },
   retentionRate: {
@@ -85,8 +85,8 @@ export const filterSlice = createSlice({
     setRadarDate: (state, action: PayloadAction<TDateAgoFilter>) => {
       state.radar.dateAgo = action.payload;
     },
-    setHalfPieDate: (state, action: PayloadAction<TDateAgoFilter>) => {
-      state.halfPie.dateAgo = action.payload;
+    setScatterPlotDate: (state, action: PayloadAction<TDateAgoFilter>) => {
+      state.scatterPlot.dateAgo = action.payload;
     },
     setRetentionRateDate: (state, action: PayloadAction<TDateAgoFilter>) => {
       state.retentionRate.dateAgo = action.payload;

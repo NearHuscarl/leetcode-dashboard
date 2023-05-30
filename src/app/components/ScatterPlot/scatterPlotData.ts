@@ -1,51 +1,46 @@
-import { TCardType, getCardType, getEaseRate } from "app/helpers/card";
+import red from "@mui/material/colors/red";
+import orange from "@mui/material/colors/orange";
+import amber from "@mui/material/colors/amber";
+import lightGreen from "@mui/material/colors/lightGreen";
 import { TCardModel } from "app/services/problems";
+import { getDueDateDistance, getDueStatus } from "app/helpers/card";
+import { TDateAgoFilter } from "app/store/filterSlice";
+import { getDateAgo } from "app/helpers/date";
 import { ScatterPlotDatum, ScatterPlotRawSerie } from "@nivo/scatterplot";
 
-// A helper function that preprocesses the cards array and creates a map that stores the number of problems solved for each date and category
-function createMap(cards: TCardModel[]) {
-  const map: Record<
-    TCardType,
-    { id: string; x: number; y: number; reviews: number }[]
-  > = {} as any;
+export interface TScatterPlotDatum extends ScatterPlotDatum {
+  leetcodeId: string;
+  color: string;
+}
+
+export interface TScatterPlotRawSerie
+  extends ScatterPlotRawSerie<TScatterPlotDatum> {}
+
+const colorLookup: Record<string, string> = {
+  stale: red[500],
+  bad: orange[500],
+  now: amber[500],
+  good: lightGreen[500],
+  none: "",
+};
+
+export function prepareChartData(cards: TCardModel[], dateAgo: TDateAgoFilter) {
+  const data: TScatterPlotDatum[] = [];
+  const dateEnd = getDateAgo(dateAgo);
 
   for (const card of cards) {
-    if (!card.leetcode) continue;
+    const dueStatus = getDueStatus(card, dateEnd);
+    const dueDistance = getDueDateDistance(card, dateEnd);
 
-    const type = getCardType(card);
-    const points = map[type] ?? (map[type] = []); // Initialize the points if it doesn't exist
-    const easeRate = getEaseRate(card.reviews);
-
-    points.push({
-      id: card.leetcodeId,
-      y: easeRate,
-      x: card.leetcode.acRate,
-      reviews: card.reviews.length,
+    data.push({
+      x: dueDistance ?? Number.MIN_SAFE_INTEGER,
+      y: card.leetcode?.acRate ?? 0,
+      leetcodeId: card.leetcodeId,
+      color: colorLookup[dueStatus],
     });
   }
 
-  // Return the map
-  return map;
-}
-
-const cardTypes: TCardType[] = [
-  "New",
-  "Learning",
-  "Young",
-  "Mature",
-  "Relearning",
-];
-
-export function prepareChartData(cards: TCardModel[]) {
-  const map = createMap(cards);
-  const data: ScatterPlotRawSerie<ScatterPlotDatum>[] = [];
-
-  for (const cardType of cardTypes) {
-    const d = map[cardType] ?? [];
-    data.push({ id: cardType, data: d });
-  }
-
   return {
-    data,
+    data: [{ id: "all", data }] as TScatterPlotRawSerie[],
   };
 }

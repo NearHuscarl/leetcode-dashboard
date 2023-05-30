@@ -99,23 +99,38 @@ export const getNextReviewTime = (
   return reviewDate + interval;
 };
 
-export type TDueStatus = "stale" | "bad" | "now" | "good" | "none";
-
-export const getDueStatus = (card: TCard, dateEnd?: number): TDueStatus => {
+export const getDueDateDistance = (card: TCard, dateEnd?: number) => {
   dateEnd = dateEnd ?? Date.now();
 
   // card does not exist at this point
   if (dateEnd < card.cardId) {
-    return "none";
+    return null;
   }
 
   const nextInterviewTime = getNextReviewTime(card, dateEnd);
 
+  // new card without any review
   if (nextInterviewTime == 0) {
-    return "now";
+    return 0;
   }
 
-  const distance = nextInterviewTime - dateEnd;
+  return nextInterviewTime - dateEnd;
+};
+
+export type TDueStatus = "stale" | "bad" | "now" | "good" | "none";
+
+export const getDueStatus = (card: TCard, dateEnd?: number): TDueStatus => {
+  const distance = getDueDateDistance(card, dateEnd);
+
+  // card does not exist at this point
+  if (distance === null) {
+    return "none";
+  }
+
+  // new card without any review
+  if (distance == 0) {
+    return "now";
+  }
 
   // within 1 day
   if (Math.abs(distance) < 1000 * 60 * 60 * 24) {

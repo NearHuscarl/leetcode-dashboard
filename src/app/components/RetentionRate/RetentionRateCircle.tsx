@@ -124,7 +124,7 @@ const CenteredMetric = (props: TCenterMetricProps) => {
         textAnchor="middle"
         dominantBaseline="central"
         style={{
-          fontSize: 28,
+          fontSize: 22,
           fontWeight: 600,
           pointerEvents: "none",
         }}
@@ -145,7 +145,7 @@ const CenteredMetric = (props: TCenterMetricProps) => {
         textAnchor="middle"
         dominantBaseline="central"
         style={{
-          fontSize: "15px",
+          fontSize: 14,
           fontWeight: 500,
           fill: grey[500],
           pointerEvents: "none",
@@ -175,7 +175,7 @@ export const RetentionRateCircle = (props: TRetentionRateCircleProps) => {
   return (
     <ResponsivePie<TRetentionDatum>
       data={d}
-      margin={{ top: 10, right: 0, bottom: 5, left: 0 }}
+      margin={{ top: 10, right: 0, bottom: 15, left: 0 }}
       innerRadius={0.85}
       padAngle={1}
       cornerRadius={10}

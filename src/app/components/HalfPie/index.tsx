@@ -1,1 +1,0 @@
-export { HalfPie } from "./HalfPie";

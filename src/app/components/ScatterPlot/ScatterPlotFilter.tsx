@@ -14,8 +14,8 @@ const options: { value: TDateAgoFilter; label: string }[] = [
   { value: "3month", label: "3 months ago" },
 ];
 
-export const HalfPieFilter = ({ sx }: { sx: SxProps }) => {
-  const dateAgo = useSelector((state) => state.filter.halfPie.dateAgo);
+export const ScatterPlotFilter = ({ sx }: { sx: SxProps }) => {
+  const dateAgo = useSelector((state) => state.filter.scatterPlot.dateAgo);
   const dispatch = useDispatch();
 
   return (
@@ -24,7 +24,7 @@ export const HalfPieFilter = ({ sx }: { sx: SxProps }) => {
       sx={{ width: 140, ...sx }}
       value={dateAgo}
       onChange={(e) =>
-        dispatch(filterActions.setHalfPieDate(e.target.value as any))
+        dispatch(filterActions.setScatterPlotDate(e.target.value as any))
       }
     >
       {options.map((option) => (
