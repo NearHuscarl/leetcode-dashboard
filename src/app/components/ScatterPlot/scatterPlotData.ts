@@ -2,6 +2,8 @@ import red from "@mui/material/colors/red";
 import orange from "@mui/material/colors/orange";
 import amber from "@mui/material/colors/amber";
 import lightGreen from "@mui/material/colors/lightGreen";
+import lime from "@mui/material/colors/lime";
+import teal from "@mui/material/colors/teal";
 import grey from "@mui/material/colors/grey";
 import { TCardModel } from "app/services/problems";
 import { getDueDateDistance, getDueStatus } from "app/helpers/card";
@@ -25,11 +27,13 @@ export interface TScatterPlotDatum extends ScatterPlotDatum {
 export interface TScatterPlotRawSerie
   extends ScatterPlotRawSerie<TScatterPlotDatum> {}
 
-const colorLookup: Record<string, TMuiColor> = {
+export const colorLookup: Record<string, TMuiColor> = {
   stale: red,
   bad: orange,
   now: amber,
+  soon: lime,
   good: lightGreen,
+  safe: teal,
   none: grey,
 };
 

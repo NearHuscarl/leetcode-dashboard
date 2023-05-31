@@ -1,6 +1,7 @@
 import { TCard } from "app/api/deck";
 import { TCardReview } from "app/api/stats";
 import { getIntervalTime } from "./stats";
+import { MSS } from "app/settings";
 
 export type TCardType =
   | "New"
@@ -117,7 +118,14 @@ export const getDueDateDistance = (card: TCard, dateEnd?: number) => {
   return nextInterviewTime - dateEnd;
 };
 
-export type TDueStatus = "stale" | "bad" | "now" | "good" | "none";
+export type TDueStatus =
+  | "stale"
+  | "bad"
+  | "now"
+  | "soon"
+  | "good"
+  | "safe"
+  | "none";
 
 export const getDueStatus = (card: TCard, dateEnd?: number): TDueStatus => {
   const distance = getDueDateDistance(card, dateEnd);
@@ -132,17 +140,18 @@ export const getDueStatus = (card: TCard, dateEnd?: number): TDueStatus => {
     return "now";
   }
 
-  // within 1 day
-  if (Math.abs(distance) < 1000 * 60 * 60 * 24) {
-    return "now";
-  } else if (distance >= 1000 * 60 * 60 * 24) {
-    return "good";
-    // due over 30 days
-  } else if (distance < -1000 * 60 * 60 * 24 * 30) {
+  if (distance < -MSS.oneMonth) {
     return "stale";
+  } else if (distance < -MSS.oneDay) {
+    return "bad";
+  } else if (distance >= -MSS.oneDay && distance <= MSS.oneDay) {
+    return "now";
+  } else if (distance < MSS.oneWeek) {
+    return "soon";
+  } else if (distance < MSS.oneMonth) {
+    return "good";
   }
-
-  return "bad";
+  return "safe";
 };
 
 export const getRetentionRate = (card: TCard): number => {

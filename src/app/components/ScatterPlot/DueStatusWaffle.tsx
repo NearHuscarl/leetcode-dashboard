@@ -1,12 +1,13 @@
 import { TWaffleDatum } from "./scatterPlotData";
 import { TDueStatus } from "app/helpers/card";
-import { grey } from "@mui/material/colors";
 
 const duePriority: Record<TDueStatus, number> = {
   stale: 0,
   bad: 1,
   now: 2,
-  good: 3,
+  soon: 3,
+  good: 4,
+  safe: 5,
   none: -1,
 };
 
@@ -23,29 +24,28 @@ export const DueStatusWaffle = (props: TDueStatusWaffleProps) => {
     .reduce((acc, cur) => acc + cur.value, 0);
 
   return (
-    <div
-      style={{
-        width: 15,
-        height: "100%",
-        position: "relative",
-        display: "flex",
-        flexDirection: "column",
-        gap: 2,
-        backgroundColor: grey[300],
-      }}
-    >
-      {data.map((d) => {
-        const { color } = d;
+    <div style={{ width: 15, height: "100%" }}>
+      {data.map((d, i) => {
+        const { color, value } = d;
 
         return (
           <div
             style={{
-              bottom: 0,
-              left: 0,
-              width: "100%",
-              borderRadius: 1,
               background: color[500],
-              height: `${(d.value / total) * 100}%`,
+              width: "100%",
+              height: `${(value / total) * 100}%`,
+              ...(i === 0
+                ? {
+                    borderTopLeftRadius: 3,
+                    borderTopRightRadius: 3,
+                  }
+                : {}),
+              ...(i === data.length - 1
+                ? {
+                    borderBottomLeftRadius: 3,
+                    borderBottomRightRadius: 3,
+                  }
+                : {}),
             }}
           />
         );
