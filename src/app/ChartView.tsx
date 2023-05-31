@@ -48,7 +48,7 @@ export const ChartView = () => {
   }
 
   return (
-    <Stack height="95vh" justifyContent="stretch">
+    <Stack height="100vh" justifyContent="stretch" overflow="hidden">
       <Stack flex={1} direction="row" gap={2} p={2} pb={0}>
         <ChartCard flex="1.25">
           <TotalReviewHistory />
