@@ -1,5 +1,7 @@
 # Leetcode Dashboard
 
+![leetcode-dashboard-charts](./images/image.png)
+
 ## Development
 
 - Download and install Anki
