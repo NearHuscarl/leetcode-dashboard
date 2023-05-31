@@ -96,6 +96,8 @@ Card type over time
 + Bar
 + X: time
 + Y: Number of card type in stack (new, learning, review)
++ Filter
++ Tooltip
 
 Review Result (Ease rate)
 + SwarmPlot
@@ -113,9 +115,9 @@ Revision History
   - Tooltip to explain total number
 + Add due date as red square in the future
 
-Upcoming Due Table
-- Click to see full table
-- Display upcoming leetcode problems
+Hard problems Table
++ Click to see full table
++ Display upcoming leetcode problems
 
 Heatmap
 + Show correlation between number of reviews and review hours
@@ -123,16 +125,13 @@ Heatmap
 + Add date filter
 + Add tooltip
 
-HalfPie
-+ Due status
+ScatterPlot
++ Due Status
++ Dot color: Due status
++ X: Due date distance
++ Y: AC Rate
 + Filter
 - Tooltip
-
-LC Problem Difficulty
-- ScatterPlot
-- Dot color: LC pattern
-- X: Interval
-- Y: Number of reviews
 
 Current retention rate: In circle percentage
 - Easy: percentage
@@ -146,6 +145,6 @@ Patterns covered
 + Stack item: Card type
 + Y: Number of reviews
 + Color: card type (new, learning, review)
-- Tooltip
++ Tooltip
 
  -->
