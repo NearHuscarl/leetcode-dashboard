@@ -6,7 +6,6 @@ import {
 } from "@nivo/heatmap";
 import { transform } from "framer-motion";
 import Stack from "@mui/material/Stack";
-import grey from "@mui/material/colors/grey";
 import useTheme from "@mui/material/styles/useTheme";
 import { formatDate } from "app/helpers/date";
 import { ChartTooltip } from "../ChartTooltip";
@@ -38,15 +37,7 @@ const CustomTooltip = (props: TooltipProps<HeatMapDatum>) => {
           }}
         />
         <ChartTooltip.Text>
-          <span
-            style={{
-              color: data.y === 0 ? grey[400] : "inherit",
-              fontWeight: 600,
-            }}
-          >
-            {data.y}
-          </span>{" "}
-          Reviews
+          <ChartTooltip.Number dimZero>{data.y}</ChartTooltip.Number> Reviews
         </ChartTooltip.Text>
       </Stack>
     </ChartTooltip>

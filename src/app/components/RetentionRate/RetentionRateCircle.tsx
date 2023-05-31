@@ -36,12 +36,10 @@ const CustomTooltip = (props: PieCustomLayerProps<TRetentionDatum>) => {
             >
               {startCase(id as string)}
             </ChartTooltip.Text>
-            <ChartTooltip.Text style={{ fontWeight: 600 }}>
-              {value}
-            </ChartTooltip.Text>
+            <ChartTooltip.Number>{value}</ChartTooltip.Number>
             <ChartTooltip.Text style={{ width: 40, textAlign: "right" }}>
               {((value / (total || 1)) * 100).toFixed(1)}
-              <span style={{ color: grey[400] }}>%</span>
+              <ChartTooltip.Unit>%</ChartTooltip.Unit>
             </ChartTooltip.Text>
           </Stack>
         ))}

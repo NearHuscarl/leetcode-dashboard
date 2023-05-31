@@ -39,20 +39,15 @@ const createCustomTooltip = (tooltip: string) => (props: SliceTooltipProps) => {
                 alignItems: "center",
               }}
             >
-              <div style={{ display: "flex", gap: 4, alignItems: "center" }}>
-                <ChartTooltip.Text style={{ color, width: 100 }}>
-                  {serieId}
-                </ChartTooltip.Text>
-              </div>
-              <ChartTooltip.Text
-                style={{
-                  textAlign: "right",
-                  fontWeight: 600,
-                  color: data.yFormatted === "0" ? grey[400] : "inherit",
-                }}
-              >
-                {data.yFormatted}
+              <ChartTooltip.Text style={{ color, width: 100 }}>
+                {serieId}
               </ChartTooltip.Text>
+              <ChartTooltip.Number
+                dimZero
+                style={{ width: 20, textAlign: "right" }}
+              >
+                {data.y as number}
+              </ChartTooltip.Number>
               <ChartTooltip.Text
                 style={{
                   padding: "0.5px 4px",

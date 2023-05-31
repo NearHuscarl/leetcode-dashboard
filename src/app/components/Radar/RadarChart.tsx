@@ -58,7 +58,7 @@ const CustomTooltip = (props: RadarSliceTooltipProps) => {
 
   return (
     <ChartTooltip>
-      <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+      <Stack gap={0.5}>
         <div style={{ fontWeight: "bold" }}>
           {getDisplayedLabel(index as string)}
         </div>
@@ -77,15 +77,15 @@ const CustomTooltip = (props: RadarSliceTooltipProps) => {
                   {id}
                 </ChartTooltip.Text>
                 <ChartTooltip.Text>
-                  <span style={{ fontWeight: 600 }}>
+                  <ChartTooltip.Number>
                     {Math.round(value * 10) / 10}
-                  </span>
-                  <span style={{ color: grey[400] }}>%</span>
+                  </ChartTooltip.Number>
+                  <ChartTooltip.Unit>%</ChartTooltip.Unit>
                 </ChartTooltip.Text>
               </Stack>
             ))}
         </Stack>
-      </div>
+      </Stack>
     </ChartTooltip>
   );
 };
