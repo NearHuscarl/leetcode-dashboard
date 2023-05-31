@@ -1,7 +1,65 @@
-import { ResponsiveBar } from "@nivo/bar";
+import Stack from "@mui/material/Stack";
+import { BarTooltipProps, ResponsiveBar } from "@nivo/bar";
 import { useTheme } from "@mui/material";
 import { TBarDatum, TPattern, patternShortNames } from "./patternBarData";
 import { TCardType } from "app/helpers/card";
+import { ChartTooltip } from "../ChartTooltip";
+import { grey } from "@mui/material/colors";
+
+const cardTypePriorities = {
+  Learning: 0,
+  Young: 1,
+  Mature: 2,
+  Unsolved: 3,
+};
+
+const CustomTooltip = (props: BarTooltipProps<TBarDatum>) => {
+  const { pattern, ...sum } = props.data;
+  const theme = useTheme();
+  const total = Object.keys(sum).reduce(
+    (acc, cardType) => acc + (sum[cardType as TCardType] as number),
+    0
+  );
+
+  return (
+    <ChartTooltip>
+      <Stack gap={0.5}>
+        <div style={{ fontWeight: "bold" }}>{pattern}</div>
+        <Stack>
+          {Object.keys(sum)
+            // @ts-ignore
+            .sort((a, b) => cardTypePriorities[a] - cardTypePriorities[b])
+            .map((cardType2) => {
+              const cardType = cardType2 as TCardType;
+              return (
+                <Stack
+                  key={cardType}
+                  direction="row"
+                  justifyContent="space-between"
+                >
+                  <ChartTooltip.Text
+                    style={{
+                      width: 80,
+                      color: theme.anki.cardType[cardType] ?? grey[400],
+                    }}
+                  >
+                    {cardType}
+                  </ChartTooltip.Text>
+                  <ChartTooltip.Text>
+                    <ChartTooltip.Number>
+                      {Math.round(((sum[cardType] as number) / total) * 1000) /
+                        10}
+                    </ChartTooltip.Number>
+                    <ChartTooltip.Unit>%</ChartTooltip.Unit>
+                  </ChartTooltip.Text>
+                </Stack>
+              );
+            })}
+        </Stack>
+      </Stack>
+    </ChartTooltip>
+  );
+};
 
 type TPatternBarChartProps = {
   data: TBarDatum[];
@@ -30,7 +88,7 @@ export const PatternBarChart = (props: TPatternBarChartProps) => {
       margin={{ top: 10, right: 90, bottom: 25, left: 25 }}
       groupMode="stacked"
       valueScale={{ type: "linear", min: 0 }}
-      indexScale={{ type: "band", round: true }}
+      tooltip={CustomTooltip}
       padding={0.6}
       gridYValues={4}
       axisLeft={{
