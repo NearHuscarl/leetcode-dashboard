@@ -36,7 +36,7 @@ const RadarGridLabel = ({
         {getDisplayedLabel(id)
           .split(" ")
           .map((w, i) => (
-            <tspan x="0" dy={`${i}em`}>
+            <tspan key={i} x="0" dy={`${i}em`}>
               {w}
             </tspan>
           ))}

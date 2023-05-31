@@ -1,11 +1,11 @@
 import { formatDate } from "./date";
 
-export const getTickFormattedDate = (date: string, daysRecoreded: number) => {
+export const getTickFormattedDate = (date: string, daysRecorded: number) => {
   const [_, __, day] = date.split("-").map(Number);
-  if (daysRecoreded <= 7) {
+  if (daysRecorded <= 7) {
     return formatDate(new Date(date), "dd/MM");
   }
-  if (daysRecoreded <= 31) {
+  if (daysRecorded <= 31) {
     if (day % 5 === 0) {
       return formatDate(new Date(date), "dd/MM");
     }

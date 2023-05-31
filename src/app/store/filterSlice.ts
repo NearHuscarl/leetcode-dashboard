@@ -3,6 +3,7 @@ import type { PayloadAction } from "@reduxjs/toolkit";
 import { persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 
+export type TDateView = "day" | "week" | "month" | "quarter";
 export type TDateFilter = "week" | "month" | "quarter" | "year" | "all";
 export type TDateAgoFilter =
   | "today"
@@ -37,6 +38,9 @@ export interface TFilterState {
   patternBar: {
     dateAgo: TDateAgoFilter;
   };
+  cardTypeBar: {
+    dateView: TDateView;
+  };
 }
 
 const initialState: TFilterState = {
@@ -63,6 +67,9 @@ const initialState: TFilterState = {
   },
   patternBar: {
     dateAgo: "today",
+  },
+  cardTypeBar: {
+    dateView: "month",
   },
 };
 
@@ -93,6 +100,9 @@ export const filterSlice = createSlice({
     },
     setPatternBar: (state, action: PayloadAction<TDateAgoFilter>) => {
       state.patternBar.dateAgo = action.payload;
+    },
+    setCardTypeBarDate: (state, action: PayloadAction<TDateView>) => {
+      state.cardTypeBar.dateView = action.payload;
     },
   },
 });

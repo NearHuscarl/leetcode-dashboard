@@ -1,4 +1,5 @@
-import differenceInMonths from "date-fns/differenceInMonths";
+import differenceInDays from "date-fns/differenceInDays";
+import uniqBy from "lodash/uniqBy";
 import {
   TCardType,
   getCardType,
@@ -7,8 +8,7 @@ import {
 import { formatDate } from "app/helpers/date";
 import { TCardModel } from "app/services/problems";
 import { BarDatum } from "@nivo/bar";
-
-const DATE_FORMAT = "yyyy-MM";
+import { TDateView } from "app/store/filterSlice";
 
 type TDate = string;
 type TDiff = {
@@ -25,18 +25,18 @@ const createSubmap = (): Record<TCardType, TDiff> =>
   }, {} as any);
 
 // A helper function that preprocesses the cards array and creates a map that stores the number of problems solved for each date and category
-function createMap(cards: TCardModel[]) {
+function createMap(cards: TCardModel[], dateFormat: string) {
   const map: Record<TDate, Record<TCardType, TDiff>> = {};
 
   for (const card of cards) {
     if (!card.leetcode) continue;
 
-    const createdTime = formatDate(card.cardId, DATE_FORMAT);
+    const createdTime = formatDate(card.cardId, dateFormat);
     const submap = map[createdTime] ?? (map[createdTime] = createSubmap()); // Initialize the submap if it doesn't exist
     submap.New.add = (submap.New.add ?? 0) + 1;
 
     for (let i = 0; i < card.reviews.length; i++) {
-      const date = formatDate(card.reviews[i].id, DATE_FORMAT);
+      const date = formatDate(card.reviews[i].id, dateFormat);
       const submap = map[date] ?? (map[date] = createSubmap()); // Initialize the submap if it doesn't exist
       const cardTypeAfterReview = card.reviews[i + 1]
         ? getCardTypeFromReview(card.reviews[i + 1])
@@ -59,26 +59,44 @@ function createMap(cards: TCardModel[]) {
   return map;
 }
 
-function getDatesBetween(start: Date, end: Date): string[] {
-  const dates: string[] = [];
-  const diff = differenceInMonths(end, start);
+function getDatesBetween(start: Date, end: Date, dateFormat: string) {
+  const dates: { dateFormat: string; date: number }[] = [];
+  const diff = differenceInDays(end, start);
+
   for (let i = 0; i <= diff; i++) {
     const date = new Date(start);
-    date.setMonth(date.getMonth() + i);
-    dates.push(formatDate(date, DATE_FORMAT));
+    date.setDate(date.getDate() + i);
+    dates.push({
+      dateFormat: formatDate(date, dateFormat),
+      date: date.valueOf(),
+    });
   }
-  return dates;
+
+  return uniqBy(dates, (d) => d.dateFormat);
 }
 
 export interface TBarDatum extends BarDatum {
-  date: string;
+  date: number;
   New: number;
   Learning: number;
   Young: number;
   Mature: number;
 }
 
-export function prepareChartData(cards: TCardModel[]) {
+const getDateFormat = (dateView: TDateView) => {
+  switch (dateView) {
+    case "day":
+      return "yyyy-MM-dd";
+    case "week":
+      return "yyyy-w";
+    case "month":
+      return "yyyy-MM";
+    case "quarter":
+      return "yyyy-Q";
+  }
+};
+
+export function prepareChartData(cards: TCardModel[], dateView: TDateView) {
   let minCreationDate = new Date();
   for (const card of cards) {
     const creationDate = new Date(card.cardId);
@@ -88,13 +106,14 @@ export function prepareChartData(cards: TCardModel[]) {
   let minDate = minCreationDate;
   let maxDate = new Date();
 
-  const dates = getDatesBetween(minDate, maxDate);
-  const map = createMap(cards);
+  const dateFormat = getDateFormat(dateView);
+  const dates = getDatesBetween(minDate, maxDate, dateFormat);
+  const map = createMap(cards, dateFormat);
   const data: TBarDatum[] = [];
 
-  for (const date of dates) {
+  for (const { date, dateFormat } of dates) {
     const lastItem: TBarDatum = data.at(-1) ?? {
-      date: "",
+      date: 0,
       New: 0,
       Learning: 0,
       Young: 0,
@@ -105,24 +124,24 @@ export function prepareChartData(cards: TCardModel[]) {
       date,
       Mature:
         lastItem.Mature +
-        (map[date]?.["Mature"]?.add ?? 0) -
-        (map[date]?.["Mature"]?.sub ?? 0),
+        (map[dateFormat]?.["Mature"]?.add ?? 0) -
+        (map[dateFormat]?.["Mature"]?.sub ?? 0),
       New:
         lastItem.New +
-        (map[date]?.["New"]?.add ?? 0) -
-        (map[date]?.["New"]?.sub ?? 0),
+        (map[dateFormat]?.["New"]?.add ?? 0) -
+        (map[dateFormat]?.["New"]?.sub ?? 0),
       Learning:
         lastItem.Learning +
-        (map[date]?.["Learning"]?.add ?? 0) -
-        (map[date]?.["Learning"]?.sub ?? 0),
+        (map[dateFormat]?.["Learning"]?.add ?? 0) -
+        (map[dateFormat]?.["Learning"]?.sub ?? 0),
       Young:
         lastItem.Young +
-        (map[date]?.["Young"]?.add ?? 0) -
-        (map[date]?.["Young"]?.sub ?? 0),
+        (map[dateFormat]?.["Young"]?.add ?? 0) -
+        (map[dateFormat]?.["Young"]?.sub ?? 0),
     });
   }
 
   return {
-    data,
+    data: data.slice(data.length - 6, data.length),
   };
 }

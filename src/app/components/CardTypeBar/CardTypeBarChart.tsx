@@ -2,14 +2,16 @@ import { ResponsiveBar } from "@nivo/bar";
 import { useTheme } from "@mui/material";
 import { TBarDatum, cardTypes } from "./cardTypeBarData";
 import { TCardType } from "app/helpers/card";
-import { getTickFormattedDate } from "app/helpers/chart";
+import { formatDate } from "app/helpers/date";
+import { TDateView } from "app/store/filterSlice";
 
 type TCardTypeBarChartProps = {
   data: TBarDatum[];
+  dateView: TDateView;
 };
 
 export const CardTypeBarChart = (props: TCardTypeBarChartProps) => {
-  const { data } = props;
+  const { data, dateView } = props;
   const theme = useTheme();
 
   return (
@@ -21,7 +23,7 @@ export const CardTypeBarChart = (props: TCardTypeBarChartProps) => {
         textColor: theme.chart.legend.color,
       }}
       colors={({ id }) => theme.anki.cardType[id as TCardType]}
-      margin={{ top: 50, right: 90, bottom: 50, left: 25 }}
+      margin={{ top: 30, right: 90, bottom: 55, left: 25 }}
       groupMode="grouped"
       valueScale={{ type: "linear" }}
       indexScale={{ type: "band", round: true }}
@@ -36,15 +38,28 @@ export const CardTypeBarChart = (props: TCardTypeBarChartProps) => {
         tickSize: 0,
         tickPadding: 10,
         renderTick(props) {
-          const { x, y, value } = props;
-          const formattedDate = getTickFormattedDate(value + "-01", 30 * 6);
+          let { x, y, value } = props;
+          let formattedDate = "";
+
+          if (dateView === "day") {
+            formattedDate = formatDate(new Date(value), "E");
+          }
+          if (dateView === "week") {
+            formattedDate = formatDate(new Date(value), "d MMM");
+          }
+          if (dateView === "month") {
+            formattedDate = formatDate(new Date(value), "MMM");
+          }
+          if (dateView === "quarter") {
+            formattedDate = formatDate(new Date(value), "QQQ yyyy");
+          }
 
           if (!formattedDate) {
             return <></>;
           }
 
           return (
-            <text x={x - 10} y={y + 20} {...theme.chart.legend}>
+            <text x={x} y={y + 20} textAnchor="middle" {...theme.chart.legend}>
               {formattedDate}
             </text>
           );
