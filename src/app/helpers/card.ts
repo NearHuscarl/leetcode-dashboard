@@ -36,7 +36,7 @@ export const getCardTypeAt = (card: TCard, date: number) => {
 // https://docs.ankiweb.net/getting-started.html#cards
 const isMatureInterval = (ivl: number) => {
   const interval = getIntervalTime(ivl);
-  return interval / 1000 / 60 / 60 / 24 >= 21;
+  return interval / MSS.oneDay >= 21;
 };
 
 export const getCardType = (card: TCard): TCardType => {

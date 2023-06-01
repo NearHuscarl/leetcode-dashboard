@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
+import { MSS } from "app/settings";
 
 const BASE_URL = "https://leetcode-dashboard.vercel.app";
 
@@ -44,7 +45,7 @@ export const useLeetcodeProblems = () => {
       return problems;
     },
     {
-      staleTime: 1000 * 60 * 60 * 24 * 7, // 1 week
+      staleTime: MSS.oneMonth,
     }
   );
 };
