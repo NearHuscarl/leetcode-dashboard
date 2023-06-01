@@ -1,20 +1,16 @@
 import Stack from "@mui/material/Stack";
-import { useTheme } from "@mui/material";
 import { ChartTitle } from "../ChartTitle";
 import { RetentionRateFilter } from "./RetentionRateFilter";
 import { useProblems } from "app/services/problems";
 import { prepareChartData } from "./retentionRateData";
 import { useSelector } from "app/store/setup";
 import { RetentionRateCircle } from "./RetentionRateCircle";
-import { TEaseLabel } from "app/helpers/card";
+import { RetentionRateBar } from "./RetentionRateBar";
 
 export const RetentionRate = () => {
   const cards = useProblems();
   const dateAgo = useSelector((state) => state.filter.retentionRate.dateAgo);
-  const { data, ease, total } = prepareChartData(cards, dateAgo);
-  const theme = useTheme();
-  const totalPassed = ease.good + ease.easy + ease.hard;
-  const totalFailed = ease.again;
+  const { data, ease } = prepareChartData(cards, dateAgo);
 
   return (
     <Stack justifyContent="space-between" height="100%">
@@ -43,40 +39,7 @@ export const RetentionRate = () => {
           />
         ))}
       </Stack>
-      <Stack>
-        <Stack px={1} direction="row" justifyContent="space-between">
-          <div>
-            <div style={{ color: theme.chart.legend.color, fontSize: 12 }}>
-              Passed
-            </div>
-            <div style={{ fontWeight: 600 }}>
-              {Math.round((totalPassed / (total || 1)) * 100)}%
-            </div>
-          </div>
-          <div style={{ textAlign: "right" }}>
-            <div style={{ color: theme.chart.legend.color, fontSize: 12 }}>
-              Failed
-            </div>
-            <div style={{ fontWeight: 600 }}>
-              {Math.round((totalFailed / (total || 1)) * 100)}%
-            </div>
-          </div>
-        </Stack>
-        <Stack direction="row" px={0.6} gap={0.5}>
-          {(Object.keys(ease) as TEaseLabel[]).reverse().map((e) => (
-            <div
-              key={e}
-              style={{
-                width: `${(ease[e] / (total || 1)) * 100}%`,
-                height: 11,
-                transition: "width 0.3s",
-                backgroundColor: theme.anki.ease[e],
-                borderRadius: 10,
-              }}
-            />
-          ))}
-        </Stack>
-      </Stack>
+      <RetentionRateBar result={ease} />
     </Stack>
   );
 };

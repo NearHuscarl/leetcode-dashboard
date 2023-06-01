@@ -34,6 +34,7 @@ ChartTooltip.Number = ({ children, style, dimZero = false }: TNumberProps) => {
   return (
     <span
       style={{
+        textAlign: "right",
         fontSize: 12,
         fontWeight: 600,
         color: dimZero ? (children === 0 ? grey[400] : "inherit") : "inherit",

@@ -184,7 +184,7 @@ export const getEaseRate = (reviews: TCardReview[]): number => {
 
 export type TEaseLabel = "again" | "hard" | "good" | "easy" | "unknown";
 
-export const getEaseLabel = (ease: number) => {
+export const getEaseLabel = (ease: number): TEaseLabel => {
   switch (ease) {
     case 1:
       return "again";

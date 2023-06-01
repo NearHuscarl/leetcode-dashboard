@@ -56,7 +56,6 @@ export function prepareChartData(cards: TCardModel[], dateAgo: TDateAgoFilter) {
     easy: 0,
     unknown: 0,
   };
-  let total = 0;
 
   for (const card of cards) {
     for (const review of card.reviews) {
@@ -70,7 +69,6 @@ export function prepareChartData(cards: TCardModel[], dateAgo: TDateAgoFilter) {
       const i = getEaseIndex(review.ease);
 
       ease[easeLabel] += 1;
-      total += 1;
 
       data[cardType][i] = data[cardType][i] ?? {
         id: easeLabel,
@@ -83,6 +81,5 @@ export function prepareChartData(cards: TCardModel[], dateAgo: TDateAgoFilter) {
   return {
     data,
     ease,
-    total,
   };
 }

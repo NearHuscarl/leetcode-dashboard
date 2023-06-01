@@ -1,67 +1,30 @@
-import Stack from "@mui/material/Stack";
 import useTheme from "@mui/material/styles/useTheme";
-import {
-  Tooltip,
-  TooltipProps,
-  lighten,
-  styled,
-  tooltipClasses,
-} from "@mui/material";
+import { lighten } from "@mui/material";
 import grey from "@mui/material/colors/grey";
 import { PieCustomLayerProps, ResponsivePie } from "@nivo/pie";
-import startCase from "lodash/startCase";
 import { TRetentionDatum } from "./retentionRateData";
-import { ChartTooltip } from "../ChartTooltip";
+import { RetentionRateTooltip } from "./RetentionRateTooltip";
 
-const easePriorities = {
-  easy: 0,
-  good: 1,
-  hard: 2,
-  again: 3,
-};
+interface TInnerBackgroundProps extends PieCustomLayerProps<TRetentionDatum> {
+  cardType: string;
+}
 
-const CustomTooltip = (props: PieCustomLayerProps<TRetentionDatum>) => {
-  const { dataWithArc } = props;
-  const total = dataWithArc.reduce((acc, datum) => acc + datum.value, 0);
-
-  return (
-    <ChartTooltip>
-      {dataWithArc
-        // @ts-ignore
-        .sort((a, b) => easePriorities[a.id] - easePriorities[b.id])
-        .map(({ value, color, id }) => (
-          <Stack key={id} direction="row" alignItems="center" gap={1}>
-            <ChartTooltip.Text
-              style={{ color: id === "again" ? grey[400] : color, width: 60 }}
-            >
-              {startCase(id as string)}
-            </ChartTooltip.Text>
-            <ChartTooltip.Number>{value}</ChartTooltip.Number>
-            <ChartTooltip.Text style={{ width: 40, textAlign: "right" }}>
-              {((value / (total || 1)) * 100).toFixed(1)}
-              <ChartTooltip.Unit>%</ChartTooltip.Unit>
-            </ChartTooltip.Text>
-          </Stack>
-        ))}
-    </ChartTooltip>
-  );
-};
-
-const TootlipWrapper = styled(({ className, ...props }: TooltipProps) => (
-  <Tooltip {...props} classes={{ popper: className }} />
-))({
-  [`& .${tooltipClasses.tooltip}`]: {
-    backgroundColor: "transparent",
-    fontWeight: 400,
-    padding: 0,
-  },
-});
-
-const InnerBackground = (props: PieCustomLayerProps<TRetentionDatum>) => {
-  const { centerX, centerY, arcGenerator, dataWithArc, innerRadius, radius } =
-    props;
+const InnerBackground = (props: TInnerBackgroundProps) => {
+  const {
+    centerX,
+    centerY,
+    arcGenerator,
+    dataWithArc,
+    innerRadius,
+    radius,
+    cardType,
+  } = props;
   let success = 0;
   let total = 0;
+  const result = dataWithArc.reduce<Record<string, number>>((a, c) => {
+    a[c.id] = c.value;
+    return a;
+  }, {});
 
   dataWithArc.forEach((datum) => {
     if (datum.data.id !== "again") {
@@ -85,34 +48,32 @@ const InnerBackground = (props: PieCustomLayerProps<TRetentionDatum>) => {
           }
         />
         {!(dataWithArc[0].data as any).isEmpty && (
-          <TootlipWrapper
-            title={<CustomTooltip {...props} />}
-            followCursor
-            placement="top"
-          >
+          <RetentionRateTooltip result={result} cardType={cardType}>
             <circle fill="transparent" r={radius} />
-          </TootlipWrapper>
+          </RetentionRateTooltip>
         )}
       </g>
+      <CenteredMetric
+        cardType={cardType}
+        centerX={centerX}
+        centerY={centerY}
+        success={success}
+        total={total}
+      />
     </>
   );
 };
 
-interface TCenterMetricProps extends PieCustomLayerProps<TRetentionDatum> {
+interface TCenterMetricProps {
   cardType: string;
+  success: number;
+  total: number;
+  centerX: number;
+  centerY: number;
 }
 
 const CenteredMetric = (props: TCenterMetricProps) => {
-  const { dataWithArc, centerX, centerY, cardType } = props;
-  let success = 0;
-  let total = 0;
-
-  dataWithArc.forEach((datum) => {
-    if (datum.data.id !== "again") {
-      success += datum.value;
-    }
-    total += datum.value;
-  });
+  const { centerX, centerY, cardType, total, success } = props;
 
   return (
     <>
@@ -225,8 +186,7 @@ export const RetentionRateCircle = (props: TRetentionRateCircleProps) => {
         "arcLabels",
         "arcLinkLabels",
         "legends",
-        InnerBackground,
-        (props) => <CenteredMetric {...props} cardType={cardType} />,
+        (props) => <InnerBackground {...props} cardType={cardType} />,
       ]}
     />
   );
