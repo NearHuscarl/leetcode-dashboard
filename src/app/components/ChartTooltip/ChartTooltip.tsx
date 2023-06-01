@@ -1,11 +1,29 @@
-import { CSSProperties, PropsWithChildren } from "react";
+import { CSSProperties, PropsWithChildren, useEffect, useId } from "react";
 import Card from "@mui/material/Card";
 import grey from "@mui/material/colors/grey";
 
 type TChartTooltipProps = PropsWithChildren<{}> & {};
 
 export const ChartTooltip = ({ children }: TChartTooltipProps) => {
-  return <Card sx={{ p: 1.5 }}>{children}</Card>;
+  const id = useId();
+
+  // Fix incorrect position on first render
+  // https://github.com/plouc/nivo/issues/2161
+  useEffect(() => {
+    setTimeout(() => {
+      const tooltipEl = document.getElementById(`tooltip-${id}`);
+
+      if (tooltipEl) {
+        tooltipEl.style.opacity = "1";
+      }
+    }, 50);
+  }, []);
+
+  return (
+    <Card key={id} id={`tooltip-${id}`} style={{ opacity: 0 }} sx={{ p: 1.5 }}>
+      {children}
+    </Card>
+  );
 };
 
 type TCommonProps = PropsWithChildren & {
