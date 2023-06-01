@@ -15,7 +15,7 @@ type TDueStatusWaffleProps = {
   data: TWaffleDatum[];
 };
 
-export const DueStatusWaffle = (props: TDueStatusWaffleProps) => {
+export const DueStatusBar = (props: TDueStatusWaffleProps) => {
   const { data } = props;
   const total = data
     // @ts-ignore

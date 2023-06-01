@@ -6,7 +6,7 @@ import { ScatterPlotChart } from "./ScatterPlotChart";
 import { ScatterPlotFilter } from "./ScatterPlotFilter";
 import { useSelector } from "app/store/setup";
 import { ResponsiveContainer } from "../ResponsiveContainer";
-import { DueStatusWaffle } from "./DueStatusWaffle";
+import { DueStatusBar } from "./DueStatusBar";
 
 export const ScatterPlot = () => {
   const cards = useProblems();
@@ -40,7 +40,7 @@ export const ScatterPlot = () => {
           }}
         >
           <ResponsiveContainer>
-            <DueStatusWaffle data={total} />
+            <DueStatusBar data={total} />
           </ResponsiveContainer>
         </div>
       </Stack>
