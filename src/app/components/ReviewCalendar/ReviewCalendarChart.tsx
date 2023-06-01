@@ -4,12 +4,12 @@ import {
   DateOrString,
   ResponsiveCalendar,
 } from "@nivo/calendar";
+import Stack from "@mui/material/Stack";
 import useTheme from "@mui/material/styles/useTheme";
 import grey from "@mui/material/colors/grey";
 import red from "@mui/material/colors/red";
 import amber from "@mui/material/colors/amber";
 import cyan from "@mui/material/colors/cyan";
-import Stack from "@mui/material/Stack";
 import {
   EMPTY_CURRENT,
   EMPTY_IN_FUTURE,

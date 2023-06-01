@@ -1,15 +1,26 @@
+import Stack from "@mui/material/Stack";
 import {
   ResponsiveScatterPlot,
   ScatterPlotDatum,
   ScatterPlotLayerProps,
+  ScatterPlotTooltipProps,
 } from "@nivo/scatterplot";
 import { alpha, useTheme } from "@mui/material";
-import { TScatterPlotRawSerie, colorLookup } from "./scatterPlotData";
+import {
+  TScatterPlotDatum,
+  TScatterPlotRawSerie,
+  colorLookup,
+} from "./scatterPlotData";
 import { MSS } from "app/settings";
 import { ScatterPlotNode } from "./ScatterPlotNode";
 import { blueGrey } from "@mui/material/colors";
 import { useState } from "react";
 import { TDueStatus } from "app/helpers/card";
+import { ChartTooltip } from "../ChartTooltip";
+import { AcRateIndicator } from "../AcRateIndicator";
+import formatDistanceToNowStrict from "date-fns/formatDistanceToNowStrict";
+import { useLeetcodeProblems } from "app/api/leetcode";
+import { formatDisplayedDateShort } from "app/helpers/date";
 
 type TRectProps = {
   x: number;
@@ -110,6 +121,30 @@ const AreaLayer = (props: ScatterPlotLayerProps<ScatterPlotDatum>) => {
   );
 };
 
+const CustomTooltip = (props: ScatterPlotTooltipProps<TScatterPlotDatum>) => {
+  const { color, leetcodeId: id, x, y } = props.node.data;
+  const dueDistance = x as number;
+  const acRate = y as number;
+  const { data: leetcodes = {} } = useLeetcodeProblems();
+  const dueDate = Date.now() + dueDistance;
+  const displayedDate = formatDistanceToNowStrict(dueDate, { addSuffix: true });
+
+  return (
+    <ChartTooltip>
+      <ChartTooltip.Date>{formatDisplayedDateShort(dueDate)}</ChartTooltip.Date>
+      <ChartTooltip.Caption style={{ marginBottom: 4, color: color[500] }}>
+        Due {displayedDate}
+      </ChartTooltip.Caption>
+      <Stack gap={1.2} direction="row" alignItems="baseline">
+        <AcRateIndicator value={acRate} width={40} height={7} />
+        <ChartTooltip.Text style={{ flex: 1 }}>
+          {leetcodes[id]?.title}
+        </ChartTooltip.Text>
+      </Stack>
+    </ChartTooltip>
+  );
+};
+
 type TScatterPlotProps = {
   data: TScatterPlotRawSerie[];
 };
@@ -140,6 +175,7 @@ export const ScatterPlotChart = (props: TScatterPlotProps) => {
       yScale={{ type: "linear", min: 0 }}
       blendMode="multiply"
       nodeComponent={ScatterPlotNode}
+      tooltip={CustomTooltip}
       axisTop={null}
       axisRight={null}
       useMesh={false}

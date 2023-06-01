@@ -135,11 +135,11 @@ ScatterPlot
 + Filter
 - Tooltip
 
-Current retention rate: In circle percentage
-- Easy: percentage
-- Medium: percentage
-- Hard: percentage
-- Overall: percentage
+Current retention rate: In progress circle
++ 3 Circles in different states: Review, Young, Mature
++ 1 Progress bar to show overall retention rate
++ Filter
++ Tooltip
 
 Patterns covered
 + Stacked bar chart
