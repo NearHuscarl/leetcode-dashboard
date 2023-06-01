@@ -159,6 +159,21 @@ export const theme = createTheme({
         },
       },
     },
+    MuiMenu: {
+      styleOverrides: {
+        paper: {
+          background: "#ffffff55",
+          backdropFilter: "blur(5px)",
+        },
+      },
+    },
+    MuiMenuItem: {
+      styleOverrides: {
+        root: {
+          height: INPUT_HEIGHT,
+        },
+      },
+    },
     MuiInputBase: {
       styleOverrides: {
         root: {

@@ -133,7 +133,7 @@ ScatterPlot
 + X: Due date distance
 + Y: AC Rate
 + Filter
-- Tooltip
++ Tooltip
 
 Current retention rate: In progress circle
 + 3 Circles in different states: Review, Young, Mature
