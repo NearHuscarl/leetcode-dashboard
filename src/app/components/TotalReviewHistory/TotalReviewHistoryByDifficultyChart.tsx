@@ -1,10 +1,12 @@
 import Stack from "@mui/material/Stack";
-import { amber, lightGreen, red, green, grey } from "@mui/material/colors";
+import grey from "@mui/material/colors/grey";
+import green from "@mui/material/colors/green";
 import { ResponsiveLine, Serie, SliceTooltipProps } from "@nivo/line";
 import { theme } from "app/provider/ThemeProvider";
 import { ChartTooltip } from "../ChartTooltip";
 import { TLineDatum } from "./totalReviewHistoryData";
 import { useMemo } from "react";
+import { TDifficulty } from "app/api/leetcode";
 
 const legendTextStyle: Partial<React.CSSProperties> = {
   fill: theme.chart.legend.color,
@@ -97,18 +99,7 @@ export const TotalReviewHistoryByDifficultyChart = (
       }}
       enableSlices="x"
       sliceTooltip={CustomTooltip}
-      colors={(data) => {
-        switch (data.id) {
-          case "Hard":
-            return red[500];
-          case "Medium":
-            return amber[500];
-          case "Easy":
-            return lightGreen[500];
-        }
-
-        return grey[500];
-      }}
+      colors={(data) => theme.leetcode.difficulty[data.id as TDifficulty]}
       axisTop={null}
       axisRight={null}
       axisLeft={null}

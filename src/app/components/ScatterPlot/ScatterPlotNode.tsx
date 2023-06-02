@@ -1,7 +1,8 @@
 import { useCallback, MouseEvent } from "react";
 import { useDispatch } from "react-redux";
-import styled from "@mui/material/styles/styled";
 import { animated } from "@react-spring/web";
+import styled from "@mui/material/styles/styled";
+import useTheme from "@mui/material/styles/useTheme";
 import purple from "@mui/material/colors/purple";
 import { ScatterPlotNodeProps } from "@nivo/scatterplot";
 import { TScatterPlotDatum } from "./scatterPlotData";
@@ -25,13 +26,14 @@ export const ScatterPlotNode = <RawDatum extends TScatterPlotDatum>({
   onClick,
 }: ScatterPlotNodeProps<RawDatum>) => {
   const dispatch = useDispatch();
-  const selectedProblem = useSelector((state) => state.global.selectedProblem);
-  const selectedChart = useSelector((state) => state.global.selectedChart);
+  const theme = useTheme();
+  const selectedProblem = useSelector((state) => state.global.hover.problem);
+  const selectedChart = useSelector((state) => state.global.hover.chart);
   const isSelected =
     selectedProblem === node.data.id && selectedChart !== "scatterPlot";
   const handleMouseEnter = useCallback(
     (event: MouseEvent<SVGCircleElement>) => {
-      dispatch(globalActions.setSelectedProblem([node.data.id, "scatterPlot"]));
+      dispatch(globalActions.hoverProblem([node.data.id, "scatterPlot"]));
       onMouseEnter?.(node, event);
     },
     [node, onMouseEnter]
@@ -42,17 +44,21 @@ export const ScatterPlotNode = <RawDatum extends TScatterPlotDatum>({
   );
   const handleMouseLeave = useCallback(
     (event: MouseEvent<SVGCircleElement>) => {
-      dispatch(globalActions.setSelectedProblem());
+      dispatch(globalActions.hoverProblem());
       onMouseLeave?.(node, event);
     },
     [node, onMouseLeave]
   );
   const handleClick = useCallback(
-    (event: MouseEvent<SVGCircleElement>) => onClick?.(node, event),
+    (event: MouseEvent<SVGCircleElement>) => {
+      dispatch(globalActions.openProblemDetail(node.data.id));
+      onClick?.(node, event);
+    },
     [node, onClick]
   );
   const r = style.size.to(interpolateRadius);
   const selectedColor = purple[500];
+  const nodeColor = theme.anki.dueStatus[node.data.dueStatus];
 
   return (
     <>
@@ -70,12 +76,19 @@ export const ScatterPlotNode = <RawDatum extends TScatterPlotDatum>({
           }}
         />
       )}
-      <animated.circle
+      <Circle
+        sx={{
+          cursor: "pointer",
+          "&:hover": {
+            stroke: nodeColor,
+          },
+        }}
         cx={style.x}
         cy={style.y}
         r={r}
-        fill={isSelected ? selectedColor : node.data.color[500]}
+        fill={isSelected ? selectedColor : nodeColor}
         style={{ mixBlendMode: blendMode }}
+        strokeWidth={3}
         onMouseEnter={isInteractive ? handleMouseEnter : undefined}
         onMouseMove={isInteractive ? handleMouseMove : undefined}
         onMouseLeave={isInteractive ? handleMouseLeave : undefined}

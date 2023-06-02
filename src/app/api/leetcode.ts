@@ -3,9 +3,11 @@ import { MSS } from "app/settings";
 
 const BASE_URL = "https://leetcode-dashboard.vercel.app";
 
+export type TDifficulty = "Easy" | "Medium" | "Hard";
+
 export type TLeetcode = {
   acRate: number;
-  difficulty: "Easy" | "Medium" | "Hard";
+  difficulty: TDifficulty;
   title: string;
   titleSlug: string;
   likes: number;

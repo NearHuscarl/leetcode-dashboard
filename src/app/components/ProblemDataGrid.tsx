@@ -4,27 +4,23 @@ import {
   GridRenderCellParams,
   GridValueGetterParams,
 } from "@mui/x-data-grid";
-import formatDistanceToNowStrict from "date-fns/formatDistanceToNowStrict";
 import { IconButton, Chip, Link } from "@mui/material";
-import red from "@mui/material/colors/red";
-import orange from "@mui/material/colors/orange";
-import lightGreen from "@mui/material/colors/lightGreen";
-import green from "@mui/material/colors/green";
-import lightBlue from "@mui/material/colors/lightBlue";
-import amber from "@mui/material/colors/amber";
-import grey from "@mui/material/colors/grey";
 import OndemandVideoIcon from "@mui/icons-material/OndemandVideo";
-import GppBadIcon from "@mui/icons-material/GppBad";
-import GppMaybeIcon from "@mui/icons-material/GppMaybe";
-import GppGoodIcon from "@mui/icons-material/GppGood";
 import { TCard } from "app/api/deck";
 import { TCardReview } from "app/api/stats";
 import { TLeetcode } from "app/api/leetcode";
 import { useProblems } from "app/services/problems";
-import { getCardType, getDueStatus, getNextReviewTime } from "app/helpers/card";
+import {
+  TCardType,
+  getCardType,
+  getDueStatus,
+  getNextReviewTime,
+} from "app/helpers/card";
 import { LEETCODE_BASE_URL } from "app/settings";
 import { AcRateIndicator } from "./AcRateIndicator";
 import { ReviewStatus } from "./ReviewStatus";
+import { theme } from "app/provider/ThemeProvider";
+import { DueStatus } from "./DueStatus";
 
 declare global {
   interface Array<T> {
@@ -32,14 +28,6 @@ declare global {
   }
 }
 
-const cardTypeColors: Record<string, string> = {
-  New: lightBlue[500],
-  Learning: orange[500],
-  Young: lightGreen[500],
-  Mature: green[500],
-  Relearning: red[500],
-  Unknown: grey[500],
-};
 // use in sorting
 const cardTypePriority: Record<string, number> = {
   New: 0,
@@ -65,11 +53,7 @@ const columns: GridColDef[] = [
         return null;
       }
       return (
-        <Link
-          href={`${LEETCODE_BASE_URL}/${params.value}`}
-          color="Highlight"
-          underline="none"
-        >
+        <Link href={`${LEETCODE_BASE_URL}/${params.value}`}>
           {params.row.leetcode?.title ?? params.value}
         </Link>
       );
@@ -92,7 +76,7 @@ const columns: GridColDef[] = [
         <Chip
           label={params.value}
           style={{
-            backgroundColor: cardTypeColors[params.value],
+            backgroundColor: theme.anki.cardType[params.value as TCardType],
             color: "white",
           }}
         />
@@ -126,27 +110,9 @@ const columns: GridColDef[] = [
     renderCell: (params) => {
       const dueStatus = getDueStatus(params.row);
       const nextReviewTime = params.value;
-      const displayedDate = formatDistanceToNowStrict(nextReviewTime, {
-        addSuffix: true,
-      });
-
-      if (!displayedDate) {
-        return null;
-      }
 
       return (
-        <div style={{ display: "flex", gap: 3, alignItems: "center" }}>
-          {(dueStatus === "bad" || dueStatus === "stale") && (
-            <GppBadIcon style={{ color: red[300] }} />
-          )}
-          {dueStatus === "now" && (
-            <GppMaybeIcon style={{ color: amber[400] }} />
-          )}
-          {dueStatus === "good" && (
-            <GppGoodIcon style={{ color: lightGreen[300] }} />
-          )}
-          {displayedDate}
-        </div>
+        <DueStatus nextReviewTime={nextReviewTime} dueStatus={dueStatus} />
       );
     },
   },

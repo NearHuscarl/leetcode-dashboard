@@ -1,0 +1,1 @@
+export { DetailDrawer } from "./DetailDrawer";

@@ -6,14 +6,28 @@ export type TChartType = "scatterPlot" | "swarmPlot";
 
 export interface TGlobalState {
   view: "table" | "chart";
-  selectedProblem: string;
-  selectedChart: TChartType | "";
+  hover: {
+    problem: string;
+    chart: TChartType | "";
+  };
+  drawer: {
+    open: boolean;
+    problemIds: string[];
+    problemDetailId: string;
+  };
 }
 
 const initialState: TGlobalState = {
   view: "chart",
-  selectedProblem: "",
-  selectedChart: "",
+  hover: {
+    problem: "",
+    chart: "",
+  },
+  drawer: {
+    open: false,
+    problemIds: [],
+    problemDetailId: "",
+  },
 };
 
 export const globalSlice = createSlice({
@@ -26,12 +40,22 @@ export const globalSlice = createSlice({
     setTableView: (state) => {
       state.view = "table";
     },
-    setSelectedProblem: (
+    hoverProblem: (
       state,
       action: PayloadAction<[string, TChartType] | undefined>
     ) => {
-      state.selectedProblem = action.payload?.[0] ?? "";
-      state.selectedChart = action.payload?.[1] ?? "";
+      state.hover.problem = action.payload?.[0] ?? "";
+      state.hover.chart = action.payload?.[1] ?? "";
+    },
+    setDrawerOpen: (state, action: PayloadAction<boolean>) => {
+      state.drawer.open = action.payload;
+    },
+    setDrawerProblems: (state, action: PayloadAction<string[]>) => {
+      state.drawer.problemIds = action.payload;
+    },
+    openProblemDetail: (state, action: PayloadAction<string>) => {
+      state.drawer.open = true;
+      state.drawer.problemDetailId = action.payload;
     },
   },
 });

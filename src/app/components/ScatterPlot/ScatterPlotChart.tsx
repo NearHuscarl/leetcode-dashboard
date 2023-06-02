@@ -6,11 +6,7 @@ import {
   ScatterPlotTooltipProps,
 } from "@nivo/scatterplot";
 import { alpha, useTheme } from "@mui/material";
-import {
-  TScatterPlotDatum,
-  TScatterPlotRawSerie,
-  colorLookup,
-} from "./scatterPlotData";
+import { TScatterPlotDatum, TScatterPlotRawSerie } from "./scatterPlotData";
 import { MSS } from "app/settings";
 import { ScatterPlotNode } from "./ScatterPlotNode";
 import { blueGrey } from "@mui/material/colors";
@@ -32,6 +28,7 @@ type TRectProps = {
 
 const Rect = ({ x, y = 0, w, h, status }: TRectProps) => {
   const [enter, setEnter] = useState(false);
+  const theme = useTheme();
 
   return (
     <rect
@@ -50,7 +47,7 @@ const Rect = ({ x, y = 0, w, h, status }: TRectProps) => {
       x={x}
       y={y}
       style={{ transition: "fill 0.25s ease" }}
-      fill={alpha(colorLookup[status][500], enter ? 0.2 : 0.08)}
+      fill={alpha(theme.anki.dueStatus[status], enter ? 0.2 : 0.08)}
       width={w}
       height={h}
     />
@@ -122,7 +119,8 @@ const AreaLayer = (props: ScatterPlotLayerProps<ScatterPlotDatum>) => {
 };
 
 const CustomTooltip = (props: ScatterPlotTooltipProps<TScatterPlotDatum>) => {
-  const { color, id, x, y } = props.node.data;
+  const { id, x, y, dueStatus } = props.node.data;
+  const theme = useTheme();
   const dueDistance = x as number;
   const acRate = y as number;
   const { data: leetcodes = {} } = useLeetcodeProblems();
@@ -132,7 +130,9 @@ const CustomTooltip = (props: ScatterPlotTooltipProps<TScatterPlotDatum>) => {
   return (
     <ChartTooltip>
       <ChartTooltip.Date>{formatDisplayedDateShort(dueDate)}</ChartTooltip.Date>
-      <ChartTooltip.Caption style={{ marginBottom: 4, color: color[500] }}>
+      <ChartTooltip.Caption
+        style={{ marginBottom: 4, color: theme.anki.dueStatus[dueStatus] }}
+      >
         Due {displayedDate}
       </ChartTooltip.Caption>
       <Stack gap={1.2} direction="row" alignItems="baseline">

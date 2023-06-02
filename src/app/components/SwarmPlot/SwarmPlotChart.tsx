@@ -4,14 +4,14 @@ import {
   ComputedDatum,
   ResponsiveSwarmPlot,
 } from "@nivo/swarmplot";
-import { styled, useTheme } from "@mui/material";
+import styled from "@mui/material/styles/styled";
+import useTheme from "@mui/material/styles/useTheme";
+import red from "@mui/material/colors/red";
 import { animated } from "@react-spring/web";
 import { transform } from "framer-motion";
-import red from "@mui/material/colors/red";
 import { TSwarmPlotDatum } from "./swarmPlotData";
 import { TCardType } from "app/helpers/card";
 import { useLeetcodeProblems } from "app/api/leetcode";
-import { LEETCODE_BASE_URL } from "app/settings";
 import { ReviewStatus } from "../ReviewStatus";
 import { ChartTooltip } from "../ChartTooltip";
 import { primaryColor } from "app/provider/ThemeProvider";
@@ -29,8 +29,8 @@ const CustomCircle = (props: CircleProps<TSwarmPlotDatum>) => {
   const { node, onMouseEnter, onMouseMove, onMouseLeave, onClick, style } =
     props;
   const dispatch = useDispatch();
-  const selectedProblem = useSelector((state) => state.global.selectedProblem);
-  const selectedChart = useSelector((state) => state.global.selectedChart);
+  const selectedProblem = useSelector((state) => state.global.hover.problem);
+  const selectedChart = useSelector((state) => state.global.hover.chart);
   const isSelected =
     selectedProblem === node.id && selectedChart !== "swarmPlot";
   const selectedColor = red[500];
@@ -54,7 +54,6 @@ const CustomCircle = (props: CircleProps<TSwarmPlotDatum>) => {
       <Circle
         sx={{
           cursor: "pointer",
-          fill: isSelected ? selectedColor : style.color.get(),
           "&:hover": {
             stroke: node.color,
           },
@@ -63,18 +62,16 @@ const CustomCircle = (props: CircleProps<TSwarmPlotDatum>) => {
         cx={style.x}
         cy={style.y}
         r={style.radius}
-        fill={style.color}
+        fill={isSelected ? selectedColor : style.color.get()}
         strokeWidth={3}
         opacity={style.opacity}
         onMouseEnter={(event) => {
-          dispatch(
-            globalActions.setSelectedProblem([node.data.id, "swarmPlot"])
-          );
+          dispatch(globalActions.hoverProblem([node.data.id, "swarmPlot"]));
           onMouseEnter?.(node, event);
         }}
         onMouseMove={(event) => onMouseMove?.(node, event)}
         onMouseLeave={(event) => {
-          dispatch(globalActions.setSelectedProblem());
+          dispatch(globalActions.hoverProblem());
           onMouseLeave?.(node, event);
         }}
         onClick={(event) => onClick?.(node, event)}
@@ -104,6 +101,7 @@ type TSwarmPlotChartProps = {
 
 export const SwarmPlotChart = (props: TSwarmPlotChartProps) => {
   const { data, groups } = props;
+  const dispatch = useDispatch();
   const theme = useTheme();
 
   return (
@@ -118,7 +116,7 @@ export const SwarmPlotChart = (props: TSwarmPlotChartProps) => {
       tooltip={CustomTooltip}
       colors={({ data }) => getAcRateColor(data.acRate)}
       valueScale={{ type: "linear", min: 0, max: 1, reverse: false }}
-      onClick={({ id }) => window.open(`${LEETCODE_BASE_URL}/${id}`, "_blank")}
+      onClick={({ id }) => dispatch(globalActions.openProblemDetail(id))}
       size={{
         key: "volume",
         values: [1, 6],

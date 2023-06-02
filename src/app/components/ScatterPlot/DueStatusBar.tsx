@@ -1,6 +1,7 @@
 import Stack from "@mui/material/Stack";
 import Tooltip, { tooltipClasses, TooltipProps } from "@mui/material/Tooltip";
 import styled from "@mui/material/styles/styled";
+import useTheme from "@mui/material/styles/useTheme";
 import startCase from "lodash/startCase";
 import { TWaffleDatum } from "./scatterPlotData";
 import { TDueStatus } from "app/helpers/card";
@@ -13,12 +14,13 @@ interface TCustomTooltipProps {
 
 const CustomTooltip = (props: TCustomTooltipProps) => {
   const { data, total } = props;
+  const theme = useTheme();
 
   return (
     <ChartTooltip>
       {data
         .filter((d) => d.id !== "none")
-        .map(({ id, color, value }) => (
+        .map(({ id, value }) => (
           <Stack
             key={id}
             direction="row"
@@ -26,7 +28,9 @@ const CustomTooltip = (props: TCustomTooltipProps) => {
             justifyContent="space-between"
             gap={1}
           >
-            <ChartTooltip.Text style={{ color: color[500], width: 60 }}>
+            <ChartTooltip.Text
+              style={{ color: theme.anki.dueStatus[id], width: 60 }}
+            >
               {startCase(id)}
             </ChartTooltip.Text>
             <ChartTooltip.Number style={{ flex: 1 }}>
@@ -68,6 +72,7 @@ type TDueStatusWaffleProps = {
 
 export const DueStatusBar = (props: TDueStatusWaffleProps) => {
   const { data } = props;
+  const theme = useTheme();
   const total = data
     // @ts-ignore
     .sort((a, b) => duePriority[a.id] - duePriority[b.id])
@@ -82,13 +87,13 @@ export const DueStatusBar = (props: TDueStatusWaffleProps) => {
     >
       <div style={{ width: 15, height: "100%" }}>
         {data.map((d, i) => {
-          const { id, color, value } = d;
+          const { id, value } = d;
 
           return (
             <div
               key={id}
               style={{
-                background: color[500],
+                background: theme.anki.dueStatus[id],
                 width: "100%",
                 height: `${(value / total) * 100}%`,
                 ...(i === 0

@@ -5,10 +5,13 @@ import cyan from "@mui/material/colors/cyan";
 import orange from "@mui/material/colors/orange";
 import amber from "@mui/material/colors/amber";
 import lightGreen from "@mui/material/colors/lightGreen";
+import lime from "@mui/material/colors/lime";
+import teal from "@mui/material/colors/teal";
 import {
   ThemeProvider as ThemeProvider2,
   createTheme,
 } from "@mui/material/styles";
+import { TDueStatus } from "app/helpers/card";
 
 export const INPUT_HEIGHT = 35;
 
@@ -22,6 +25,13 @@ declare module "@mui/material/styles/createTheme" {
         fontSize?: number;
       };
     };
+    leetcode: {
+      difficulty: {
+        Easy: string;
+        Medium: string;
+        Hard: string;
+      };
+    };
     anki: {
       ease: {
         again: string;
@@ -38,12 +48,20 @@ declare module "@mui/material/styles/createTheme" {
         Relearning: string;
         Unknown: string;
       };
+      dueStatus: Record<TDueStatus, string>;
     };
   }
   interface ThemeOptions {
     chart: {
       legend: CSSProperties;
     };
+    leetcode: {
+      difficulty: {
+        Easy: string;
+        Medium: string;
+        Hard: string;
+      };
+    };
     anki: {
       ease: {
         again: string;
@@ -60,6 +78,7 @@ declare module "@mui/material/styles/createTheme" {
         Relearning: string;
         Unknown: string;
       };
+      dueStatus: Record<TDueStatus, string>;
     };
   }
 }
@@ -94,6 +113,13 @@ export const theme = createTheme({
       fill: "currentColor",
     },
   },
+  leetcode: {
+    difficulty: {
+      Easy: lightGreen[500],
+      Medium: amber[500],
+      Hard: red[500],
+    },
+  },
   anki: {
     ease: {
       again: grey[200],
@@ -110,6 +136,15 @@ export const theme = createTheme({
       Relearning: red[500],
       Unknown: grey[500],
     },
+    dueStatus: {
+      stale: red[500],
+      bad: orange[500],
+      now: amber[500],
+      soon: lime[500],
+      good: lightGreen[500],
+      safe: teal[500],
+      none: grey[500],
+    },
   },
   components: {
     MuiCard: {
@@ -121,6 +156,12 @@ export const theme = createTheme({
           borderRadius: 8,
           boxShadow: `rgba(0, 0, 0, 0.1) 0px 10px 50px`,
         },
+      },
+    },
+    MuiLink: {
+      defaultProps: {
+        underline: "hover",
+        color: "Highlight",
       },
     },
     MuiPaper: {

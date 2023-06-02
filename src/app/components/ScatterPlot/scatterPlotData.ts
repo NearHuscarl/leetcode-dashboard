@@ -1,41 +1,22 @@
-import red from "@mui/material/colors/red";
-import orange from "@mui/material/colors/orange";
-import amber from "@mui/material/colors/amber";
-import lightGreen from "@mui/material/colors/lightGreen";
-import lime from "@mui/material/colors/lime";
-import teal from "@mui/material/colors/teal";
-import grey from "@mui/material/colors/grey";
 import { TCardModel } from "app/services/problems";
-import { getDueDateDistance, getDueStatus } from "app/helpers/card";
+import { TDueStatus, getDueDateDistance, getDueStatus } from "app/helpers/card";
 import { TDateAgoFilter } from "app/store/filterSlice";
 import { getDateAgo } from "app/helpers/date";
 import { ScatterPlotDatum, ScatterPlotRawSerie } from "@nivo/scatterplot";
-import { TMuiColor } from "app/provider/ThemeProvider";
 
 export interface TWaffleDatum {
-  id: string;
+  id: TDueStatus;
   label: string;
   value: number;
-  color: TMuiColor;
 }
 
 export interface TScatterPlotDatum extends ScatterPlotDatum {
   id: string;
-  color: TMuiColor;
+  dueStatus: TDueStatus;
 }
 
 export interface TScatterPlotRawSerie
   extends ScatterPlotRawSerie<TScatterPlotDatum> {}
-
-export const colorLookup: Record<string, TMuiColor> = {
-  stale: red,
-  bad: orange,
-  now: amber,
-  soon: lime,
-  good: lightGreen,
-  safe: teal,
-  none: grey,
-};
 
 export function prepareChartData(cards: TCardModel[], dateAgo: TDateAgoFilter) {
   const data: TScatterPlotDatum[] = [];
@@ -53,7 +34,6 @@ export function prepareChartData(cards: TCardModel[], dateAgo: TDateAgoFilter) {
         id: dueStatus,
         label: dueStatus,
         value: 0,
-        color: colorLookup[dueStatus],
       };
     }
     total[dueStatus].value++;
@@ -62,7 +42,7 @@ export function prepareChartData(cards: TCardModel[], dateAgo: TDateAgoFilter) {
       x: dueDistance,
       y: card.leetcode?.acRate ?? 0,
       id: card.leetcodeId,
-      color: colorLookup[dueStatus],
+      dueStatus,
     });
   }
 
