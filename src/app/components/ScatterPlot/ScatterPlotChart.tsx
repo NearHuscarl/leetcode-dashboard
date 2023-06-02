@@ -122,7 +122,7 @@ const AreaLayer = (props: ScatterPlotLayerProps<ScatterPlotDatum>) => {
 };
 
 const CustomTooltip = (props: ScatterPlotTooltipProps<TScatterPlotDatum>) => {
-  const { color, leetcodeId: id, x, y } = props.node.data;
+  const { color, id, x, y } = props.node.data;
   const dueDistance = x as number;
   const acRate = y as number;
   const { data: leetcodes = {} } = useLeetcodeProblems();

@@ -9,6 +9,16 @@ export const GlobalStyle = () => {
         body: {
           backgroundColor: `${grey[100]} !important`,
         },
+        "@keyframes pulse": {
+          "0%": {
+            transform: "scale(1, 1)",
+            opacity: 0.5,
+          },
+          "100%": {
+            transform: "scale(3, 3)",
+            opacity: 0,
+          },
+        },
       }}
     />
   );

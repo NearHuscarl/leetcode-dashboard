@@ -1,13 +1,19 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 
+export type TChartType = "scatterPlot" | "swarmPlot";
+
 export interface TGlobalState {
   view: "table" | "chart";
+  selectedProblem: string;
+  selectedChart: TChartType | "";
 }
 
 const initialState: TGlobalState = {
   view: "chart",
+  selectedProblem: "",
+  selectedChart: "",
 };
 
 export const globalSlice = createSlice({
@@ -19,6 +25,13 @@ export const globalSlice = createSlice({
     },
     setTableView: (state) => {
       state.view = "table";
+    },
+    setSelectedProblem: (
+      state,
+      action: PayloadAction<[string, TChartType] | undefined>
+    ) => {
+      state.selectedProblem = action.payload?.[0] ?? "";
+      state.selectedChart = action.payload?.[1] ?? "";
     },
   },
 });

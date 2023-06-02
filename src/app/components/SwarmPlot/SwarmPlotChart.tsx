@@ -1,3 +1,4 @@
+import { useDispatch } from "react-redux";
 import {
   CircleProps,
   ComputedDatum,
@@ -6,6 +7,7 @@ import {
 import { styled, useTheme } from "@mui/material";
 import { animated } from "@react-spring/web";
 import { transform } from "framer-motion";
+import red from "@mui/material/colors/red";
 import { TSwarmPlotDatum } from "./swarmPlotData";
 import { TCardType } from "app/helpers/card";
 import { useLeetcodeProblems } from "app/api/leetcode";
@@ -13,6 +15,8 @@ import { LEETCODE_BASE_URL } from "app/settings";
 import { ReviewStatus } from "../ReviewStatus";
 import { ChartTooltip } from "../ChartTooltip";
 import { primaryColor } from "app/provider/ThemeProvider";
+import { useSelector } from "app/store/setup";
+import { globalActions } from "app/store/globalSlice";
 
 export const getAcRateColor = transform(
   [30, 60, 80],
@@ -24,28 +28,58 @@ const Circle = styled(animated.circle)();
 const CustomCircle = (props: CircleProps<TSwarmPlotDatum>) => {
   const { node, onMouseEnter, onMouseMove, onMouseLeave, onClick, style } =
     props;
+  const dispatch = useDispatch();
+  const selectedProblem = useSelector((state) => state.global.selectedProblem);
+  const selectedChart = useSelector((state) => state.global.selectedChart);
+  const isSelected =
+    selectedProblem === node.id && selectedChart !== "swarmPlot";
+  const selectedColor = red[500];
 
   return (
-    <Circle
-      sx={{
-        cursor: "pointer",
-        stroke: "transparent",
-        "&:hover": {
-          stroke: node.color,
-        },
-      }}
-      key={node.id}
-      cx={style.x}
-      cy={style.y}
-      r={style.radius}
-      fill={style.color}
-      strokeWidth={3}
-      opacity={style.opacity}
-      onMouseEnter={(event) => onMouseEnter?.(node, event)}
-      onMouseMove={(event) => onMouseMove?.(node, event)}
-      onMouseLeave={(event) => onMouseLeave?.(node, event)}
-      onClick={(event) => onClick?.(node, event)}
-    />
+    <>
+      {isSelected && (
+        <Circle
+          cx={style.x.get()}
+          cy={style.y.get()}
+          r={style.radius.get()}
+          fill={selectedColor}
+          strokeWidth={0}
+          sx={{
+            transformOrigin: "center",
+            transformBox: "fill-box",
+            animation: "pulse 1.5s ease-out infinite",
+          }}
+        />
+      )}
+      <Circle
+        sx={{
+          cursor: "pointer",
+          fill: isSelected ? selectedColor : style.color.get(),
+          "&:hover": {
+            stroke: node.color,
+          },
+        }}
+        key={node.id}
+        cx={style.x}
+        cy={style.y}
+        r={style.radius}
+        fill={style.color}
+        strokeWidth={3}
+        opacity={style.opacity}
+        onMouseEnter={(event) => {
+          dispatch(
+            globalActions.setSelectedProblem([node.data.id, "swarmPlot"])
+          );
+          onMouseEnter?.(node, event);
+        }}
+        onMouseMove={(event) => onMouseMove?.(node, event)}
+        onMouseLeave={(event) => {
+          dispatch(globalActions.setSelectedProblem());
+          onMouseLeave?.(node, event);
+        }}
+        onClick={(event) => onClick?.(node, event)}
+      />
+    </>
   );
 };
 

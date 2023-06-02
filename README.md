@@ -77,9 +77,12 @@ Algorithm (Sorted by most common in interviews)
 
 All Charts
 - Highlight nodes today, this week, this month
-- Click on data point
-  - Show list of problems | Show single problem
+- Click on data point that contains multiple problems
+  - Show list of problems
     - See problem detail
+- Click on data point that contains a single problem
+  - See problem detail
++ Scatterplot - Swarmplot sync data point
 
 LC solved over time
 + Line chart
@@ -134,6 +137,8 @@ ScatterPlot
 + Y: AC Rate
 + Filter
 + Tooltip
++ Status bar
++ Status bar tooltip
 
 Current retention rate: In progress circle
 + 3 Circles in different states: Review, Young, Mature

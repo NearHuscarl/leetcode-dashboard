@@ -20,7 +20,7 @@ export interface TWaffleDatum {
 }
 
 export interface TScatterPlotDatum extends ScatterPlotDatum {
-  leetcodeId: string;
+  id: string;
   color: TMuiColor;
 }
 
@@ -61,7 +61,7 @@ export function prepareChartData(cards: TCardModel[], dateAgo: TDateAgoFilter) {
     data.push({
       x: dueDistance,
       y: card.leetcode?.acRate ?? 0,
-      leetcodeId: card.leetcodeId,
+      id: card.leetcodeId,
       color: colorLookup[dueStatus],
     });
   }
