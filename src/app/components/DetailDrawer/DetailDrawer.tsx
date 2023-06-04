@@ -14,8 +14,16 @@ import { useProblem } from "app/services/problems";
 import { Chip, Link, Typography, useTheme } from "@mui/material";
 import { LEETCODE_BASE_URL } from "app/settings";
 import { AcRateIndicator } from "../AcRateIndicator";
-import { getCardType, getDueStatus, getNextReviewTime } from "app/helpers/card";
-import { ReviewStatus } from "../ReviewStatus";
+import {
+  getCardType,
+  getCardTypeFromReview,
+  getDueStatus,
+  getEaseLabel,
+  getNextReviewTime,
+} from "app/helpers/card";
+import { ReviewTrend } from "../ReviewTrend/ReviewTrend";
+import { CardEventDataGrid, TRowItem } from "./CardEventDataGrid";
+import { getIntervalTime } from "app/helpers/stats";
 
 type TFieldProps = {
   label: string;
@@ -56,16 +64,34 @@ export const DetailDrawer = () => {
   const nextReviewDate = formatDistanceToNowStrict(getNextReviewTime(card), {
     addSuffix: true,
   });
+  let rows: TRowItem[] = [
+    {
+      id: card.cardId,
+      cardType: "New",
+      ease: "unknown",
+      interval: 0,
+    },
+  ];
 
   return (
     <Drawer
+      PaperProps={{
+        sx: {
+          borderRadius: 2,
+        },
+      }}
+      slotProps={{
+        backdrop: {
+          invisible: true,
+        },
+      }}
       anchor={anchor}
       open={isOpen}
       onClose={() => dispatch(globalActions.setDrawerOpen(false))}
     >
-      <Box sx={{ width: 500, p: 2 }} role="presentation">
+      <Box sx={{ width: 500, p: 3 }} role="presentation">
         <Stack direction="row" alignItems="center" mb={2} gap={2}>
-          <Typography variant="h5">
+          <Typography variant="h5" fontWeight="500">
             <Link href={`${LEETCODE_BASE_URL}/${card.leetcodeId}`}>
               {card.leetcode?.title ?? card.leetcodeId}
             </Link>
@@ -144,9 +170,18 @@ export const DetailDrawer = () => {
             </Stack>
           }
         />
-        <Field
-          label="Reviews"
-          value={<ReviewStatus reviews={card.reviews} />}
+        <Field label="Reviews" value={<ReviewTrend reviews={card.reviews} />} />
+        <CardEventDataGrid
+          rows={rows
+            .concat(
+              card.reviews.map((r) => ({
+                id: r.id,
+                cardType: getCardTypeFromReview(r),
+                ease: getEaseLabel(r.ease),
+                interval: getIntervalTime(r.ivl),
+              }))
+            )
+            .reverse()}
         />
       </Box>
     </Drawer>

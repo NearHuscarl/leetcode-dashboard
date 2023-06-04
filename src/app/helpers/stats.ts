@@ -1,5 +1,3 @@
-import { TCardReview } from "app/api/stats";
-
 // -- revlog is a review history; it has a row for every review you've ever done!
 // CREATE TABLE revlog (
 //     id              integer primary key,
@@ -24,31 +22,6 @@ import { TCardReview } from "app/api/stats";
 //     type            integer not null
 //        --  0=learn, 1=review, 2=relearn, 3=cram
 // );
-
-// return 'wrong' | 'hard' | 'ok' | 'easy';
-export const getReviewResult = (review: TCardReview) => {
-  // if (review.type === 2 || review.type === 3) {
-  //   switch (review.ease) {
-  //     case 1:
-  //       return "wrong";
-  //     case 2:
-  //       return "ok";
-  //     case 3:
-  //       return "easy";
-  //   }
-  // }
-
-  switch (review.ease) {
-    case 1:
-      return "wrong";
-    case 2:
-      return "hard";
-    case 3:
-      return "ok";
-    case 4:
-      return "easy";
-  }
-};
 
 // Negative = seconds, positive = days
 // https://github.com/ankidroid/Anki-Android/wiki/Database-Structure#cards

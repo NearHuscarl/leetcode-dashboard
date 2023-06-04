@@ -1,0 +1,1 @@
+export { ReviewTrend } from "./ReviewTrend";

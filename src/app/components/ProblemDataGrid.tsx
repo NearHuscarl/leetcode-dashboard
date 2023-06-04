@@ -18,7 +18,7 @@ import {
 } from "app/helpers/card";
 import { LEETCODE_BASE_URL } from "app/settings";
 import { AcRateIndicator } from "./AcRateIndicator";
-import { ReviewStatus } from "./ReviewStatus";
+import { ReviewTrend } from "./ReviewTrend/ReviewTrend";
 import { theme } from "app/provider/ThemeProvider";
 import { DueStatus } from "./DueStatus";
 
@@ -133,7 +133,7 @@ const columns: GridColDef[] = [
     width: 70,
     sortComparator: (v1, v2) => v1.length - v2.length,
     renderCell: (params: GridRenderCellParams<any, TCardReview[]>) => {
-      return <ReviewStatus reviews={params.value} />;
+      return <ReviewTrend reviews={params.value} />;
     },
   },
   {

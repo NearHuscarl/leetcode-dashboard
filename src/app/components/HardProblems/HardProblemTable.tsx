@@ -2,7 +2,7 @@ import { DataGrid, GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
 import { TCardReview } from "app/api/stats";
 import { getRetentionRate } from "app/helpers/card";
 import { useProblems } from "app/services/problems";
-import { ReviewStatus } from "../ReviewStatus";
+import { ReviewTrend } from "../ReviewTrend/ReviewTrend";
 
 const columns: GridColDef[] = [
   {
@@ -27,7 +27,7 @@ const columns: GridColDef[] = [
     sortable: false,
     sortComparator: (v1, v2) => v1.length - v2.length,
     renderCell: (params: GridRenderCellParams<any, TCardReview[]>) => {
-      return <ReviewStatus reviews={params.value} />;
+      return <ReviewTrend reviews={params.value} />;
     },
   },
 ];

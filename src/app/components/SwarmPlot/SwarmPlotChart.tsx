@@ -12,7 +12,7 @@ import { transform } from "framer-motion";
 import { TSwarmPlotDatum } from "./swarmPlotData";
 import { TCardType } from "app/helpers/card";
 import { useLeetcodeProblems } from "app/api/leetcode";
-import { ReviewStatus } from "../ReviewStatus";
+import { ReviewTrend } from "../ReviewTrend/ReviewTrend";
 import { ChartTooltip } from "../ChartTooltip";
 import { primaryColor } from "app/provider/ThemeProvider";
 import { useSelector } from "app/store/setup";
@@ -88,7 +88,7 @@ const CustomTooltip = (props: ComputedDatum<TSwarmPlotDatum>) => {
     <ChartTooltip>
       <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
         <ChartTooltip.Text>{leetcodes[id]?.title}</ChartTooltip.Text>
-        <ReviewStatus reviews={data.reviews} />
+        <ReviewTrend reviews={data.reviews} />
       </div>
     </ChartTooltip>
   );
