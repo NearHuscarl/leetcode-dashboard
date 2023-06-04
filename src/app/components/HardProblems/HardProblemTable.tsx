@@ -1,8 +1,10 @@
+import { useDispatch } from "react-redux";
 import { DataGrid, GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
 import { TCardReview } from "app/api/stats";
 import { getRetentionRate } from "app/helpers/card";
 import { useProblems } from "app/services/problems";
 import { ReviewTrend } from "../ReviewTrend/ReviewTrend";
+import { globalActions } from "app/store/globalSlice";
 
 const columns: GridColDef[] = [
   {
@@ -12,14 +14,6 @@ const columns: GridColDef[] = [
     minWidth: 100,
     sortable: false,
   },
-  // {
-  //   field: "retentionRate",
-  //   headerName: "Retention",
-  //   type: "number",
-  // disableColumnMenu: true,
-  //   width: 70,
-  //   sortable: false,
-  // },
   {
     field: "reviews",
     headerName: "Reviews",
@@ -34,6 +28,7 @@ const columns: GridColDef[] = [
 
 export const HardProblemTable = () => {
   const cards = useProblems();
+  const dispatch = useDispatch();
   const cardsWithRetentionRate = cards.map((card) => ({
     card,
     retentionRate: getRetentionRate(card),
@@ -42,7 +37,7 @@ export const HardProblemTable = () => {
     .sort((a, b) => a.retentionRate - b.retentionRate)
     .slice(0, 5)
     .map(({ card, retentionRate }) => ({
-      id: card.cardId,
+      id: card.leetcodeId,
       retentionRate: retentionRate,
       reviews: card.reviews,
       name: card.leetcode?.title ?? card.leetcodeId,
@@ -56,12 +51,16 @@ export const HardProblemTable = () => {
       rowHeight={33}
       hideFooter
       autoHeight
-      rowSelection={false}
+      rowSelection
+      onRowClick={(params) => {
+        dispatch(globalActions.openProblemDetail(params.row.id));
+      }}
       disableColumnMenu
       sx={{
         border: "none",
         "& .MuiDataGrid-cell": {
           border: "none",
+          cursor: "pointer",
         },
       }}
       initialState={{

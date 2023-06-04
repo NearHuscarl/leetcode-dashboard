@@ -75,6 +75,10 @@ Algorithm (Sorted by most common in interviews)
 - Bit Manipulation
 - Sorting
 
+- Drawer
+  - Problem List
+  + Problem Detail
+
 All Charts
 - Highlight nodes today, this week, this month
 - Click on data point that contains multiple problems
