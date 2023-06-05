@@ -2,7 +2,7 @@ import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 
-export type TChartType = "scatterPlot" | "swarmPlot";
+export type TChartType = "scatterPlot" | "swarmPlot" | "table";
 
 export interface TGlobalState {
   view: "table" | "chart";
