@@ -7,20 +7,22 @@ import {
 } from "app/helpers/card";
 import { formatDate } from "app/helpers/date";
 import { TCardModel } from "app/services/problems";
-import { BarDatum } from "@nivo/bar";
 import { TDateView } from "app/store/filterSlice";
+import { setDifference } from "app/helpers/lang";
 
 type TDate = string;
 type TDiff = {
   add: number;
   sub: number;
+  addIds: Set<string>;
+  subIds: Set<string>;
 };
 
 export const cardTypes: TCardType[] = ["New", "Learning", "Young", "Mature"];
 
 const createSubmap = (): Record<TCardType, TDiff> =>
   cardTypes.reduce((acc, type) => {
-    acc[type] = { add: 0, sub: 0 };
+    acc[type] = { add: 0, sub: 0, addIds: new Set(), subIds: new Set() };
     return acc;
   }, {} as any);
 
@@ -33,29 +35,28 @@ function createMap(cards: TCardModel[], dateFormat: string) {
 
     const createdTime = formatDate(card.cardId, dateFormat);
     const submap = map[createdTime] ?? (map[createdTime] = createSubmap()); // Initialize the submap if it doesn't exist
-    submap.New.add = (submap.New.add ?? 0) + 1;
+
+    submap.New.add += 1;
+    submap.New.addIds.add(card.leetcodeId);
 
     for (let i = 0; i < card.reviews.length; i++) {
       const date = formatDate(card.reviews[i].id, dateFormat);
       const submap = map[date] ?? (map[date] = createSubmap()); // Initialize the submap if it doesn't exist
+      const cardTypeBeforeReview =
+        i === 0 ? "New" : getCardTypeFromReview(card.reviews[i]);
       const cardTypeAfterReview = card.reviews[i + 1]
         ? getCardTypeFromReview(card.reviews[i + 1])
         : getCardType(card);
-      const cardTypeBeforeReview = getCardTypeFromReview(card.reviews[i]);
 
-      submap[cardTypeAfterReview].add =
-        (submap[cardTypeAfterReview].add ?? 0) + 1;
-
-      if (i > 0) {
-        submap[cardTypeBeforeReview].sub =
-          (submap[cardTypeBeforeReview].sub ?? 0) + 1;
-      } else {
-        submap["New"].sub = (submap["New"].sub ?? 0) + 1;
+      if (cardTypeBeforeReview !== cardTypeAfterReview) {
+        submap[cardTypeBeforeReview].sub += 1;
+        submap[cardTypeBeforeReview].subIds.add(card.leetcodeId);
+        submap[cardTypeAfterReview].add += 1;
+        submap[cardTypeAfterReview].addIds.add(card.leetcodeId);
       }
     }
   }
 
-  // Return the map
   return map;
 }
 
@@ -75,12 +76,13 @@ function getDatesBetween(start: Date, end: Date, dateFormat: string) {
   return uniqBy(dates, (d) => d.dateFormat);
 }
 
-export interface TBarDatum extends BarDatum {
+export interface TBarDatum {
   date: number;
   New: number;
   Learning: number;
   Young: number;
   Mature: number;
+  leetcodeIds: Set<string>;
 }
 
 const getDateFormat = (dateView: TDateView) => {
@@ -110,6 +112,7 @@ export function prepareChartData(cards: TCardModel[], dateView: TDateView) {
   const dates = getDatesBetween(minDate, maxDate, dateFormat);
   const map = createMap(cards, dateFormat);
   const data: TBarDatum[] = [];
+  const cardTypes = ["New", "Learning", "Young", "Mature"] as const;
 
   for (const { date, dateFormat } of dates) {
     const lastItem: TBarDatum = data.at(-1) ?? {
@@ -118,26 +121,33 @@ export function prepareChartData(cards: TCardModel[], dateView: TDateView) {
       Learning: 0,
       Young: 0,
       Mature: 0,
+      leetcodeIds: new Set<string>(),
     };
+
+    let leetcodeIds = new Set<string>(lastItem.leetcodeIds);
+    for (const cardType of cardTypes) {
+      const diff = map[dateFormat]?.[cardType];
+      if (diff) {
+        const ids = setDifference(diff.addIds, diff.subIds);
+        for (const id of ids) {
+          leetcodeIds.add(id);
+        }
+      }
+    }
+    const total = cardTypes.map(
+      (t) =>
+        lastItem[t] +
+        (map[dateFormat]?.[t]?.add ?? 0) -
+        (map[dateFormat]?.[t]?.sub ?? 0)
+    );
 
     data.push({
       date,
-      Mature:
-        lastItem.Mature +
-        (map[dateFormat]?.["Mature"]?.add ?? 0) -
-        (map[dateFormat]?.["Mature"]?.sub ?? 0),
-      New:
-        lastItem.New +
-        (map[dateFormat]?.["New"]?.add ?? 0) -
-        (map[dateFormat]?.["New"]?.sub ?? 0),
-      Learning:
-        lastItem.Learning +
-        (map[dateFormat]?.["Learning"]?.add ?? 0) -
-        (map[dateFormat]?.["Learning"]?.sub ?? 0),
-      Young:
-        lastItem.Young +
-        (map[dateFormat]?.["Young"]?.add ?? 0) -
-        (map[dateFormat]?.["Young"]?.sub ?? 0),
+      leetcodeIds,
+      New: total[0],
+      Learning: total[1],
+      Young: total[2],
+      Mature: total[3],
     });
   }
 

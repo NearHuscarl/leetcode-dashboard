@@ -1,3 +1,6 @@
+import { useEffect, useRef } from "react";
+import { useDispatch } from "react-redux";
+import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import {
   GridLabelProps,
@@ -8,9 +11,10 @@ import { useTheme as useNivoTheme } from "@nivo/core";
 import { animated } from "@react-spring/web";
 import useTheme from "@mui/material/styles/useTheme";
 import grey from "@mui/material/colors/grey";
-import { TRadarDatum } from "./radarData";
+import { TRadarDatum, dataStructures } from "./radarData";
 import { TCardType } from "app/helpers/card";
 import { ChartTooltip } from "../ChartTooltip";
+import { globalActions } from "app/store/globalSlice";
 
 const getDisplayedLabel = (id: string) => {
   if (id.startsWith("Heap")) {
@@ -97,33 +101,80 @@ type TRadarChartProps = {
 export const RadarChart = (props: TRadarChartProps) => {
   const { data } = props;
   const theme = useTheme();
+  const dispatch = useDispatch();
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    let radarSliceEls: SVGPathElement[] = [];
+    const clickHandlers = dataStructures.map((_, i) => () => {
+      dispatch(
+        globalActions.openProblems({
+          ids: data[i].leetcodeIds,
+          column: "dsa",
+        })
+      );
+    });
+
+    const observer = new MutationObserver((mutations) => {
+      if (mutations[0]?.addedNodes.length === 0) {
+        return;
+      }
+
+      radarSliceEls = [
+        // https://github.com/plouc/nivo/blob/31ce26a80120d57955acbf02b0ebe7d59afde5bd/packages/radar/src/RadarSlice.tsx#LL86C17-L86C28
+        ...(ref.current?.querySelectorAll('[fill="#F00"]') ?? []),
+      ] as SVGPathElement[];
+      if (radarSliceEls.length === 0) return;
+
+      radarSliceEls.forEach((el, i) => {
+        el.style.cursor = "pointer";
+        el.addEventListener("click", clickHandlers[i]);
+      });
+    });
+
+    observer.observe(ref.current!, { childList: true, subtree: true });
+    return () => {
+      observer.disconnect();
+      radarSliceEls.forEach((el, i) => {
+        el.removeEventListener("click", clickHandlers[i]);
+      });
+    };
+  }, [data]);
 
   return (
-    <ResponsiveRadar
-      data={data}
-      keys={cardTypes}
-      indexBy="dsa"
-      theme={{
-        textColor: theme.chart.legend.color,
-        grid: {
-          line: { stroke: grey[300] },
-        },
-        crosshair: {
-          line: { stroke: theme.palette.primary.main },
-        },
+    <Box
+      ref={ref}
+      sx={{
+        width: "100%",
+        height: "100%",
       }}
-      sliceTooltip={CustomTooltip}
-      maxValue={100}
-      gridLevels={4}
-      margin={{ top: 20, right: 45, bottom: 10, left: 35 }}
-      gridShape="linear"
-      gridLabelOffset={10}
-      gridLabel={RadarGridLabel}
-      enableDots={false}
-      colors={({ key }) => theme.anki.cardType[key as TCardType]}
-      fillOpacity={0.8}
-      blendMode="normal"
-      motionConfig="wobbly"
-    />
+    >
+      <ResponsiveRadar
+        data={data}
+        keys={cardTypes}
+        indexBy="dsa"
+        theme={{
+          textColor: theme.chart.legend.color,
+          grid: {
+            line: { stroke: grey[300] },
+          },
+          crosshair: {
+            line: { stroke: theme.palette.primary.main },
+          },
+        }}
+        sliceTooltip={CustomTooltip}
+        maxValue={100}
+        gridLevels={4}
+        margin={{ top: 20, right: 45, bottom: 10, left: 35 }}
+        gridShape="linear"
+        gridLabelOffset={10}
+        gridLabel={RadarGridLabel}
+        enableDots={false}
+        colors={({ key }) => theme.anki.cardType[key as TCardType]}
+        fillOpacity={0.8}
+        blendMode="normal"
+        motionConfig="wobbly"
+      />
+    </Box>
   );
 };

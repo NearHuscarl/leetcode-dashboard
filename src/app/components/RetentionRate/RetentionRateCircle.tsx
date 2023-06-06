@@ -1,9 +1,11 @@
+import { useDispatch } from "react-redux";
 import useTheme from "@mui/material/styles/useTheme";
 import { lighten } from "@mui/material";
 import grey from "@mui/material/colors/grey";
 import { PieCustomLayerProps, ResponsivePie } from "@nivo/pie";
 import { TRetentionDatum } from "./retentionRateData";
 import { RetentionRateTooltip } from "./RetentionRateTooltip";
+import { globalActions } from "app/store/globalSlice";
 
 interface TInnerBackgroundProps extends PieCustomLayerProps<TRetentionDatum> {
   cardType: string;
@@ -19,18 +21,21 @@ const InnerBackground = (props: TInnerBackgroundProps) => {
     radius,
     cardType,
   } = props;
+  const dispatch = useDispatch();
   let success = 0;
   let total = 0;
   const result = dataWithArc.reduce<Record<string, number>>((a, c) => {
     a[c.id] = c.value;
     return a;
   }, {});
+  const leetcodeIds: string[] = [];
 
   dataWithArc.forEach((datum) => {
     if (datum.data.id !== "again") {
       success += datum.value;
     }
     total += datum.value;
+    leetcodeIds.push(...datum.data.leetcodeIds);
   });
 
   return (
@@ -49,7 +54,19 @@ const InnerBackground = (props: TInnerBackgroundProps) => {
         />
         {!(dataWithArc[0].data as any).isEmpty && (
           <RetentionRateTooltip result={result} cardType={cardType}>
-            <circle fill="transparent" r={radius} />
+            <circle
+              fill="transparent"
+              r={radius}
+              style={{ cursor: "pointer" }}
+              onClick={() => {
+                dispatch(
+                  globalActions.openProblems({
+                    ids: leetcodeIds,
+                    column: "reviews",
+                  })
+                );
+              }}
+            />
           </RetentionRateTooltip>
         )}
       </g>
@@ -117,7 +134,7 @@ const CenteredMetric = (props: TCenterMetricProps) => {
 };
 
 const EMPTY_DATA = [
-  { id: "again", value: 1, isEmpty: true } as TRetentionDatum,
+  { id: "again", value: 1, isEmpty: true, leetcodeIds: [] } as TRetentionDatum,
 ];
 
 type TRetentionRateCircleProps = {

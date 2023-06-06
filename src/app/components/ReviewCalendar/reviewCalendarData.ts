@@ -5,12 +5,15 @@ import { formatDate, getDatesBetween } from "app/helpers/date";
 import { TCardModel } from "app/services/problems";
 
 type TDate = string;
-type TCategory = "Review" | "New" | "Due";
+type TChartType = "Review" | "New";
+type TStats = { id: string; category: TCategory };
+
+export type TCategory = "Review" | "New" | "Due";
 
 // A helper function that preprocesses the cards array and creates a map that stores the number of problems solved for each date and category
 function createMap(cards: TCardModel[]) {
-  const map: Record<TDate, Record<TCategory, string[]>> = {};
-  const dateNow = formatDate(new Date());
+  const map: Record<TDate, Record<TChartType, TStats[]>> = {};
+  const dateNow = Date.now();
 
   for (const card of cards) {
     for (let i = 0; i < card.reviews.length; i++) {
@@ -21,14 +24,15 @@ function createMap(cards: TCardModel[]) {
       const category = isNewCard ? "New" : "Review";
 
       if (!submap[category]) submap[category] = [];
-      submap[category].push(card.leetcodeId);
+      submap[category].push({ id: card.leetcodeId, category });
     }
 
-    const deadline = formatDate(getNextReviewTime(card));
-    if (dateNow < deadline) {
+    const deadlineTimestamp = getNextReviewTime(card);
+    const deadline = formatDate(deadlineTimestamp);
+    if (dateNow <= deadlineTimestamp) {
       const submap = map[deadline] ?? (map[deadline] = {} as any);
       if (!submap["Review"]) submap["Review"] = [];
-      submap["Review"].push(card.leetcodeId);
+      submap["Review"].push({ id: card.leetcodeId, category: "Due" });
     }
   }
 
@@ -36,7 +40,7 @@ function createMap(cards: TCardModel[]) {
 }
 
 function hasProblemsSolved(
-  map: Record<TDate, Record<TCategory, string[]>>,
+  map: Record<TDate, Record<TChartType, TStats[]>>,
   date: TDate
 ) {
   return (
@@ -49,7 +53,7 @@ export const EMPTY_IN_FUTURE = 0;
 export const EMPTY_CURRENT = 1;
 
 export type TCalendarData = CalendarDatum & {
-  problems: string[];
+  stats: TStats[];
   category: TCategory;
 };
 
@@ -57,7 +61,7 @@ export function prepareChartData(cards: TCardModel[], year: number) {
   // Find the earliest and latest review dates
   const yearStart = new Date(year, 0, 1);
   const yearEnd = endOfYear(yearStart);
-  const dateNow = formatDate(new Date());
+  const dateNow = formatDate(Date.now());
 
   const minDate = yearStart;
   const maxDate = yearEnd;
@@ -78,14 +82,14 @@ export function prepareChartData(cards: TCardModel[], year: number) {
     const isBeforeToday = date < dateNow;
 
     for (const category of ["New", "Review"] as const) {
-      const problems = map[date]?.[category] ?? [];
+      const stats = map[date]?.[category] ?? [];
 
       if (isBeforeToday) {
-        const value = problems.length + EMPTY_CURRENT;
-        data[category].push({ day: date, value, problems, category });
+        const value = stats.length + EMPTY_CURRENT;
+        data[category].push({ day: date, value, stats, category });
       } else {
-        const value = problems.length * -1;
-        data[category].push({ day: date, value, problems, category: "Due" });
+        const value = stats.length * -1;
+        data[category].push({ day: date, value, stats, category: "Due" });
       }
     }
 

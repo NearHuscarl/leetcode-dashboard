@@ -1,9 +1,12 @@
+import { useDispatch } from "react-redux";
+import groupBy from "lodash/groupBy";
 import {
   CalendarDatum,
   CalendarTooltipProps,
   DateOrString,
   ResponsiveCalendar,
 } from "@nivo/calendar";
+import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import useTheme from "@mui/material/styles/useTheme";
 import grey from "@mui/material/colors/grey";
@@ -14,11 +17,13 @@ import {
   EMPTY_CURRENT,
   EMPTY_IN_FUTURE,
   TCalendarData,
+  TCategory,
 } from "./reviewCalendarData";
 import { formatDisplayedDate } from "app/helpers/date";
 import { useLeetcodeProblems } from "app/api/leetcode";
 import { AcRateIndicator } from "../AcRateIndicator";
 import { ChartTooltip } from "../ChartTooltip";
+import { globalActions } from "app/store/globalSlice";
 
 const newColors = [
   amber[50],
@@ -83,23 +88,35 @@ const CustomTooltip = (props: CalendarTooltipProps) => {
   if (value < 0) value = -value;
 
   const color = cat2Color[category];
+  const group = groupBy(data.stats, (s) => s.category);
 
   return (
     <ChartTooltip>
       <ChartTooltip.Date>
         {formatDisplayedDate(new Date(day))}
       </ChartTooltip.Date>
-      <ChartTooltip.Caption style={{ marginBottom: 4, color }}>
-        {value} {cat2TootlipTitle[category]}
-      </ChartTooltip.Caption>
-      {data.problems.map((p) => (
-        <Stack key={p} gap={1.2} direction="row" alignItems="baseline">
-          <AcRateIndicator value={leetcodes[p]?.acRate} width={40} height={7} />
-          <ChartTooltip.Text style={{ flex: 1 }}>
-            {leetcodes[p]?.title}
-          </ChartTooltip.Text>
-        </Stack>
-      ))}
+      {Object.keys(group).map((category2) => {
+        const category = category2 as TCategory;
+        return (
+          <>
+            <ChartTooltip.Caption style={{ marginBottom: 4, color }}>
+              {group[category].length} {cat2TootlipTitle[category]}
+            </ChartTooltip.Caption>
+            {group[category].map(({ id }) => (
+              <Stack key={id} gap={1.2} direction="row" alignItems="baseline">
+                <AcRateIndicator
+                  value={leetcodes[id]?.acRate}
+                  width={40}
+                  height={7}
+                />
+                <ChartTooltip.Text style={{ flex: 1 }}>
+                  {leetcodes[id]?.title}
+                </ChartTooltip.Text>
+              </Stack>
+            ))}
+          </>
+        );
+      })}
     </ChartTooltip>
   );
 };
@@ -114,25 +131,46 @@ export const ReviewCalendarChart = (props: TReviewCalendarChartProps) => {
   const { data, from, to, label } = props;
   const colors = label === "New" ? newColors : reviewColors;
   const theme = useTheme();
+  const dispatch = useDispatch();
 
   return (
-    <ResponsiveCalendar
-      data={data}
-      theme={{
-        textColor: theme.chart.legend.color,
+    <Box
+      sx={{
+        width: "100%",
+        height: "100%",
+        "& g > rect": {
+          cursor: "pointer",
+        },
       }}
-      from={from}
-      to={to}
-      emptyColor="#eeeeee"
-      minValue={-9}
-      maxValue={9}
-      colors={redColors.concat(colors)}
-      yearLegend={() => label}
-      margin={{ top: 20, right: 0, bottom: 7, left: 10 }}
-      tooltip={CustomTooltip}
-      monthBorderColor="#ffffff"
-      dayBorderWidth={2}
-      dayBorderColor="#ffffff"
-    />
+    >
+      <ResponsiveCalendar
+        data={data}
+        theme={{
+          textColor: theme.chart.legend.color,
+        }}
+        from={from}
+        to={to}
+        emptyColor="#eeeeee"
+        minValue={-9}
+        maxValue={9}
+        colors={redColors.concat(colors)}
+        onClick={(d) => {
+          const datum = (d as any).data as TCalendarData;
+          if (datum.stats.length === 0) return;
+          dispatch(
+            globalActions.openProblems({
+              ids: datum.stats.map((s) => s.id),
+              column: "due",
+            })
+          );
+        }}
+        yearLegend={() => label}
+        margin={{ top: 20, right: 0, bottom: 7, left: 10 }}
+        tooltip={CustomTooltip}
+        monthBorderColor="#ffffff"
+        dayBorderWidth={2}
+        dayBorderColor="#ffffff"
+      />
+    </Box>
   );
 };

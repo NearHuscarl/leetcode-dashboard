@@ -1,3 +1,5 @@
+import { useDispatch } from "react-redux";
+import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import { useTheme } from "@mui/material";
 import { BarTooltipProps, ResponsiveBar } from "@nivo/bar";
@@ -11,6 +13,7 @@ import {
 import { TDateView } from "app/store/filterSlice";
 import { ChartTooltip } from "../ChartTooltip";
 import { useSelector } from "app/store/setup";
+import { globalActions } from "app/store/globalSlice";
 
 const formatChartDate = (value: number, dateView: TDateView) => {
   let formattedDate = "";
@@ -83,45 +86,67 @@ type TCardTypeBarChartProps = {
 export const CardTypeBarChart = (props: TCardTypeBarChartProps) => {
   const { data, dateView } = props;
   const theme = useTheme();
+  const dispatch = useDispatch();
 
   return (
-    <ResponsiveBar
-      data={data}
-      keys={cardTypes}
-      indexBy="date"
-      theme={{
-        textColor: theme.chart.legend.color,
-      }}
-      colors={({ id }) => theme.anki.cardType[id as TCardType]}
-      margin={{ top: 30, right: 90, bottom: 55, left: 20 }}
-      groupMode="grouped"
-      valueScale={{ type: "linear" }}
-      indexScale={{ type: "band", round: true }}
-      padding={0.4}
-      gridYValues={4}
-      tooltip={CustomTooltip}
-      axisLeft={{
-        tickSize: 0,
-        tickPadding: 5,
-        tickValues: 4,
-      }}
-      axisBottom={{
-        tickSize: 0,
-        tickPadding: 10,
-        format: (v) => formatChartDate(v, dateView),
-      }}
-      labelSkipWidth={1000}
-      legends={[
-        {
-          dataFrom: "keys",
-          anchor: "bottom-right",
-          direction: "column",
-          translateX: 120,
-          itemWidth: 100,
-          itemHeight: 20,
-          symbolSize: 12,
+    <Box
+      sx={{
+        width: "100%",
+        height: "100%",
+        "& rect[focusable]": {
+          cursor: "pointer",
         },
-      ]}
-    />
+      }}
+    >
+      <ResponsiveBar
+        // @ts-ignore
+        data={data}
+        keys={cardTypes}
+        indexBy="date"
+        theme={{
+          textColor: theme.chart.legend.color,
+        }}
+        colors={({ id }) => theme.anki.cardType[id as TCardType]}
+        margin={{ top: 30, right: 90, bottom: 55, left: 20 }}
+        groupMode="grouped"
+        valueScale={{ type: "linear" }}
+        indexScale={{ type: "band", round: true }}
+        padding={0.4}
+        gridYValues={4}
+        onClick={(d) => {
+          const datum: TBarDatum = d.data as any;
+          dispatch(
+            globalActions.openProblems({
+              ids: [...datum.leetcodeIds],
+              column: "cardType",
+            })
+          );
+        }}
+        // @ts-ignore
+        tooltip={CustomTooltip}
+        axisLeft={{
+          tickSize: 0,
+          tickPadding: 5,
+          tickValues: 4,
+        }}
+        axisBottom={{
+          tickSize: 0,
+          tickPadding: 10,
+          format: (v) => formatChartDate(v, dateView),
+        }}
+        labelSkipWidth={1000}
+        legends={[
+          {
+            dataFrom: "keys",
+            anchor: "bottom-right",
+            direction: "column",
+            translateX: 120,
+            itemWidth: 100,
+            itemHeight: 20,
+            symbolSize: 12,
+          },
+        ]}
+      />
+    </Box>
   );
 };

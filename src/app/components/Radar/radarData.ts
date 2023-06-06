@@ -8,13 +8,13 @@ import { getDateAgo } from "app/helpers/date";
 
 function createMap(cards: TCardModel[], dateAgo: TDateAgoFilter) {
   const dateEnd = getDateAgo(dateAgo);
-  const map: Record<TDsa, Record<TCardType, number>> = dataStructures.reduce(
-    (acc: any, dsa) => {
-      acc[dsa] = {};
-      return acc;
-    },
-    {}
-  );
+  const map: Record<
+    TDsa,
+    { ids: string[]; submap: Record<TCardType, number> }
+  > = dataStructures.reduce((acc: any, dsa) => {
+    acc[dsa] = { ids: [], submap: {} };
+    return acc;
+  }, {});
 
   for (const card of cards) {
     if (!card.leetcode) {
@@ -28,7 +28,9 @@ function createMap(cards: TCardModel[], dateAgo: TDateAgoFilter) {
       const tagName = tag.name as TDsa;
 
       if (dataStructureSet.has(tagName)) {
-        const submap = map[tagName];
+        const { submap } = map[tagName];
+
+        map[tagName].ids.push(card.leetcodeId);
         submap[cardType] = (submap[cardType] ?? 0) + 1;
       }
     }
@@ -97,6 +99,7 @@ const computeProblemsByDsa = memoize((leetcodes: Record<string, TLeetcode>) => {
 
 export type TRadarDatum = {
   dsa: string;
+  leetcodeIds: string[];
   Learning: number;
   Young: number;
   Mature: number;
@@ -113,12 +116,13 @@ export function prepareChartData(
 
   for (const dsa2 in problemsByDsa) {
     const dsa = dsa2 as TDsa;
-    const matureCount = map[dsa]?.["Mature"] ?? 0;
-    const youngCount = (map[dsa]?.["Young"] ?? 0) + matureCount;
-    const learningCount = (map[dsa]?.["Learning"] ?? 0) + youngCount;
+    const matureCount = map[dsa]?.submap["Mature"] ?? 0;
+    const youngCount = (map[dsa]?.submap["Young"] ?? 0) + matureCount;
+    const learningCount = (map[dsa]?.submap["Learning"] ?? 0) + youngCount;
 
     data.push({
       dsa,
+      leetcodeIds: map[dsa].ids,
       Learning: (learningCount / problemsByDsa[dsa]) * 100,
       Young: (youngCount / problemsByDsa[dsa]) * 100,
       Mature: (matureCount / problemsByDsa[dsa]) * 100,

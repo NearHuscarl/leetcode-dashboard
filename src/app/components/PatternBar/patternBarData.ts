@@ -1,4 +1,3 @@
-import { BarDatum } from "@nivo/bar";
 import memoize from "lodash/memoize";
 import { TCardModel } from "app/services/problems";
 import { TLeetcode } from "app/api/leetcode";
@@ -73,10 +72,18 @@ export const patterns = [
 const patternSet = new Set(patterns);
 export type TPattern = (typeof patterns)[number];
 
+type TStats = {
+  value: number;
+  leetcodeIds: string[];
+};
+
 const computeProblemsByPattern = memoize(
   (leetcodes: Record<string, TLeetcode>) => {
-    const group: Record<TPattern, number> = patterns.reduce((acc, pattern) => {
-      acc[pattern] = 0;
+    const group: Record<TPattern, TStats> = patterns.reduce((acc, pattern) => {
+      acc[pattern] = {
+        value: 0,
+        leetcodeIds: [],
+      };
       return acc;
     }, {} as any);
 
@@ -93,7 +100,8 @@ const computeProblemsByPattern = memoize(
         for (const tag of leetcode.topicTags) {
           const tagName = tag.name as TPattern;
           if (patternSet.has(tagName)) {
-            group[tagName]++;
+            group[tagName].value++;
+            group[tagName].leetcodeIds.push(id);
           }
         }
       }
@@ -103,12 +111,13 @@ const computeProblemsByPattern = memoize(
   }
 );
 
-export interface TBarDatum extends BarDatum {
+export interface TBarDatum {
   pattern: TPattern;
   Unsolved: number;
   Learning: number;
   Young: number;
   Mature: number;
+  leetcodeIds: string[];
 }
 
 export function prepareChartData(
@@ -122,17 +131,18 @@ export function prepareChartData(
 
   for (const pattern2 in problemsByPattern) {
     const pattern = pattern2 as TPattern;
+    const total = problemsByPattern[pattern];
     const matureCount = map[pattern]?.["Mature"] ?? 0;
     const youngCount = map[pattern]?.["Young"] ?? 0;
     const learningCount = map[pattern]?.["Learning"] ?? 0;
 
     data.push({
       pattern,
-      Unsolved:
-        problemsByPattern[pattern] - matureCount - youngCount - learningCount,
+      Unsolved: total.value - matureCount - youngCount - learningCount,
       Learning: learningCount,
       Young: youngCount,
       Mature: matureCount,
+      leetcodeIds: total.leetcodeIds,
     });
   }
 

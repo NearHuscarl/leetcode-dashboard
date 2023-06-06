@@ -3,18 +3,24 @@ import { formatDate, getDateStart, getDatesBetween } from "app/helpers/date";
 import { TCardModel } from "app/services/problems";
 import { TDateFilter } from "app/store/filterSlice";
 
+type TStats = string[];
 type TDate = string;
 type TDifficulty = "Easy" | "Medium" | "Hard";
 
 export interface TLineDatum extends Datum {
-  diff?: number;
+  leetcodeIds: string[];
 }
 
 function createMap(cards: TCardModel[]) {
-  const totalMap: Record<TDate, { reviews: number; news: number }> = {};
-  const newMap: Record<TDate, Record<TDifficulty, number>> = {};
-  const reviewMap: Record<TDate, Record<TDifficulty, number>> = {};
-  const createSubmap = () => ({ Easy: 0, Medium: 0, Hard: 0 });
+  const totalMap: Record<TDate, { reviews: TStats; news: TStats }> = {};
+  const newMap: Record<TDate, Record<TDifficulty, TStats>> = {};
+  const reviewMap: Record<TDate, Record<TDifficulty, TStats>> = {};
+  const createStats = () => [];
+  const createSubmap = () => ({
+    Easy: createStats(),
+    Medium: createStats(),
+    Hard: createStats(),
+  });
 
   for (const card of cards) {
     if (!card.leetcode) continue;
@@ -28,15 +34,18 @@ function createMap(cards: TCardModel[]) {
 
       if (isNewCard) {
         const submap = newMap[date] ?? (newMap[date] = createSubmap()); // Initialize the submap if it doesn't exist
-        submap[difficulty] = (submap[difficulty] ?? 0) + 1;
+        submap[difficulty].push(card.leetcodeId);
       }
 
       const submap = reviewMap[date] ?? (reviewMap[date] = createSubmap()); // Initialize the submap if it doesn't exist
-      submap[difficulty] = (submap[difficulty] ?? 0) + 1;
+      submap[difficulty].push(card.leetcodeId);
 
-      totalMap[date] ??= { reviews: 0, news: 0 };
-      totalMap[date].reviews += 1;
-      if (isNewCard) totalMap[date].news += 1;
+      totalMap[date] ??= { reviews: createStats(), news: createStats() };
+      totalMap[date].reviews.push(card.leetcodeId);
+
+      if (isNewCard) {
+        totalMap[date].news.push(card.leetcodeId);
+      }
     }
   }
 
@@ -76,38 +85,38 @@ export function prepareChartData(cards: TCardModel[], date: TDateFilter) {
 
   for (const date of dates) {
     for (const difficulty of difficulties) {
-      const r = reviewMap[date]?.[difficulty] ?? 0;
-      const n = newMap[date]?.[difficulty] ?? 0;
+      const r = reviewMap[date]?.[difficulty] ?? [];
+      const n = newMap[date]?.[difficulty] ?? [];
 
-      totalLookup[difficulty].reviews += r;
+      totalLookup[difficulty].reviews += r.length;
       totalLookup[difficulty].reviewPoints.push({
         x: date,
         y: totalLookup[difficulty].reviews,
-        diff: r,
+        leetcodeIds: r,
       });
 
-      totalLookup[difficulty].news += n;
+      totalLookup[difficulty].news += n.length;
       totalLookup[difficulty].newPoints.push({
         x: date,
         y: totalLookup[difficulty].news,
-        diff: n,
+        leetcodeIds: n,
       });
     }
 
-    const n = totalMap[date]?.news ?? 0;
-    totalLookup["Total"].news += n;
+    const n = totalMap[date]?.news ?? [];
+    totalLookup["Total"].news += n.length;
     totalLookup["Total"].newPoints.push({
       x: date,
       y: totalLookup["Total"].news,
-      diff: n,
+      leetcodeIds: n,
     });
 
-    const r = totalMap[date]?.reviews ?? 0;
-    totalLookup["Total"].reviews += r;
+    const r = totalMap[date]?.reviews ?? [];
+    totalLookup["Total"].reviews += r.length;
     totalLookup["Total"].reviewPoints.push({
       x: date,
       y: totalLookup["Total"].reviews,
-      diff: r,
+      leetcodeIds: r,
     });
   }
 

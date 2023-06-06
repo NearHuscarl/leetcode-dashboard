@@ -12,6 +12,7 @@ import { MayHaveLabel } from "@nivo/pie";
 export interface TRetentionDatum extends MayHaveLabel {
   id: TEaseLabel;
   value: number;
+  leetcodeIds: string[];
 }
 
 type TRetentionRateData = {
@@ -36,10 +37,10 @@ const getEaseIndex = (ease: number) => {
 };
 
 const createDatums = (cardType: TCardType) => [
-  { id: getEaseLabel(2), value: 0, cardType },
-  { id: getEaseLabel(3), value: 0, cardType },
-  { id: getEaseLabel(4), value: 0, cardType },
-  { id: getEaseLabel(1), value: 0, cardType },
+  { id: getEaseLabel(2), value: 0, cardType, leetcodeIds: [] },
+  { id: getEaseLabel(3), value: 0, cardType, leetcodeIds: [] },
+  { id: getEaseLabel(4), value: 0, cardType, leetcodeIds: [] },
+  { id: getEaseLabel(1), value: 0, cardType, leetcodeIds: [] },
 ];
 
 export function prepareChartData(cards: TCardModel[], dateAgo: TDateAgoFilter) {
@@ -75,6 +76,7 @@ export function prepareChartData(cards: TCardModel[], dateAgo: TDateAgoFilter) {
         value: 0,
       };
       data[cardType][i].value += 1;
+      data[cardType][i].leetcodeIds.push(card.leetcodeId);
     }
   }
 

@@ -4,6 +4,15 @@ import storage from "redux-persist/lib/storage";
 
 export type TChartType = "scatterPlot" | "swarmPlot" | "table";
 
+type TCardTableColumn =
+  | "reviews"
+  | "dsa"
+  | "pattern"
+  | "lastReviewDate"
+  | "cardType"
+  | "due"
+  | "difficulty";
+
 export interface TGlobalState {
   view: "table" | "chart";
   hover: {
@@ -14,6 +23,7 @@ export interface TGlobalState {
     open: boolean;
     problemIds: string[];
     problemDetailId: string;
+    column: TCardTableColumn | "";
   };
 }
 
@@ -27,6 +37,7 @@ const initialState: TGlobalState = {
     open: false,
     problemIds: [],
     problemDetailId: "",
+    column: "",
   },
 };
 
@@ -50,8 +61,19 @@ export const globalSlice = createSlice({
     setDrawerOpen: (state, action: PayloadAction<boolean>) => {
       state.drawer.open = action.payload;
     },
-    setDrawerProblems: (state, action: PayloadAction<string[]>) => {
+    setProblems: (state, action: PayloadAction<string[]>) => {
       state.drawer.problemIds = action.payload;
+      state.drawer.problemDetailId = "";
+    },
+    openProblems: (
+      state,
+      action: PayloadAction<{ ids: string[]; column: TCardTableColumn }>
+    ) => {
+      const { ids, column } = action.payload;
+      state.drawer.open = true;
+      state.drawer.problemIds = ids;
+      state.drawer.column = column;
+      state.drawer.problemDetailId = "";
     },
     openProblemDetail: (state, action: PayloadAction<string>) => {
       state.drawer.open = true;

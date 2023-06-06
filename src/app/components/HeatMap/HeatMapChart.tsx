@@ -1,3 +1,4 @@
+import { useDispatch } from "react-redux";
 import {
   HeatMapDatum,
   HeatMapSerie,
@@ -10,6 +11,8 @@ import useTheme from "@mui/material/styles/useTheme";
 import { formatDate } from "app/helpers/date";
 import { ChartTooltip } from "../ChartTooltip";
 import { primaryColor } from "app/provider/ThemeProvider";
+import { THeatMapDatum } from "./heatMapData";
+import { globalActions } from "app/store/globalSlice";
 
 const interpolator = transform(
   [0, 0.5, 1],
@@ -45,12 +48,13 @@ const CustomTooltip = (props: TooltipProps<HeatMapDatum>) => {
 };
 
 type THeatMapProps = {
-  data: HeatMapSerie<HeatMapDatum, {}>[];
+  data: HeatMapSerie<THeatMapDatum, {}>[];
 };
 
 export const HeatMapChart = (props: THeatMapProps) => {
   const { data } = props;
   const theme = useTheme();
+  const dispatch = useDispatch();
 
   return (
     <ResponsiveHeatMap
@@ -80,6 +84,14 @@ export const HeatMapChart = (props: THeatMapProps) => {
       colors={{
         type: "sequential",
         interpolator,
+      }}
+      onClick={(cell) => {
+        dispatch(
+          globalActions.openProblems({
+            ids: cell.data.leetcodeIds,
+            column: "lastReviewDate",
+          })
+        );
       }}
       borderWidth={3}
       borderColor="#ffffff"

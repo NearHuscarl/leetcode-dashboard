@@ -49,15 +49,20 @@ const dayPriority = {
   Sun: 6,
 };
 
-const createSubmap = (): Record<TDay, number> =>
+type TStats = {
+  value: number;
+  leetcodeIds: string[];
+};
+
+const createSubmap = (): Record<TDay, TStats> =>
   Object.keys(dayPriority).reduce((acc: any, day) => {
-    acc[day] = 0;
+    acc[day] = { value: 0, leetcodeIds: [] };
     return acc;
   }, {});
 
 // A helper function that preprocesses the cards array and creates a map that stores the number of problems solved for each date and category
 function createMap(cards: TCardModel[], dateStart: Date) {
-  const map: Record<THour, Record<TDay, number>> = hourKeys.reduce(
+  const map: Record<THour, Record<TDay, TStats>> = hourKeys.reduce(
     (acc: any, hour) => {
       acc[hour] = createSubmap();
       return acc;
@@ -79,15 +84,20 @@ function createMap(cards: TCardModel[], dateStart: Date) {
       const submap = map[hourKey];
       const day = formatDate(review.id, "E");
 
-      submap[day] = (submap[day] ?? 0) + 1;
+      submap[day].value++;
+      submap[day].leetcodeIds.push(card.leetcodeId);
     }
   }
 
   return map;
 }
 
+export interface THeatMapDatum extends HeatMapDatum {
+  leetcodeIds: string[];
+}
+
 export function prepareChartData(cards: TCardModel[], dateFilter: TDateFilter) {
-  const data: HeatMapSerie<HeatMapDatum, {}>[] = [];
+  const data: HeatMapSerie<THeatMapDatum, {}>[] = [];
   const dateStart = getDateStart(dateFilter);
   const map = createMap(cards, dateStart ?? new Date(0));
   let totalReviews = 0;
@@ -99,10 +109,11 @@ export function prepareChartData(cards: TCardModel[], dateFilter: TDateFilter) {
         // @ts-ignore
         .sort((a, b) => dayPriority[a] - dayPriority[b])
         .map((day) => {
-          const value = map[hour]?.[day] ?? 0;
+          const stats = map[hour]?.[day];
+          const value = stats.value ?? 0;
           totalReviews += value;
 
-          return { x: day, y: value };
+          return { x: day, y: value, leetcodeIds: stats.leetcodeIds };
         }),
     });
   }
