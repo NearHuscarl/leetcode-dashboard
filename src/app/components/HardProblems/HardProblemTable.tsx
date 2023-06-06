@@ -21,7 +21,7 @@ const columns: GridColDef[] = [
     minWidth: 100,
     sortable: false,
     renderCell: (params: GridRenderCellParams<TRowItem, string>) => {
-      return <span data-rowId={params.row.id}>{params.value}</span>;
+      return <span data-rowid={params.row.id}>{params.value}</span>;
     },
   },
   {
