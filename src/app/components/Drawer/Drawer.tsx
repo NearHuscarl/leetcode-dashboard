@@ -5,6 +5,25 @@ import { useSelector } from "app/store/setup";
 import { globalActions } from "app/store/globalSlice";
 import { DrawerDetail } from "./DrawerDetail";
 import { DrawerProblems } from "./DrawerProblems";
+import { ReactNode } from "react";
+
+const Layer = ({ children }: { children: ReactNode }) => {
+  return (
+    <Box
+      sx={{
+        position: "absolute",
+        width: "100%",
+        height: "100%",
+        background: "white",
+        left: 0,
+        top: 0,
+        p: 3,
+      }}
+    >
+      {children}
+    </Box>
+  );
+};
 
 export const Drawer = () => {
   const dispatch = useDispatch();
@@ -29,11 +48,17 @@ export const Drawer = () => {
       open={isOpen}
       onClose={() => dispatch(globalActions.setDrawerOpen(false))}
     >
-      <Box sx={{ width: 700, height: "100%", p: 3 }} role="presentation">
-        {detailId ? (
-          <DrawerDetail leetcodeId={detailId} />
-        ) : (
+      <Box
+        sx={{ width: 700, height: "100%", position: "relative" }}
+        role="presentation"
+      >
+        <Layer>
           <DrawerProblems leetcodeIds={problemIds} />
+        </Layer>
+        {detailId && (
+          <Layer>
+            <DrawerDetail leetcodeId={detailId} />
+          </Layer>
         )}
       </Box>
     </MuiDrawer>
