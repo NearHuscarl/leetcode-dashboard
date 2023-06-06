@@ -62,7 +62,7 @@ const columns: GridColDef[] = [
   {
     field: "date",
     headerName: "Date",
-    width: 150,
+    flex: 1,
     renderCell: (params: GridRenderCellParams<TRowItem>) => {
       return <>{formatDate(params.row.id)}</>;
     },

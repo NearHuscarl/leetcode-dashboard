@@ -68,7 +68,7 @@ const columns: GridColDef[] = [
       return getCardType(params.row);
     },
     sortComparator: (v1, v2) => cardTypePriority[v1] - cardTypePriority[v2],
-    renderCell: (params: GridRenderCellParams<any, string>) => {
+    renderCell: (params: GridRenderCellParams<any, TCardType>) => {
       if (!params.value) {
         return null;
       }
@@ -76,7 +76,7 @@ const columns: GridColDef[] = [
         <Chip
           label={params.value}
           style={{
-            backgroundColor: theme.anki.cardType[params.value as TCardType],
+            backgroundColor: theme.anki.cardType[params.value],
             color: "white",
           }}
         />

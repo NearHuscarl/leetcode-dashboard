@@ -50,7 +50,7 @@ export const dataStructures = [
   "Heap (Priority Queue)",
   "Graph",
 ] as const;
-const dataStructureSet = new Set(dataStructures);
+export const dataStructureSet = new Set(dataStructures);
 type TDsa = (typeof dataStructures)[number];
 
 const blacklistCategory = new Set([

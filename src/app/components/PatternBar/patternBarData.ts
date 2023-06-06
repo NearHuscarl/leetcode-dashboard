@@ -69,7 +69,7 @@ export const patterns = [
   "Bit Manipulation",
   "Sorting",
 ] as const;
-const patternSet = new Set(patterns);
+export const patternSet = new Set(patterns);
 export type TPattern = (typeof patterns)[number];
 
 type TStats = {

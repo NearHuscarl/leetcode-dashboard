@@ -4,7 +4,7 @@ import storage from "redux-persist/lib/storage";
 
 export type TChartType = "scatterPlot" | "swarmPlot" | "table";
 
-type TCardTableColumn =
+export type TCardTableColumn =
   | "reviews"
   | "dsa"
   | "pattern"
@@ -23,7 +23,7 @@ export interface TGlobalState {
     open: boolean;
     problemIds: string[];
     problemDetailId: string;
-    column: TCardTableColumn | "";
+    column: TCardTableColumn;
   };
 }
 
@@ -37,7 +37,7 @@ const initialState: TGlobalState = {
     open: false,
     problemIds: [],
     problemDetailId: "",
-    column: "",
+    column: "difficulty",
   },
 };
 
@@ -63,6 +63,9 @@ export const globalSlice = createSlice({
     },
     setProblems: (state, action: PayloadAction<string[]>) => {
       state.drawer.problemIds = action.payload;
+      state.drawer.problemDetailId = "";
+    },
+    closeDetail: (state) => {
       state.drawer.problemDetailId = "";
     },
     openProblems: (

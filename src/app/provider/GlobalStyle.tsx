@@ -9,6 +9,10 @@ export const GlobalStyle = () => {
         body: {
           backgroundColor: `${grey[100]} !important`,
         },
+        "*": {
+          // the fuck is it not included by default
+          boxSizing: "border-box",
+        },
         "@keyframes pulse": {
           "0%": {
             transform: "scale(1, 1)",
