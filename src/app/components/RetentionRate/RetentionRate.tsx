@@ -28,6 +28,7 @@ export const RetentionRate = () => {
         width="100%"
         height="calc(100% - 100px)"
         direction="row"
+        gap={2}
         justifyContent="space-around"
         alignItems="center"
       >
