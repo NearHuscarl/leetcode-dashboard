@@ -35,6 +35,9 @@ https://dribbble.com/shots/20325736-Sales-Components
 
 --Features
 
+TODO:
+- parse lintcode problem
+
 Factor:
 - Number of problems
 - Number of reviews

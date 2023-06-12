@@ -1,7 +1,7 @@
 import puppeteer from "puppeteer";
+import prettier from "prettier";
 import fs from "fs";
 import path from "path";
-import mkdirp from "mkdirp";
 import { fileURLToPath } from "url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -39,9 +39,9 @@ const main = async () => {
     problemIdsByCategory
   )};`;
 
-  fs.writeFileSync(targetPath, code, { flag: "w" });
+  await browser.close(targetPath);
 
-  await browser.close();
+  fs.writeFileSync(targetPath, prettier.format(code), { flag: "w" });
 };
 
 main();
