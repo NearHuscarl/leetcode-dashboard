@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
+import { lintcodeProblems } from "app/lintcode.g";
 import { MSS } from "app/settings";
 
 const BASE_URL = "https://leetcode-dashboard.vercel.app";
@@ -10,8 +11,9 @@ export type TLeetcode = {
   difficulty: TDifficulty;
   title: string;
   titleSlug: string;
-  likes: number;
-  dislikes: number;
+  lintcodeId?: number;
+  likes?: number;
+  dislikes?: number;
   topicTags: {
     name: string;
     slug: string;
@@ -42,6 +44,9 @@ export const useLeetcodeProblems = () => {
         for (const id in data.problems) {
           problems[id] = data.problems[id];
         }
+      }
+      for (const p of lintcodeProblems) {
+        problems[p.titleSlug] = p;
       }
 
       return problems;

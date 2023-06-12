@@ -10,7 +10,6 @@ import Stack from "@mui/material/Stack";
 import grey from "@mui/material/colors/grey";
 import { useProblem } from "app/services/problems";
 import { Chip, Link, Typography, useTheme } from "@mui/material";
-import { LEETCODE_BASE_URL } from "app/settings";
 import { AcRateIndicator } from "../AcRateIndicator";
 import {
   getCardType,
@@ -18,6 +17,7 @@ import {
   getDueStatus,
   getEaseLabel,
   getNextReviewTime,
+  getProblemLink,
 } from "app/helpers/card";
 import { ReviewTrend } from "../ReviewTrend/ReviewTrend";
 import { CardEventDataGrid, TRowItem } from "./CardEventDataGrid";
@@ -85,7 +85,7 @@ export const DrawerDetail = ({ leetcodeId }: { leetcodeId: string }) => {
           <ArrowBackIcon />
         </IconButton>
         <Typography variant="h5" fontWeight="500">
-          <Link href={`${LEETCODE_BASE_URL}/${card.leetcodeId}`}>
+          <Link href={getProblemLink(card)}>
             {card.leetcode?.title ?? card.leetcodeId}
           </Link>
         </Typography>

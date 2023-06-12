@@ -15,6 +15,7 @@ export type TCard = {
 
   leetcodeId: string;
   neetcodeLink: string;
+  website: "leetcode" | "lintcode";
   deckName: string;
   modelName: string;
   fieldOrder: number;

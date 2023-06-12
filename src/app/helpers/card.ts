@@ -1,7 +1,16 @@
 import { TCard } from "app/api/deck";
 import { TCardReview } from "app/api/stats";
 import { getIntervalTime } from "./stats";
-import { MSS } from "app/settings";
+import { LEETCODE_BASE_URL, LINTCODE_BASE_URL, MSS } from "app/settings";
+import { TCardModel } from "app/services/problems";
+
+export const getProblemLink = (card: TCardModel) => {
+  if (card.website === "leetcode") {
+    return `${LEETCODE_BASE_URL}/${card.leetcodeId}`;
+  }
+  console.log(card);
+  return `${LINTCODE_BASE_URL}/${card.leetcode?.lintcodeId}/${card.leetcodeId}`;
+};
 
 export type TCardType =
   | "New"

@@ -9,14 +9,14 @@ import OndemandVideoIcon from "@mui/icons-material/OndemandVideo";
 import { TCard } from "app/api/deck";
 import { TCardReview } from "app/api/stats";
 import { TLeetcode } from "app/api/leetcode";
-import { useProblems } from "app/services/problems";
+import { TCardModel, useProblems } from "app/services/problems";
 import {
   TCardType,
   getCardType,
   getDueStatus,
   getNextReviewTime,
+  getProblemLink,
 } from "app/helpers/card";
-import { LEETCODE_BASE_URL } from "app/settings";
 import { AcRateIndicator } from "./AcRateIndicator";
 import { ReviewTrend } from "./ReviewTrend/ReviewTrend";
 import { theme } from "app/provider/ThemeProvider";
@@ -48,12 +48,12 @@ const columns: GridColDef[] = [
     field: "leetcodeId",
     headerName: "Leetcode",
     width: 350,
-    renderCell: (params: GridRenderCellParams<any, string>) => {
+    renderCell: (params: GridRenderCellParams<TCardModel, string>) => {
       if (!params.value) {
         return null;
       }
       return (
-        <Link href={`${LEETCODE_BASE_URL}/${params.value}`}>
+        <Link href={getProblemLink(params.row)}>
           {params.row.leetcode?.title ?? params.value}
         </Link>
       );

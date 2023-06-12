@@ -24,6 +24,22 @@ type TCardInfo = {
   mod: number;
 };
 
+const parseProblemLink = (cardInfo: TCardInfo) => {
+  const question = cardInfo.fields.Front.value;
+  const leetcodeId =
+    question.match(/https:\/\/leetcode.com\/problems\/([\w-]+)/)?.[1] ?? "";
+
+  if (leetcodeId) {
+    return leetcodeId;
+  }
+
+  return (
+    question.match(
+      /https:\/\/www\.lintcode.com\/problem\/\d+\/([\w-]+)/
+    )?.[1] ?? ""
+  );
+};
+
 export const getCardInfos = async (cards: number[]) => {
   const cardInfos: TCardInfo[] = await ankiConnect("cardsInfo", { cards });
 
@@ -31,10 +47,10 @@ export const getCardInfos = async (cards: number[]) => {
     const { fields, question, answer, css, ...rest } = cardInfo;
     return {
       ...rest,
-      leetcodeId:
-        cardInfo.fields.Front.value.match(
-          /https:\/\/leetcode.com\/problems\/([\w-]+)/
-        )?.[1] ?? "",
+      website: cardInfo.fields.Front.value.includes("lintcode.com")
+        ? "lintcode"
+        : "leetcode",
+      leetcodeId: parseProblemLink(cardInfo),
       neetcodeLink: cardInfo.fields.Back.value.match(/href="(.*)"/)?.[1] ?? "",
     };
   });

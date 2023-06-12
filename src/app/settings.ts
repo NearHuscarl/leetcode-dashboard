@@ -14,3 +14,4 @@ export const goal = {
 };
 
 export const LEETCODE_BASE_URL = "https://leetcode.com/problems";
+export const LINTCODE_BASE_URL = "https://www.lintcode.com/problem";
