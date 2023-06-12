@@ -18,6 +18,8 @@ const Layer = ({ children }: { children: ReactNode }) => {
         left: 0,
         top: 0,
         p: 3,
+        // put this layer above the empty row Overlay of the DataGrid
+        zIndex: 4,
       }}
     >
       {children}
