@@ -46,7 +46,9 @@ export const useLeetcodeProblems = () => {
         }
       }
       for (const p of lintcodeProblems) {
-        problems[p.titleSlug] = p;
+        if (!problems[p.titleSlug]) {
+          problems[p.titleSlug] = p;
+        }
       }
 
       return problems;

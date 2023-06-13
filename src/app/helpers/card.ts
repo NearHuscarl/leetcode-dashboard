@@ -8,7 +8,6 @@ export const getProblemLink = (card: TCardModel) => {
   if (card.website === "leetcode") {
     return `${LEETCODE_BASE_URL}/${card.leetcodeId}`;
   }
-  console.log(card);
   return `${LINTCODE_BASE_URL}/${card.leetcode?.lintcodeId}/${card.leetcodeId}`;
 };
 

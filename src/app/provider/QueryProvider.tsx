@@ -19,7 +19,7 @@ export const QueryProvider = ({ children }: PropsWithChildren) => {
   return (
     <PersistQueryClientProvider
       client={queryClient}
-      persistOptions={{ persister }}
+      persistOptions={{ persister, buster: "1" }}
     >
       {children}
     </PersistQueryClientProvider>
