@@ -117,11 +117,6 @@ export const SwarmPlotChart = (props: TSwarmPlotChartProps) => {
       colors={({ data }) => getAcRateColor(data.acRate)}
       valueScale={{ type: "linear", min: 0, max: 1, reverse: false }}
       onClick={({ id }) => dispatch(globalActions.openProblemDetail(id))}
-      size={{
-        key: "volume",
-        values: [1, 6],
-        sizes: [6, 15],
-      }}
       forceStrength={4}
       simulationIterations={100}
       margin={{ top: 30, right: 60, bottom: 25, left: 60 }}
