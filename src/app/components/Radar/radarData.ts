@@ -53,19 +53,6 @@ export const dataStructures = [
 export const dataStructureSet = new Set(dataStructures);
 type TDsa = (typeof dataStructures)[number];
 
-const blacklistCategory = new Set([
-  "Binary Search",
-  "Graphs",
-  // "Advanced Graphs",
-  "Backtracking",
-  "1-D Dynamic Programming",
-  "2-D Dynamic Programming",
-  "Greedy",
-  "Intervals",
-  "Math & Geometry",
-  "Bit Manipulation",
-]);
-
 const computeProblemsByDsa = memoize((leetcodes: Record<string, TLeetcode>) => {
   const group: Record<TDsa, number> = dataStructures.reduce((acc, dsa) => {
     acc[dsa] = 0;
@@ -74,9 +61,6 @@ const computeProblemsByDsa = memoize((leetcodes: Record<string, TLeetcode>) => {
 
   for (const category2 in neetcodeProblems) {
     const category = category2 as keyof typeof neetcodeProblems;
-    if (blacklistCategory.has(category)) {
-      continue;
-    }
 
     for (const id of neetcodeProblems[category]) {
       const leetcode = leetcodes[id];
