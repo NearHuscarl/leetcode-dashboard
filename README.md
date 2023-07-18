@@ -2,7 +2,7 @@
 
 ![leetcode-dashboard-charts](./images/image.png)
 
-## Development
+## Getting Started
 
 - Download and install Anki
 - Install [anki-connect](https://ankiweb.net/shared/info/2055492159) add-on.
@@ -19,6 +19,33 @@
 ```
 
 - Do not close Anki to maintain the connection with AnkiConnect.
+
+## Usage
+
+- Create a deck named `Leetcode`.
+- Create a card with the following format:
+
+  - Front: Contains a link to leetcode/lintcode problem. Example:
+
+  ```
+  https://leetcode.com/problems/container-with-most-water
+  ```
+
+  - Back: Contains a single link to the solution (Github/Leetcode Discussion/Neetcode video...). Example:
+
+  ```
+  https://www.youtube.com/watch?v=o-YDQzHoaKM
+  ```
+
+- Recommended deck settings:
+  - **New cards/day:** 1 to 3 is enough, I cannot retain enough information if I cram more than that, YMMV.
+  - **Learning Steps:** `5d 10d 15d` or greater intervals if your plan takes longer to complete, otherwise you just memorize the previously solved solution.
+  - **New/Review order:**: Show before review. New problems are more important.
+  - **Review Sort Order:** `Relative overdueness`. This helps if you have a lot of overdue cards.
+
+## Development
+
+- Follow all the steps in [Getting Started](#getting-started)
 - Clone this repo.
 - Install depedencies and run the dev server
 
