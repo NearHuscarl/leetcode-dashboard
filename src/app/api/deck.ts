@@ -4,6 +4,7 @@ import { getCardInfos } from "./card";
 import { getNoteInfos } from "./note";
 import { TCardReview, getCardReviews } from "./stats";
 import { useQuery } from "@tanstack/react-query";
+import { getCardTypeFromReview } from "app/helpers/card";
 
 export const getCardIds = (deck: string): Promise<number[]> => {
   return ankiConnect("findCards", { query: `deck:${deck}` });
@@ -45,7 +46,10 @@ export const getCards = async (deck: string) => {
     (cardInfo) =>
       ({
         ...cardInfo,
-        reviews: cardReviews[cardInfo.cardId],
+        reviews: cardReviews[cardInfo.cardId].filter(
+          // cram state is temporary for the filtered deck, it's an afterthought for this app and is not supported.
+          (r) => getCardTypeFromReview(r) !== "Cram"
+        ),
         tags: noteLookup[cardInfo.note].tags.filter(
           (t) => !t.startsWith("leetcode::lvl")
         ),

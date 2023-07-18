@@ -17,6 +17,7 @@ export type TCardType =
   | "Young"
   | "Mature"
   | "Relearning"
+  | "Cram"
   | "Unknown";
 
 export const getCardTypeAt = (card: TCard, date: number) => {
@@ -75,6 +76,9 @@ export const getCardTypeFromReview = (review: TCardReview): TCardType => {
       return "Young";
     case 2:
       return "Relearning";
+    case 3:
+      // cards being studied in a filtered deck when they are not due
+      return "Cram";
     default:
       return "Unknown";
   }
