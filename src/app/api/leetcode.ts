@@ -14,6 +14,7 @@ export type TLeetcode = {
   lintcodeId?: number;
   likes?: number;
   dislikes?: number;
+  isPaidOnly?: boolean;
   topicTags: {
     name: string;
     slug: string;
@@ -46,7 +47,7 @@ export const useLeetcodeProblems = () => {
         }
       }
       for (const p of lintcodeProblems) {
-        if (!problems[p.titleSlug]) {
+        if (!problems[p.titleSlug] || problems[p.titleSlug].isPaidOnly) {
           problems[p.titleSlug] = p;
         }
       }

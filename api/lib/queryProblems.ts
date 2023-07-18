@@ -8,6 +8,7 @@ type TQueryProblemsProps = {
 export type TLcQuestion = {
   acRate: number;
   difficulty: "Easy" | "Medium" | "Hard";
+  isPaidOnly: boolean;
   title: string;
   titleSlug: string;
   likes: number;
@@ -35,6 +36,7 @@ query problemsetQuestionList($categorySlug: String, $limit: Int, $skip: Int, $fi
     questions: data {
       acRate
       difficulty
+      isPaidOnly
       title
       titleSlug
       likes
