@@ -48,7 +48,7 @@ export const getCards = async (deck: string) => {
         ...cardInfo,
         reviews: cardReviews[cardInfo.cardId].filter(
           // cram state is temporary for the filtered deck, it's an afterthought for this app and is not supported.
-          (r) => getCardTypeFromReview(r) !== "Cram"
+          (r) => (getCardTypeFromReview(r) as any) !== "Cram"
         ),
         tags: noteLookup[cardInfo.note].tags.filter(
           (t) => !t.startsWith("leetcode::lvl")
